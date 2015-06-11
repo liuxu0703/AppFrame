@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#343535" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:drawableTop="@drawable/mis_ic_camera"
+        android:drawablePadding="10dp"
+        android:textSize="14sp"
+        android:textColor="#CDCECE"
+        android:text="@string/mis_camera" />
+
+</FrameLayout>

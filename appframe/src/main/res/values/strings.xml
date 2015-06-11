@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+
+    <string name="lib_app_name">LxAndroidFrame</string>
+
+    <string name="dlg_edit_title">编辑</string>
+    <string name="dlg_loading_default_message">正在加载&#8230;</string>
+    <string name="dlg_loading_login_message">正在登录&#8230;</string>
+
+    <string name="mis_title">选择图片</string>
+    <string name="mis_folder_all">所有照片</string>
+    <string name="mis_preview">预览</string>
+    <string name="mis_camera">拍摄照片</string>
+    <string name="mis_toast_no_camera">未找到系统相机</string>
+    <string name="mis_toast_amount_limit">已经达到最高选择数量</string>
+    <string name="mis_folder_img_amount"><xliff:g>%d</xliff:g>张</string>
+    <string name="mis_finish_btn">完成</string>
+    <string name="mis_finish_btn_with_amount">完成(<xliff:g>%d</xliff:g>/<xliff:g>%d</xliff:g>)</string>
+    <string name="mis_error_load_timeout">加载图片超时</string>
+
+    <string name="toast_path_sdcard_not_mounted">存储卡不可用</string>
+    <string name="toast_path_sdcard_full">存储卡已满</string>
+    <string name="toast_path_create_dir_fail">创建文件夹失败</string>
+
+</resources>

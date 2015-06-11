@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="translucent">#00000000</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="activity_bkg_1">#f1f1f1</color>
+    <color name="activity_bkg_2">#e9ecf1</color>
+
+    <color name="black">#000</color>
+    <color name="white">#fff</color>
+    <color name="grey">#696969</color>
+    <color name="brick_red">#ff5757</color>
+    <color name="light_green">#9acd34</color>
+    <color name="cyan">#49cbc9</color>
+    <color name="azure">#1e90ff</color>
+    <color name="orange">#ffb957</color>
+    <color name="green">#24ae60</color>
+    <color name="red">#c2312f</color>
+
+    <color name="pager_strip_tab_color">#929292</color>
+    <color name="pager_strip_tab_press_color">#ffb81e</color>
+
+</resources>
