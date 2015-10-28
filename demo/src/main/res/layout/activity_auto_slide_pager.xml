@@ -1,0 +1,163 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <lx.af.view.AutoSlidePager.AutoSlidePager
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/aasp_slide_pager1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:autoSlideInterval="1800"
+        app:indicatorAnimDuration="600"
+        app:itemDividerWidth="10dp"
+        app:indicatorColor="#ffcc0000"
+        app:indicatorHeight="3dp"
+        app:indicatorPaddingTop="3dp"
+        >
+
+        <TextView
+            android:id="@+id/aasp_page_aaa"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="aaa" />
+
+        <TextView
+            android:layout_width="45dp"
+            android:layout_height="75dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="bbb" />
+
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="c" />
+
+        <TextView
+            android:id="@+id/aasp_page_ddd"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="ddd" />
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="eeeeeee" />
+
+    </lx.af.view.AutoSlidePager.AutoSlidePager>
+
+    <TextView
+        android:id="@+id/aasp_tv_page_info1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:layout_marginTop="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/aasp_btn_hide_page_aaa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="hide page aaa"/>
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/aasp_btn_hide_page_ddd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="hide page ddd"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="15dp"
+        android:background="#696969" />
+
+    <lx.af.view.AutoSlidePager.AutoSlidePager
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/aasp_slide_pager2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:itemDividerWidth="5dp"
+        app:indicatorColor="#ffcc0000"
+        app:indicatorHeight="5dp"
+        app:indicatorPaddingTop="5dp"
+        >
+
+        <TextView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="S_111" />
+
+        <TextView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="S_222" />
+
+        <TextView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="#00BFFF"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="S_333" />
+
+    </lx.af.view.AutoSlidePager.AutoSlidePager>
+
+    <TextView
+        android:id="@+id/aasp_tv_page_info2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/aasp_btn_add_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="add a page"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="15dp"
+        android:background="#696969" />
+
+</LinearLayout>

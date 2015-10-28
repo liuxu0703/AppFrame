@@ -58,6 +58,10 @@
             android:name=".activity.ActivityHomeWatcherDemo"
             android:label="Home Key Watcher" >
         </activity>
+        <activity
+            android:name=".activity.ActivityAutoSlidePager"
+            android:label="Auto Slide Pager" >
+        </activity>
 
     </application>
 

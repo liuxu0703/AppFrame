@@ -28,6 +28,8 @@ public class ActivityMain extends BaseActivity implements
                 ActivityHomeWatcherDemo.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("File Picker",
                 ActivityFilePickerDemo.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Auto Slide Pager",
+                ActivityAutoSlidePager.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Video Play",
                 ActivityPlayViewDemo.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Image Pick and Crop",
