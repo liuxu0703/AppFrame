@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="AutoSlidePager">
+        <attr name="autoSlide" format="boolean" />
+        <attr name="autoSlideInterval" format="integer" />
+        <attr name="indicatorAnimDuration" format="integer" />
+        <attr name="indicatorHeight" format="dimension" />
+        <attr name="indicatorPaddingTop" format="dimension" />
+        <attr name="indicatorColor" format="color" />
+        <attr name="itemDividerWidth" format="dimension" />
+        <attr name="itemDividerRes" format="reference" />
+    </declare-styleable>
+
+</resources>
