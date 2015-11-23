@@ -10,7 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import lx.af.manager.GlobalThreadManager;
-import lx.af.manager.PrefManager;
+import lx.af.utils.KV;
 import lx.af.utils.AlertUtils;
 import lx.af.utils.CrashHandler;
 import lx.af.utils.NetStateUtils;
@@ -36,9 +36,9 @@ public class BaseApp extends Application{
         LogUtils.init(this);
         StringUtils.init(this);
 
+        KV.init(this);
         CrashHandler.init();
         GlobalThreadManager.init(this);
-        PrefManager.init(this);
         initImageLoader(this);
 
         AlertUtils.init(this);
