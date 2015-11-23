@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="MediaPlayButton">
+        <attr name="progressColor" format="color" />
+        <attr name="progressTrackColor" format="color" />
+        <attr name="progressWidth" format="dimension" />
+        <attr name="progressArcDegree" format="integer" />
+        <attr name="progressSpeedDegree" format="integer" />
+        <attr name="iconPadding" format="dimension" />
+        <attr name="iconPlaySrc" format="reference" />
+        <attr name="iconPauseSrc" format="reference" />
+        <attr name="iconAnimDuration" format="integer" />
+        <attr name="iconVisible" format="boolean" />
+    </declare-styleable>
+</resources>

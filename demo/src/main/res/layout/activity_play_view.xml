@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/apv_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="#e6e6fa"
+        android:orientation="vertical" >
+
+        <lx.af.view.MediaButton.MediaPlayButton
+            xmlns:MediaPlayButton="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/apv_play_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="#40000000"
+            MediaPlayButton:progressArcDegree="60"
+            MediaPlayButton:progressWidth="4dp"
+            MediaPlayButton:progressSpeedDegree="5"
+            MediaPlayButton:iconPadding="5dp"
+            MediaPlayButton:iconVisible="false"
+            MediaPlayButton:iconAnimDuration="250"
+            />
+
+        <Button
+            android:id="@+id/apv_btn_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="test media btn: load" />
+    </LinearLayout>
+</LinearLayout>

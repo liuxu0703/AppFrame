@@ -48,7 +48,8 @@
         </activity>
         <activity
             android:name=".activity.ActivityPlayViewDemo"
-            android:label="Video" >
+            android:label="Video"
+            android:theme="@style/activity_theme_no_translucent" >
         </activity>
         <activity
             android:name=".activity.ActivityAvatarDemo"

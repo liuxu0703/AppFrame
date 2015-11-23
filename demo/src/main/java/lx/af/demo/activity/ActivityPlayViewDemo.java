@@ -5,27 +5,36 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lx.af.base.BaseActivity;
+import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
+import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ScreenUtils;
+import lx.af.utils.log.Log;
+import lx.af.view.MediaButton.MediaPlayButton;
 import lx.af.view.VideoPlayView;
 import lx.af.view.FilePicker.FilePickerDialog;
 import lx.af.view.FilePicker.FilePickerList;
 
 public final class ActivityPlayViewDemo extends BaseDemoActivity implements
-        BaseActivity.ActionBarImpl,
-        BaseActivity.SwipeBackImpl {
+        OnClickListener,
+        BaseActivity.ActionBarImpl {
 
     private int mScreenWidth;
     private int mVideoSize;
+
+    private MediaPlayButton mPlayBtn;
+    private Button mBtnLoad;
 
     private LinearLayout mContentView;
     private LinearLayout mContainer1;
@@ -34,8 +43,12 @@ public final class ActivityPlayViewDemo extends BaseDemoActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContentView = new LinearLayout(this);
-        mContentView.setOrientation(LinearLayout.VERTICAL);
+        setContentView(R.layout.activity_play_view);
+        mContentView = getView(R.id.apv_layout);
+        mPlayBtn = getView(R.id.apv_play_btn);
+        mPlayBtn.setOnClickListener(this);
+        mBtnLoad = getView(R.id.apv_btn_load);
+        mBtnLoad.setOnClickListener(this);
 
         mContainer1 = new LinearLayout(this);
         mContainer1.setOrientation(LinearLayout.HORIZONTAL);
@@ -52,9 +65,58 @@ public final class ActivityPlayViewDemo extends BaseDemoActivity implements
         VideoContainer.addToLinearLayout(mContainer2, mVideoSize);
         VideoContainer.addToLinearLayout(mContainer2, mVideoSize);
 
-        this.setContentView(mContentView);
+        load();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.apv_play_btn: {
+                if (mPlayBtn.isPlayShowing()) {
+                    mPlayBtn.showPause(false);
+                } else {
+                    mPlayBtn.showPlay(false);
+                }
+                break;
+            }
+            case R.id.apv_btn_load: {
+                load();
+                break;
+            }
+        }
+    }
+
+    private void load() {
+        mBtnLoad.setEnabled(false);
+        GlobalThreadManager.runInThreadPool(new Runnable() {
+            @Override
+            public void run() {
+                mPlayBtn.spin();
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException ignore) {
+                }
+
+                for (int progress = 0; progress <= 360; progress += 10) {
+                    mPlayBtn.setProgress(progress);
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(100);
+                    } catch (InterruptedException ignore) {
+                    }
+                }
+
+                mPlayBtn.hideProgress();
+                mPlayBtn.showPlay(true);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBtnLoad.setEnabled(true);
+                    }
+                });
+            }
+        });
+    }
 
     private static class VideoContainer extends RelativeLayout
             implements OnClickListener {
