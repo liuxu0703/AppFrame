@@ -1,6 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:AutoSlidePager="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -8,16 +9,15 @@
     tools:context=".MainActivity">
 
     <lx.af.view.AutoSlidePager.AutoSlidePager
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/aasp_slide_pager1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:autoSlideInterval="1800"
-        app:indicatorAnimDuration="600"
-        app:itemDividerWidth="10dp"
-        app:indicatorColor="#ffcc0000"
-        app:indicatorHeight="3dp"
-        app:indicatorPaddingTop="3dp"
+        AutoSlidePager:autoSlideInterval="1800"
+        AutoSlidePager:indicatorAnimDuration="600"
+        AutoSlidePager:itemDividerWidth="10dp"
+        AutoSlidePager:indicatorColor="#ffcc0000"
+        AutoSlidePager:indicatorHeight="3dp"
+        AutoSlidePager:indicatorPaddingTop="3dp"
         >
 
         <TextView
@@ -103,15 +103,14 @@
         android:background="#696969" />
 
     <lx.af.view.AutoSlidePager.AutoSlidePager
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/aasp_slide_pager2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        app:itemDividerWidth="5dp"
-        app:indicatorColor="#ffcc0000"
-        app:indicatorHeight="5dp"
-        app:indicatorPaddingTop="5dp"
+        AutoSlidePager:itemDividerWidth="5dp"
+        AutoSlidePager:indicatorColor="#ffcc0000"
+        AutoSlidePager:indicatorHeight="5dp"
+        AutoSlidePager:indicatorPaddingTop="5dp"
         >
 
         <TextView
