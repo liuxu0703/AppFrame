@@ -186,10 +186,18 @@ public class MultiImageSelectorFragment extends BaseFragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (mTimeLineText.getVisibility() == View.VISIBLE) {
-                    int index = (firstVisibleItem + 1 == view.getAdapter().getCount()) ?
-                            view.getAdapter().getCount() - 1 :
-                            firstVisibleItem + 1;
-                    Image image = (Image) view.getAdapter().getItem(index);
+                    int count = view.getAdapter().getCount();
+                    Image image = null;
+                    if (mIsShowCamera) {
+                        int index = (firstVisibleItem + 1 == count) ?
+                                view.getAdapter().getCount() - 1 :
+                                firstVisibleItem + 1;
+                        image = (Image) view.getAdapter().getItem(index);
+                    } else {
+                        if (count != 0) {
+                            image = (Image) view.getAdapter().getItem(firstVisibleItem);
+                        }
+                    }
                     if (image != null) {
                         mTimeLineText.setText(TimeUtils.formatPhotoDate(image.path));
                     }
