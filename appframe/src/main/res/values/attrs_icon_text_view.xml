@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="IconTextView">
+        <attr name="left_icon_height" format="dimension" />
+        <attr name="left_icon_width" format="dimension" />
+        <attr name="right_icon_height" format="dimension" />
+        <attr name="right_icon_width" format="dimension" />
+        <attr name="top_icon_height" format="dimension" />
+        <attr name="top_icon_width" format="dimension" />
+        <attr name="bottom_icon_height" format="dimension" />
+        <attr name="bottom_icon_width" format="dimension" />
+    </declare-styleable>
+
+</resources>
