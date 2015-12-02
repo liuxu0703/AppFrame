@@ -18,7 +18,4 @@
     <color name="green">#24ae60</color>
     <color name="red">#c2312f</color>
 
-    <color name="pager_strip_tab_color">#929292</color>
-    <color name="pager_strip_tab_press_color">#ffb81e</color>
-
 </resources>
