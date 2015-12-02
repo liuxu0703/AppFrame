@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -10,7 +12,7 @@
         android:background="#28000000" >
 
         <ImageView
-            android:id="@+id/mis_activity_btn_back"
+            android:id="@+id/activity_crop_image_action_bar_back"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_alignParentLeft="true"
@@ -28,33 +30,27 @@
             android:gravity="center"
             android:textSize="20sp"
             android:textColor="@android:color/white"
-            android:text="@string/mis_title"
+            android:text="@string/crop_image_title"
             android:singleLine="true" />
 
-        <Button
-            android:id="@+id/mis_activity_btn_submit"
+        <TextView
+            android:id="@+id/activity_crop_image_btn_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:background="@drawable/mis_action_btn"
-            android:minHeight="1dp"
-            android:minWidth="1dp"
-            android:textSize="14sp"
-            android:textColor="@color/mis_btn_text_color"
-            android:text="@string/mis_finish_btn" />
-
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:text="@android:string/ok" />
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/mis_activity_image_grid"
+    <lx.af.view.crop.CropImageView
+        android:id="@+id/activity_crop_image_crop_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#181819" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

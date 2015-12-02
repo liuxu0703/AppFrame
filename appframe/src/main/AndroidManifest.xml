@@ -2,11 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lx.af" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme" >
 
+        <activity
+            android:name="lx.af.activity.CropImageActivity"
+            android:label="@string/crop_image_title"
+            android:theme="@style/activity_theme_no_translucent" >
+        </activity>
+        <activity
+            android:name="lx.af.activity.MultiImageSelectorActivity"
+            android:label="Pick Image"
+            android:theme="@style/activity_theme_no_translucent" >
+        </activity>
     </application>
 
 </manifest>

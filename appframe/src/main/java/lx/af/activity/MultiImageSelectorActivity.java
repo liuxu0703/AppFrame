@@ -25,7 +25,7 @@ import lx.af.fragment.MultiImageSelectorFragment;
  * https://github.com/lovetuzitong/MultiImageSelector
  */
 public class MultiImageSelectorActivity extends BaseActivity implements
-        BaseActivity.ActionBarCallbacks,
+        View.OnClickListener,
         MultiImageSelectorFragment.Callback {
 
     /** 最大图片选择次数，int类型，默认9 */
@@ -53,6 +53,9 @@ public class MultiImageSelectorActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mis_activity);
+        findViewById(R.id.mis_activity_btn_back).setOnClickListener(this);
+        mSubmitButton = getView(R.id.mis_activity_btn_submit);
+        mSubmitButton.setOnClickListener(this);
 
         Intent intent = getIntent();
         mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, 9);
@@ -61,10 +64,7 @@ public class MultiImageSelectorActivity extends BaseActivity implements
         if (mMode == MODE_MULTI && intent.hasExtra(EXTRA_DEFAULT_SELECTED_LIST)) {
             resultList = intent.getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST);
         }
-        if (mMode == MODE_SINGLE) {
-            // single select mode does not need confirm button
-            mSubmitButton.setVisibility(View.GONE);
-        }
+        initSubmitButton();
 
         Bundle bundle = new Bundle();
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_COUNT, mDefaultCount);
@@ -131,45 +131,37 @@ public class MultiImageSelectorActivity extends BaseActivity implements
         }
     }
 
-    @Override
-    public View onCreateActionBarMenu() {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        mSubmitButton = (Button) inflater.inflate(R.layout.mis_btn_submit, null);
-        if (resultList == null || resultList.size() <= 0) {
-            mSubmitButton.setText(R.string.mis_finish_btn);
-            mSubmitButton.setEnabled(false);
+    private void initSubmitButton() {
+        if (mMode == MODE_SINGLE) {
+            // single select mode does not need confirm button
+            mSubmitButton.setVisibility(View.INVISIBLE);
         } else {
-            String txt = getString(
-                    R.string.mis_finish_btn_with_amount, resultList.size(), mDefaultCount);
-            mSubmitButton.setText(txt);
-            mSubmitButton.setEnabled(true);
-        }
-
-        mSubmitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (resultList != null && resultList.size() > 0) {
-                    // 返回已选择的图片数据
-                    Intent data = new Intent();
-                    data.putStringArrayListExtra(EXTRA_RESULT, resultList);
-                    setResult(RESULT_OK, data);
-                    finish();
-                }
+            if (resultList == null || resultList.size() == 0) {
+                mSubmitButton.setText(R.string.mis_finish_btn);
+                mSubmitButton.setEnabled(false);
+            } else {
+                String txt = getString(
+                        R.string.mis_finish_btn_with_amount, resultList.size(), mDefaultCount);
+                mSubmitButton.setText(txt);
+                mSubmitButton.setEnabled(true);
             }
-        });
-
-        return mSubmitButton;
+        }
     }
 
     @Override
-    public void onActionBarCreated(View actionBar, ImageView back, TextView title, @Nullable View menu) {
-
-    }
-
-    @Override
-    public boolean onActionBarBackClicked(View back) {
-        setResult(RESULT_CANCELED);
-        finish();
-        return true;
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.mis_activity_btn_back) {
+            setResult(RESULT_CANCELED);
+            finish();
+        } else if (id == R.id.mis_activity_btn_submit) {
+            if (resultList != null && resultList.size() > 0) {
+                // 返回已选择的图片数据
+                Intent data = new Intent();
+                data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        }
     }
 }
