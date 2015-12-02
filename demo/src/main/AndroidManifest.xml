@@ -28,17 +28,6 @@
         </activity>
 
         <activity
-            android:name="lx.af.activity.CropImageActivity"
-            android:label="Crop Image"
-            android:theme="@style/activity_theme_no_translucent" >
-        </activity>
-        <activity
-            android:name="lx.af.activity.MultiImageSelectorActivity"
-            android:label="Pick Image"
-            android:theme="@style/activity_theme_no_translucent" >
-        </activity>
-
-        <activity
             android:name=".activity.ActivityFilePickerDemo"
             android:label="File Picker" >
         </activity>

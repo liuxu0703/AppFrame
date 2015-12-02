@@ -1,24 +1,23 @@
 package lx.af.demo.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import lx.af.activity.CropImageActivity;
 import lx.af.activity.MultiImageSelectorActivity;
 import lx.af.base.BaseActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.PathUtils;
 import lx.af.utils.log.Log;
+import lx.af.view.crop.Crop;
 
 /**
  * Created by liuxu on 15-2-9.
@@ -29,12 +28,11 @@ public class ActivityAvatarDemo extends BaseDemoActivity implements
         BaseActivity.ActionBarImpl,
         BaseActivity.SwipeBackImpl {
 
-    // activity request and result code
-    private static final int AC_RESULT_CODE_NONE = 0;
-    private static final int AC_REQUEST_CODE_CAMERA = 1; // camera
-    private static final int AC_REQUEST_CODE_GALLERY = 2; // crop image
-    private static final int AC_REQUEST_CODE_MULTI_SELECTOR = 3; // crop image
-    private static final int AC_REQUEST_CODE_CROP = 4; // final result
+    // activity request code
+    private static final int AC_REQUEST_CODE_CAMERA = 101; // get image from camera
+    private static final int AC_REQUEST_CODE_GALLERY = 102; // get image from gallery
+    private static final int AC_REQUEST_CODE_MULTI_SELECTOR = 103; // get image use multi-image-selector
+    private static final int AC_REQUEST_CODE_CROP = 104; // crop the selected image
 
     private ImageView mAvatar;
     private String mImgPath;
@@ -62,7 +60,11 @@ public class ActivityAvatarDemo extends BaseDemoActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult, requestCode=" + requestCode + ", resultCode=" + resultCode);
-        if (resultCode == AC_RESULT_CODE_NONE) {
+        if (resultCode == Crop.RESULT_ERROR) {
+            Toast.makeText(this, Crop.getError(data).getMessage(), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (resultCode != RESULT_OK) {
             return;
         }
 
@@ -73,7 +75,7 @@ public class ActivityAvatarDemo extends BaseDemoActivity implements
                 if (!PathUtils.ensurePathExistsWithErrorToast(targetPath, false)) {
                     return;
                 }
-                startImageCropper(uri, targetPath, AC_REQUEST_CODE_CROP, 200);
+                startImageCropper(uri, targetPath, AC_REQUEST_CODE_CROP);
                 break;
             }
             case AC_REQUEST_CODE_GALLERY: {
@@ -84,7 +86,7 @@ public class ActivityAvatarDemo extends BaseDemoActivity implements
                 if (!PathUtils.ensurePathExistsWithErrorToast(targetPath, false)) {
                     return;
                 }
-                startImageCropper(data.getData(), targetPath, AC_REQUEST_CODE_CROP, 200);
+                startImageCropper(data.getData(), targetPath, AC_REQUEST_CODE_CROP);
                 break;
             }
             case AC_REQUEST_CODE_MULTI_SELECTOR: {
@@ -96,7 +98,7 @@ public class ActivityAvatarDemo extends BaseDemoActivity implements
                     if (!PathUtils.ensurePathExistsWithErrorToast(targetPath, false)) {
                         return;
                     }
-                    startImageCropper(uri, targetPath, AC_REQUEST_CODE_CROP, 200);
+                    startImageCropper(uri, targetPath, AC_REQUEST_CODE_CROP);
                 }
                 break;
             }
@@ -104,12 +106,9 @@ public class ActivityAvatarDemo extends BaseDemoActivity implements
                 if (data == null) {
                     return;
                 }
-                Uri uri = data.getData();
-                if (uri != null) {
-                    String path = uri.getPath();
-                    Bitmap avatar = BitmapFactory.decodeFile(path);
-                    mAvatar.setImageBitmap(avatar);
-                }
+                Uri uri = Crop.getOutput(data);
+                Log.d(TAG, "crop image result: " + uri);
+                mAvatar.setImageURI(Crop.getOutput(data));
                 break;
             }
 
@@ -151,12 +150,9 @@ public class ActivityAvatarDemo extends BaseDemoActivity implements
         startActivityForResult(intent, requestCode);
     }
 
-    public void startImageCropper(Uri uri, String targetPath, int requestCode, int size) {
-        new CropImageActivity.CropBuilder(uri, requestCode)
-                .output(new File(targetPath))
-                .withWidth(size)
-                .withQuality(50)
-                .start(this);
+    public void startImageCropper(Uri uri, String targetPath, int requestCode) {
+        Uri destination = Uri.parse("file://" + targetPath);
+        Crop.of(uri, destination).asSquare().start(this, requestCode);
     }
 
 }
