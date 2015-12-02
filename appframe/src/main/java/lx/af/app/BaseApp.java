@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.KV;
 import lx.af.utils.AlertUtils;
@@ -45,6 +46,8 @@ public class BaseApp extends Application{
         SystemUtils.init(this);
         ScreenUtils.init(this);
         NetStateUtils.init(this);
+
+        registerActivityLifecycleCallbacks(ActivityTaskManager.getInstance());
     }
 
     @Override

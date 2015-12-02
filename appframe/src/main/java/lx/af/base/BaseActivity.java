@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import lx.af.R;
 import lx.af.dialog.LoadingDialog;
-import lx.af.manager.ActivityManager;
 import lx.af.utils.AlertUtils;
 import lx.af.utils.ScreenUtils;
 import lx.af.view.SwipeBack.SwipeBackLayout;
@@ -31,9 +30,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  */
 public abstract class BaseActivity extends FragmentActivity {
 
-    private static ActivityManager mActivityManager = ActivityManager.getInstance();
-
-    protected String TAG = "IvBabyActivity";
+    protected String TAG = "liuxu";
 
     private LoadingDialog mLoadingDialog;
     private View mActionBarContentView;
@@ -44,7 +41,6 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = this.getClass().getSimpleName();
-        mActivityManager.onActivityCreate(this);
         if (this instanceof SwipeBackImpl) {
             initSwipeBack();
         }
@@ -61,21 +57,19 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mActivityManager.onActivityResume(this);
         mIsForeground = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mActivityManager.onActivityPause(this);
         mIsForeground = false;
     }
 
     @Override
     protected void onDestroy() {
+        dismissLoadingDialog();
         super.onDestroy();
-        mActivityManager.onActivityDestory(this);
     }
 
     @Override
