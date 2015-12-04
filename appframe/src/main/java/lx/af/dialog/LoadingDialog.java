@@ -90,6 +90,16 @@ public class LoadingDialog extends Dialog {
     }
 
     /**
+     * set loading message
+     * @param msg message
+     */
+    public void setMessage(String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            mTv.setText(msg);
+        }
+    }
+
+    /**
      * set a timeout mechanism for the loading dialog:
      * the loading dialog will be automatically dismissed in a given time.
      * @param delayMillis the timeout time, in milli seconds.

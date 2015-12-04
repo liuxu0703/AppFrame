@@ -23,7 +23,7 @@ import lx.af.view.crop.Crop;
  * Created by liuxu on 15-2-9.
  *
  */
-public class ActivityAvatarDemo extends BaseDemoActivity implements
+public class ActivityPickImageDemo extends BaseDemoActivity implements
         View.OnClickListener,
         BaseActivity.ActionBarImpl,
         BaseActivity.SwipeBackImpl {

@@ -1,4 +1,4 @@
-package lx.af.view.MediaButton;
+package lx.af.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
