@@ -30,7 +30,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  */
 public abstract class BaseActivity extends FragmentActivity {
 
-    protected String TAG = "liuxu";
+    protected String TAG;
 
     private LoadingDialog mLoadingDialog;
     private View mActionBarContentView;
@@ -39,8 +39,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         TAG = this.getClass().getSimpleName();
+        super.onCreate(savedInstanceState);
         if (this instanceof SwipeBackImpl) {
             initSwipeBack();
         }
@@ -238,6 +238,10 @@ public abstract class BaseActivity extends FragmentActivity {
 
     // ========================================================
     // add by liuxu, 2015-01-12, about action bar
+
+    protected View obtainActionBar() {
+        return null;
+    }
 
     private void initActionBar(View contentView, ViewGroup.LayoutParams params) {
         mActionBarContentView = contentView;

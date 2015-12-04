@@ -1,6 +1,7 @@
 package lx.af.view.MultiImageSelector.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,11 @@ import java.util.List;
 
 import lx.af.R;
 import lx.af.utils.ScreenUtils;
+import lx.af.utils.log.Log;
 import lx.af.view.MultiImageSelector.bean.Image;
 import lx.af.view.MultiImageSelector.view.ImageGridView;
 import lx.af.view.MultiImageSelector.view.ImageItemView;
+import lx.af.view.MultiImageSelector.view.ImageItemView.OnItemViewClickListener;
 
 /**
  * 图片Adapter
@@ -31,7 +34,6 @@ public class ImageGridAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private boolean showCamera = true;
-    private boolean showSelectIndicator = true;
 
     private List<Image> mImages = new ArrayList<>();
     private List<Image> mSelectedImages = new ArrayList<>();
@@ -39,21 +41,17 @@ public class ImageGridAdapter extends BaseAdapter {
     private int mItemSize;
     private GridView.LayoutParams mItemLayoutParams;
 
-    public ImageGridAdapter(ImageGridView gridView, boolean showCamera) {
+    private OnItemClickListener mItemClickListener;
+
+    public ImageGridAdapter(ImageGridView gridView, OnItemClickListener l, boolean showCamera) {
         mGridView = gridView;
+        mItemClickListener = l;
         Context context = gridView.getContext();
         mInflater = LayoutInflater.from(context);
         this.showCamera = showCamera;
         int gridItemSpace = context.getResources().getDimensionPixelOffset(R.dimen.mis_grid_spacing);
         mItemSize = (ScreenUtils.getScreenWidth() - 2 * gridItemSpace) / 3;
         mItemLayoutParams = new GridView.LayoutParams(mItemSize, mItemSize);
-    }
-
-    /**
-     * 显示选择指示器
-     */
-    public void showSelectIndicator(boolean b) {
-        showSelectIndicator = b;
     }
 
     public void setShowCamera(boolean b) {
@@ -81,13 +79,17 @@ public class ImageGridAdapter extends BaseAdapter {
      * 通过图片路径设置默认选择
      */
     public void setDefaultSelected(ArrayList<String> resultList) {
+        mSelectedImages.clear();
         for (String path : resultList) {
             Image image = getImageByPath(path);
             if (image != null) {
+                image.selected = true;
                 mSelectedImages.add(image);
             }
         }
+        Log.d("liuxu", "111 setDefaultSelected, selected: " + mSelectedImages);
         if (mSelectedImages.size() > 0) {
+            Log.d("liuxu", "111 setDefaultSelected, notifyDataSetChanged 111111111111111111111111");
             notifyDataSetChanged();
         }
     }
@@ -103,12 +105,27 @@ public class ImageGridAdapter extends BaseAdapter {
         return null;
     }
 
+    public ArrayList<String> getImageUriList() {
+        ArrayList<String> list = new ArrayList<>(mImages.size());
+        for (Image image : mImages) {
+            list.add(Uri.parse("file://" + image.path).toString());
+        }
+        return list;
+    }
+
+    public ArrayList<String> getSelectedImageUriList() {
+        ArrayList<String> list = new ArrayList<>(mSelectedImages.size());
+        for (Image image : mSelectedImages) {
+            list.add(Uri.parse("file://" + image.path).toString());
+        }
+        return list;
+    }
+
     /**
      * 设置数据集
      */
     public void setData(List<Image> images) {
         mSelectedImages.clear();
-
         if (images != null && images.size()>0) {
             mImages = images;
         } else {
@@ -132,7 +149,7 @@ public class ImageGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return showCamera ? mImages.size()+1 : mImages.size();
+        return showCamera ? mImages.size() + 1 : mImages.size();
     }
 
     @Override
@@ -141,7 +158,7 @@ public class ImageGridAdapter extends BaseAdapter {
             if (i == 0) {
                 return null;
             }
-            return mImages.get(i-1);
+            return mImages.get(i - 1);
         } else {
             return mImages.get(i);
         }
@@ -159,13 +176,13 @@ public class ImageGridAdapter extends BaseAdapter {
         if (type == TYPE_CAMERA) {
             view = mInflater.inflate(R.layout.mis_item_camera, viewGroup, false);
             view.setTag(null);
+            view.setOnClickListener(mCameraClickListener);
         } else if (type == TYPE_NORMAL) {
             if (view == null || !(view instanceof ImageItemView)) {
-                view = new ImageItemView(mGridView);
+                view = new ImageItemView(mGridView, mItemClickListener);
             }
             ImageItemView itemView = (ImageItemView) view;
             itemView.setData(getItem(i));
-            itemView.setShowCheck(showSelectIndicator);
         }
 
         /** Fixed View Size */
@@ -175,6 +192,17 @@ public class ImageGridAdapter extends BaseAdapter {
         }
 
         return view;
+    }
+
+    private View.OnClickListener mCameraClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mItemClickListener.onItemCameraClicked();
+        }
+    };
+
+    public interface OnItemClickListener extends OnItemViewClickListener {
+        void onItemCameraClicked();
     }
 
 }

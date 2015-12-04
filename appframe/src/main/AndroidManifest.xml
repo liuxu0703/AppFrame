@@ -18,11 +18,25 @@
         <activity
             android:name="lx.af.activity.CropImageActivity"
             android:label="@string/crop_image_title"
+            android:screenOrientation="portrait"
             android:theme="@style/activity_theme_no_translucent" >
         </activity>
         <activity
             android:name="lx.af.activity.MultiImageSelectorActivity"
-            android:label="Pick Image"
+            android:label="@string/mis_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/activity_theme_no_translucent" >
+        </activity>
+        <activity
+            android:name="lx.af.activity.MultiImageSelectorBrowser"
+            android:label="Image Browser"
+            android:screenOrientation="portrait"
+            android:theme="@style/activity_theme_no_translucent" >
+        </activity>
+        <activity
+            android:name=".activity.ImageBrowserActivity"
+            android:label="Image Browser"
+            android:screenOrientation="portrait"
             android:theme="@style/activity_theme_no_translucent" >
         </activity>
     </application>

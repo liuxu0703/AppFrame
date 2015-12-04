@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <lx.af.view.ImageBrowser.IBGalleryViewPager
+        android:id="@+id/activity_image_browser_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black" />
+
+    <RelativeLayout
+        android:id="@+id/activity_image_browser_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"
+        android:background="#28000000" >
+
+        <ImageView
+            android:id="@+id/activity_image_browser_action_bar_back"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:padding="9dp"
+            android:src="@drawable/ic_action_bar_back_pressed"
+            android:background="@drawable/bkg_clickable"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/activity_image_browser_page_idx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:singleLine="true" />
+
+        <FrameLayout
+            android:id="@+id/activity_image_browser_menu_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="16dp" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/activity_image_browser_function_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#28000000"
+        android:visibility="gone" />
+
+</RelativeLayout>

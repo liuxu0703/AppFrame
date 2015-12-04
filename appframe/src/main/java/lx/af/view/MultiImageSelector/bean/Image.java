@@ -13,6 +13,7 @@ public class Image {
     public long time;
     public String thumbnail;
 
+    public boolean invalid = false;
     public boolean selected = false;
 
     public Image(String path, String name, long time, String thumbnail) {
@@ -40,5 +41,17 @@ public class Image {
             e.printStackTrace();
         }
         return super.equals(o);
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "path='" + path + '\'' +
+                ", name='" + name + '\'' +
+                ", time=" + time +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", invalid=" + invalid +
+                ", selected=" + selected +
+                '}';
     }
 }

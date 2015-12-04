@@ -10,16 +10,21 @@
     <string name="crop_image_title">裁剪图片</string>
     <string name="crop_image_saving">正在保存照片&#8230;</string>
 
+    <string name="image_Browser_toast_load_image_fail">加载图片失败</string>
+    <string name="image_Browser_toast_list_null">空图片列表!</string>
+
     <string name="mis_title">选择图片</string>
     <string name="mis_folder_all">所有照片</string>
     <string name="mis_preview">预览</string>
     <string name="mis_camera">拍摄照片</string>
     <string name="mis_toast_no_camera">未找到系统相机</string>
     <string name="mis_toast_amount_limit">已经达到最高选择数量</string>
+    <string name="mis_toast_invalid_image">这张图片有问题&#8230;</string>
     <string name="mis_folder_img_amount"><xliff:g>%d</xliff:g>张</string>
     <string name="mis_finish_btn">完成</string>
     <string name="mis_finish_btn_with_amount">完成(<xliff:g>%d</xliff:g>/<xliff:g>%d</xliff:g>)</string>
     <string name="mis_error_load_timeout">加载图片超时</string>
+    <string name="mis_image_browser_select">选择</string>
 
     <string name="toast_path_sdcard_not_mounted">存储卡不可用</string>
     <string name="toast_path_sdcard_full">存储卡已满</string>

@@ -115,7 +115,7 @@ public class CropImageActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void setupViews() {
-        setContentView(R.layout.crop_activity_crop_image);
+        setContentView(R.layout.activity_crop_image);
 
         imageView = (CropImageView) findViewById(R.id.activity_crop_image_crop_view);
         imageView.context = this;

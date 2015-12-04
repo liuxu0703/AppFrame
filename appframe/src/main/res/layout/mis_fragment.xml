@@ -57,28 +57,6 @@
             android:drawablePadding="5dp"
             tools:text="所有图片" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/mis_fragment_btn_preview"
-            android:background="#8828292A" />
-
-        <Button
-            android:id="@+id/mis_fragment_btn_preview"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:background="@null"
-            android:minHeight="1dp"
-            android:minWidth="1dp"
-            android:textColor="@color/mis_btn_text_color"
-            android:textSize="14sp"
-            android:visibility="gone"
-            tools:text="预览(1)" />
-
         </RelativeLayout>
 
 </RelativeLayout>

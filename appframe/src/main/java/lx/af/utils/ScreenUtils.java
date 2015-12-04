@@ -9,46 +9,46 @@ import android.util.FloatMath;
 import android.view.WindowManager;
 
 /**
- * created by liuxu. many methods here are collected from various sites.
- *
+ * author: lx
+ * date: 15-02-02
  * operations about screen info.
  */
 public final class ScreenUtils {
 
-    private static Application sApp;
-    private static int[] sScreenSize;
+    private static DisplayMetrics sMetric = new DisplayMetrics();
+    private static int sStatusBarHeight;
 
     public static void init(Application app) {
-        sApp = app;
+        WindowManager wm = (WindowManager) app.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(sMetric);
     }
 
     /**
      * convert sp to px
      */
     public static int sp2px(float spValue) {
-        final float fontScale = sApp.getResources().getDisplayMetrics().scaledDensity;
+        final float fontScale = sMetric.scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    public static int px2sp(float pxValue) {
+        final float fontScale = sMetric.scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
     }
 
     /**
      * convert dip to px
      */
     public static int dip2px(float dip) {
-        WindowManager wm = (WindowManager) sApp.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics metric = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(metric);
-        return (int) FloatMath.ceil(dip * metric.density);
+        return (int) Math.ceil(dip * sMetric.density);
     }
 
     /**
      * convert px to dip
      */
     public static float px2dip(int px) {
-        WindowManager wm = (WindowManager) sApp.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics metric = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(metric);
-        if (metric.density > 0) {
-            return px / metric.density;
+        if (sMetric.density > 0) {
+            return px / sMetric.density;
         } else {
             return px;
         }
@@ -59,7 +59,7 @@ public final class ScreenUtils {
      * @return screen width
      */
     public static int getScreenWidth() {
-        return getScreenSize()[0];
+        return sMetric.widthPixels;
     }
 
     /**
@@ -67,21 +67,7 @@ public final class ScreenUtils {
      * @return screen height
      */
     public static int getScreenHeight() {
-        return getScreenSize()[1];
-    }
-
-    /**
-     * get screen size as an array: int[] { width, height }
-     * @return size
-     */
-    public static int[] getScreenSize() {
-        if (sScreenSize == null) {
-            WindowManager wm = (WindowManager) sApp.getSystemService(Context.WINDOW_SERVICE);
-            DisplayMetrics metric = new DisplayMetrics();
-            wm.getDefaultDisplay().getMetrics(metric);
-            sScreenSize = new int[] { metric.widthPixels, metric.heightPixels };
-        }
-        return sScreenSize;
+        return sMetric.heightPixels;
     }
 
     /**
@@ -89,10 +75,7 @@ public final class ScreenUtils {
      * @return screen density
      */
     public static float getScreenDensity() {
-        WindowManager wm = (WindowManager) sApp.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics metric = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(metric);
-        return metric.density;
+        return sMetric.density;
     }
 
     /**
@@ -109,24 +92,25 @@ public final class ScreenUtils {
      * @param activity must be instance of activity
      * @return status bar height
      */
-    public static int getStatusBarHeight(Activity activity){
-        int height;
-        Rect rect = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-        height = rect.top;
-        if (height == 0) {
-            Class<?> cls;
-            try {
-                cls = Class.forName("com.android.internal.R$dimen");
-                Object localObject = cls.newInstance();
-                String sbh = cls.getField("status_bar_height").get(localObject).toString();
-                int i5 = Integer.parseInt(sbh);
-                height = activity.getResources().getDimensionPixelSize(i5);
-            } catch (Exception e) {
-                e.printStackTrace();
+    public static int getStatusBarHeight(Activity activity) {
+        if (sStatusBarHeight == 0) {
+            Rect rect = new Rect();
+            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+            sStatusBarHeight = rect.top;
+            if (sStatusBarHeight == 0) {
+                Class<?> cls;
+                try {
+                    cls = Class.forName("com.android.internal.R$dimen");
+                    Object localObject = cls.newInstance();
+                    String sbh = cls.getField("status_bar_height").get(localObject).toString();
+                    int i5 = Integer.parseInt(sbh);
+                    sStatusBarHeight = activity.getResources().getDimensionPixelSize(i5);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        return height;
+        return sStatusBarHeight;
     }
 }

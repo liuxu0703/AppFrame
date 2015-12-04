@@ -1,11 +1,17 @@
 package lx.af.view.MultiImageSelector.view;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import lx.af.R;
 import lx.af.view.MultiImageSelector.bean.Image;
@@ -14,7 +20,9 @@ import lx.af.view.MultiImageSelector.bean.Image;
  * Created by liuxu on 15-5-13.
  * adapter item view for ImageGridView.
  */
-public class ImageItemView extends FrameLayout {
+public class ImageItemView extends FrameLayout implements View.OnClickListener {
+
+    private static final ImageSize IMAGE_SIZE = new ImageSize(100, 100);
 
     private ImageGridView mGridView;
     private ImageView mImage;
@@ -22,10 +30,30 @@ public class ImageItemView extends FrameLayout {
     private View mWrapper;
 
     private Image mData;
+    private OnItemViewClickListener mClickListener;
 
-    public ImageItemView(ImageGridView gridView) {
+    private ImageLoadingListener mImageLoadListener = new ImageLoadingListener() {
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+        }
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            if (mData != null && mData.getDisplayUri().equals(imageUri)) {
+                mData.invalid = true;
+            }
+        }
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+        }
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+        }
+    };
+
+    public ImageItemView(ImageGridView gridView, OnItemViewClickListener listener) {
         super(gridView.getContext());
         mGridView = gridView;
+        mClickListener = listener;
         initView();
     }
 
@@ -34,6 +62,9 @@ public class ImageItemView extends FrameLayout {
         mImage = (ImageView) findViewById(R.id.mis_item_img_image);
         mCheck = (ImageView) findViewById(R.id.mis_item_img_check);
         mWrapper = findViewById(R.id.mis_item_img_wrapper);
+
+        mImage.setOnClickListener(this);
+        mCheck.setOnClickListener(this);
     }
 
     public void setData(Image data) {
@@ -45,15 +76,8 @@ public class ImageItemView extends FrameLayout {
         String imgUri = mData.getDisplayUri();
         DisplayImageOptions options = mGridView.isScrolling() ?
                 ImageOptions.getScrollImageOptions() : ImageOptions.getDisplayImageOptions();
-        ImageLoader.getInstance().displayImage(imgUri, mImage, options);
-    }
-
-    public void setShowCheck(boolean showCheck) {
-        if (showCheck) {
-            mCheck.setVisibility(View.VISIBLE);
-        } else {
-            mCheck.setVisibility(View.GONE);
-        }
+        ImageLoader.getInstance().displayImage(
+                imgUri, new ImageViewAware(mImage), options, IMAGE_SIZE, mImageLoadListener, null);
     }
 
     public void toggleCheck() {
@@ -70,4 +94,24 @@ public class ImageItemView extends FrameLayout {
         mWrapper.setVisibility(mData.selected ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (mData.invalid) {
+            Toast.makeText(getContext(),
+                    R.string.mis_toast_invalid_image, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int id = v.getId();
+        if (id == R.id.mis_item_img_image) {
+            mClickListener.onItemImageClicked(this, mData);
+        } else if (id == R.id.mis_item_img_check) {
+            mClickListener.onItemCheckClicked(this, mData);
+        }
+    }
+
+    public interface OnItemViewClickListener {
+        void onItemCheckClicked(ImageItemView view, Image data);
+        void onItemImageClicked(ImageItemView view, Image data);
+    }
 }

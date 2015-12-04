@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lx.af.view.ProgressWheel
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    ProgressWheel:text=""
+    ProgressWheel:textColor="#fff"
+    ProgressWheel:textSize="14sp"
+    ProgressWheel:rimColor="#44696969"
+    ProgressWheel:barLength="30dp"
+    ProgressWheel:barColor="#339BB9"
+    ProgressWheel:barWidth="5dp"
+    ProgressWheel:rimWidth="5dp"
+    ProgressWheel:spinSpeed="4dp" />
