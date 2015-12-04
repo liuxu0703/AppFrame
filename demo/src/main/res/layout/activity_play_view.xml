@@ -19,7 +19,7 @@
         android:background="#e6e6fa"
         android:orientation="vertical" >
 
-        <lx.af.view.MediaButton.MediaPlayButton
+        <lx.af.view.MediaPlayButton
             xmlns:MediaPlayButton="http://schemas.android.com/apk/res-auto"
             android:id="@+id/apv_play_btn"
             android:layout_width="60dp"

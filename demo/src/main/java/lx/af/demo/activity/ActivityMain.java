@@ -33,7 +33,7 @@ public class ActivityMain extends BaseActivity implements
         BUTTON_DATA_LIST.add(new DemoButtonData("Video Play",
                 ActivityPlayViewDemo.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Image Pick and Crop",
-                ActivityAvatarDemo.class));
+                ActivityPickImageDemo.class));
     }
 
 

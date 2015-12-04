@@ -20,6 +20,7 @@
         <activity
             android:name=".activity.ActivityMain"
             android:label="Demo for AppFrame"
+            android:screenOrientation="portrait"
             android:theme="@style/activity_theme_no_translucent" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,27 +30,34 @@
 
         <activity
             android:name=".activity.ActivityFilePickerDemo"
+            android:screenOrientation="portrait"
             android:label="File Picker" >
         </activity>
         <activity
             android:name=".activity.ActivityStorageUtilsDemo"
+            android:screenOrientation="portrait"
             android:label="Storage" >
         </activity>
         <activity
             android:name=".activity.ActivityPlayViewDemo"
             android:label="Video"
+            android:screenOrientation="portrait"
             android:theme="@style/activity_theme_no_translucent" >
         </activity>
         <activity
-            android:name=".activity.ActivityAvatarDemo"
-            android:label="Image Pick and Crop" >
+            android:name=".activity.ActivityPickImageDemo"
+            android:label="Image Pick and Crop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" >
         </activity>
         <activity
             android:name=".activity.ActivityHomeWatcherDemo"
+            android:screenOrientation="portrait"
             android:label="Home Key Watcher" >
         </activity>
         <activity
             android:name=".activity.ActivityAutoSlidePager"
+            android:screenOrientation="portrait"
             android:label="Auto Slide Pager" >
         </activity>
 
