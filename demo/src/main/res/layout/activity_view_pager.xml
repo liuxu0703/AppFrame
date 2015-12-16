@@ -6,23 +6,43 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <Button
-        android:id="@+id/test_btn_1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:text="test" />
+        android:gravity="center"
+        android:padding="10dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/avp_pager_btn_flip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:text="Start Auto Flip" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="1dp"/>
+
+        <Button
+            android:id="@+id/avp_pager_btn_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:text="Pick Images" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/azure"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginBottom="10dp" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/test_pager"
+        android:id="@+id/avp_pager"
         android:layout_width="match_parent"
         android:layout_height="360dp" />
+
 </LinearLayout>

@@ -70,6 +70,11 @@
             android:screenOrientation="portrait"
             android:label="Auto Slide Pager" >
         </activity>
+        <activity
+            android:name=".activity.ActivityViewPager"
+            android:screenOrientation="portrait"
+            android:label="Auto Slide Pager" >
+        </activity>
 
     </application>
 

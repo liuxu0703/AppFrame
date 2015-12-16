@@ -1,7 +1,5 @@
 package lx.af.utils.view;
 
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
@@ -14,14 +12,10 @@ import java.util.concurrent.TimeUnit;
  * helper to make ViewPager auto scroll
  */
 public class ViewPagerAutoFlipper implements
-        Handler.Callback,
         ViewPager.OnPageChangeListener {
 
     private static final long DEFAULT_FLIP_INTERVAL = TimeUnit.SECONDS.toMillis(3);
 
-    private static final int MSG_AUTO_FLIP = 101;
-
-    private Handler mHandler;
     private ViewPager mViewPager;
     private boolean mAutoFlip = false;
     private long mFlipInterval = DEFAULT_FLIP_INTERVAL;
@@ -29,20 +23,44 @@ public class ViewPagerAutoFlipper implements
     private int mScrollState = ViewPager.SCROLL_STATE_IDLE;
     private int mPosition;
 
+    public static ViewPagerAutoFlipper newInstance(ViewPager pager) {
+        return new ViewPagerAutoFlipper(pager);
+    }
+
     public ViewPagerAutoFlipper(ViewPager pager) {
-        mHandler = new Handler(this);
         mViewPager = pager;
         mViewPager.addOnPageChangeListener(this);
         mPosition = mViewPager.getCurrentItem();
     }
 
     /**
+     * @param interval auto flip interval, in millis
+     */
+    public ViewPagerAutoFlipper setInterval(long interval) {
+        if (interval > 0) {
+            mFlipInterval = interval;
+        } else {
+            throw new IllegalArgumentException("interval should be positive");
+        }
+        return this;
+    }
+
+    /**
+     * @return true if ViewPager is auto flipping; false otherwise
+     */
+    public boolean isAutoFlip() {
+        return mAutoFlip;
+    }
+
+    /**
      * start ViewPager auto flip
      */
     public void startAutoFlip() {
-        mAutoFlip = true;
-        mHandler.removeMessages(MSG_AUTO_FLIP);
-        mHandler.sendEmptyMessageDelayed(MSG_AUTO_FLIP, mFlipInterval);
+        if (mViewPager != null) {
+            mAutoFlip = true;
+            mViewPager.removeCallbacks(mFlipRunnable);
+            mViewPager.postDelayed(mFlipRunnable, mFlipInterval);
+        }
     }
 
     /**
@@ -52,7 +70,9 @@ public class ViewPagerAutoFlipper implements
      */
     public void stopAutoFlip() {
         mAutoFlip = false;
-        mHandler.removeMessages(MSG_AUTO_FLIP);
+        if (mViewPager != null) {
+            mViewPager.removeCallbacks(mFlipRunnable);
+        }
     }
 
     /**
@@ -60,37 +80,15 @@ public class ViewPagerAutoFlipper implements
      * should be called after {@link ViewPager#setAdapter(PagerAdapter)}
      */
     public void resetAutoFlip() {
-        mHandler.removeMessages(MSG_AUTO_FLIP);
-        mViewPager.removeOnPageChangeListener(this);
-        mViewPager.addOnPageChangeListener(this);
-        mPosition = mViewPager.getCurrentItem();
-        mLastFlipTime = 0;
-        mScrollState = ViewPager.SCROLL_STATE_IDLE;
-        mHandler.sendEmptyMessageDelayed(MSG_AUTO_FLIP, mFlipInterval);
-    }
-
-    public boolean isAutoFlip() {
-        return mAutoFlip;
-    }
-
-    public void setAutoFlipInterval(long interval) {
-        if (interval != 0) {
-            mFlipInterval = interval;
+        if (mViewPager != null) {
+            mViewPager.removeCallbacks(mFlipRunnable);
+            mViewPager.removeOnPageChangeListener(this);
+            mViewPager.addOnPageChangeListener(this);
+            mPosition = mViewPager.getCurrentItem();
+            mLastFlipTime = 0;
+            mScrollState = ViewPager.SCROLL_STATE_IDLE;
+            mViewPager.postDelayed(mFlipRunnable, mFlipInterval);
         }
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MSG_AUTO_FLIP: {
-                if (canAutoFlip()) {
-                    mViewPager.post(mFlipRunnable);
-                }
-                mHandler.sendEmptyMessageDelayed(MSG_AUTO_FLIP, mFlipInterval);
-                break;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -114,8 +112,10 @@ public class ViewPagerAutoFlipper implements
         }
         long interval = System.currentTimeMillis() - mLastFlipTime;
         if (interval < mFlipInterval - 300) {
-            mHandler.removeMessages(MSG_AUTO_FLIP);
-            mHandler.sendEmptyMessageDelayed(MSG_AUTO_FLIP, mFlipInterval - interval);
+            // postDelayed() is not so accurate about delay time,
+            // we minus 300 to avoid post too soon caused by the deviation
+            mViewPager.removeCallbacks(mFlipRunnable);
+            mViewPager.postDelayed(mFlipRunnable, mFlipInterval - interval);
             return false;
         }
         return mAutoFlip && mScrollState == ViewPager.SCROLL_STATE_IDLE;
@@ -124,11 +124,25 @@ public class ViewPagerAutoFlipper implements
     private Runnable mFlipRunnable = new Runnable() {
         @Override
         public void run() {
-            int count = mViewPager.getAdapter().getCount();
-            int next = (mPosition + 1 == count) ? 0 : mPosition + 1;
-            mViewPager.setCurrentItem(next);
+            if (mViewPager == null) {
+                return;
+            }
+            if (mViewPager.getWindowToken() == null) {
+                // window token no longer valid, exit loop
+                mViewPager.removeCallbacks(mFlipRunnable);
+                return;
+            }
+
+            if (canAutoFlip()) {
+                int count = mViewPager.getAdapter().getCount();
+                int next = (mPosition + 1 == count) ? 0 : mPosition + 1;
+                mViewPager.setCurrentItem(next);
+            }
+            if (mAutoFlip) {
+                mViewPager.removeCallbacks(mFlipRunnable);
+                mViewPager.postDelayed(mFlipRunnable, mFlipInterval);
+            }
         }
     };
-
 
 }

@@ -34,15 +34,4 @@
         android:layout_gravity="center_horizontal"
         android:text="test" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/azure"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/test_pager"
-        android:layout_width="match_parent"
-        android:layout_height="360dp" />
 </LinearLayout>

@@ -24,6 +24,8 @@ public class ActivityMain extends BaseDemoActivity implements
     static {
         BUTTON_DATA_LIST.add(new DemoButtonData("Test",
                 ActivityTest.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("ViewPager Auto Flip",
+                ActivityViewPager.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Swipe Refresh List",
                 ActivitySwipeRefresh.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("StorageManagerHack",
