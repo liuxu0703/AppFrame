@@ -53,7 +53,7 @@ public class ActivityViewPager extends BaseDemoActivity implements
         mAdapter = new ImagePagerAdapter(Arrays.asList(TEST_IMG_SCENE));
         mViewPager.setAdapter(mAdapter);
         mFlipper = ViewPagerAutoFlipper.newInstance(mViewPager).setInterval(2000);
-        mFlipper.startAutoFlip();
+        mFlipper.start();
 
         mBtnFlip.setText(mFlipper.isAutoFlip() ? "Stop Auto Flip" : "Start Auto Flip");
     }
@@ -68,10 +68,10 @@ public class ActivityViewPager extends BaseDemoActivity implements
         switch (v.getId()) {
             case R.id.avp_pager_btn_flip: {
                 if (mFlipper.isAutoFlip()) {
-                    mFlipper.stopAutoFlip();
+                    mFlipper.stop();
                     mBtnFlip.setText("Start Auto Flip");
                 } else {
-                    mFlipper.startAutoFlip();
+                    mFlipper.start();
                     mBtnFlip.setText("Stop Auto Flip");
                 }
                 break;
@@ -86,7 +86,7 @@ public class ActivityViewPager extends BaseDemoActivity implements
                         }
                         mAdapter = new ImagePagerAdapter(uris);
                         mViewPager.setAdapter(mAdapter);
-                        mFlipper.resetAutoFlip();
+                        mFlipper.reset();
                     }
                 });
                 break;

@@ -55,7 +55,7 @@ public class ViewPagerAutoFlipper implements
     /**
      * start ViewPager auto flip
      */
-    public void startAutoFlip() {
+    public void start() {
         if (mViewPager != null) {
             mAutoFlip = true;
             mViewPager.removeCallbacks(mFlipRunnable);
@@ -68,7 +68,7 @@ public class ViewPagerAutoFlipper implements
      * should always call this in Activity.onDestroy to release handler callbacks,
      * or mem leak may occur.
      */
-    public void stopAutoFlip() {
+    public void stop() {
         mAutoFlip = false;
         if (mViewPager != null) {
             mViewPager.removeCallbacks(mFlipRunnable);
@@ -79,7 +79,7 @@ public class ViewPagerAutoFlipper implements
      * reset to init state.
      * should be called after {@link ViewPager#setAdapter(PagerAdapter)}
      */
-    public void resetAutoFlip() {
+    public void reset() {
         if (mViewPager != null) {
             mViewPager.removeCallbacks(mFlipRunnable);
             mViewPager.removeOnPageChangeListener(this);
