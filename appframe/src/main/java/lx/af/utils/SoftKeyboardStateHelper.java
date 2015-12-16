@@ -1,7 +1,9 @@
 package lx.af.utils;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -14,8 +16,11 @@ import java.util.List;
  */
 public class SoftKeyboardStateHelper implements ViewTreeObserver.OnGlobalLayoutListener {
 
+    private static final String PREF_LAST_KEYBOARD_HEIGHT = "pref_last_keyboard_height";
+
     private final List<SoftKeyboardStateListener> mListeners = new LinkedList<SoftKeyboardStateListener>();
     private final View mRootView;
+    private final SharedPreferences mPref;
     private int mStatusBarHeight;
     private int mLastKeyboardHeight; // in px
     private boolean mIsKeyboardOpen;
@@ -27,7 +32,9 @@ public class SoftKeyboardStateHelper implements ViewTreeObserver.OnGlobalLayoutL
     public SoftKeyboardStateHelper(Activity activity, boolean isSoftKeyboardOpened) {
         mRootView = activity.getWindow().getDecorView();
         mIsKeyboardOpen = isSoftKeyboardOpened;
-        mStatusBarHeight = getStatusBarHeight(activity);
+        mStatusBarHeight = ScreenUtils.getStatusBarHeight(activity);
+        mPref = PreferenceManager.getDefaultSharedPreferences(activity);
+        mLastKeyboardHeight = mPref.getInt(PREF_LAST_KEYBOARD_HEIGHT, 0);
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
@@ -68,11 +75,15 @@ public class SoftKeyboardStateHelper implements ViewTreeObserver.OnGlobalLayoutL
     }
 
     private void notifyOnSoftKeyboardOpened(int keyboardHeightInPx) {
-        this.mLastKeyboardHeight = keyboardHeightInPx;
+        boolean changed = mLastKeyboardHeight != keyboardHeightInPx;
+        if (changed) {
+            mLastKeyboardHeight = keyboardHeightInPx;
+            mPref.edit().putInt(PREF_LAST_KEYBOARD_HEIGHT, keyboardHeightInPx).apply();
+        }
 
         for (SoftKeyboardStateListener listener : mListeners) {
             if (listener != null) {
-                listener.onSoftKeyboardOpened(keyboardHeightInPx);
+                listener.onSoftKeyboardOpened(keyboardHeightInPx, changed);
             }
         }
     }
@@ -85,33 +96,8 @@ public class SoftKeyboardStateHelper implements ViewTreeObserver.OnGlobalLayoutL
         }
     }
 
-    /**
-     * get status bar height
-     * @param activity must be instance of activity
-     * @return status bar height
-     */
-    private static int getStatusBarHeight(Activity activity){
-        int height;
-        Rect rect = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-        height = rect.top;
-        if (height == 0) {
-            Class<?> cls;
-            try {
-                cls = Class.forName("com.android.internal.R$dimen");
-                Object localObject = cls.newInstance();
-                String sbh = cls.getField("status_bar_height").get(localObject).toString();
-                int i5 = Integer.parseInt(sbh);
-                height = activity.getResources().getDimensionPixelSize(i5);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return height;
-    }
-
     public interface SoftKeyboardStateListener {
-        void onSoftKeyboardOpened(int keyboardHeightInPx);
+        void onSoftKeyboardOpened(int keyboardHeightInPx, boolean heightChanged);
         void onSoftKeyboardClosed();
     }
 }

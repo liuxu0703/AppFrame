@@ -12,17 +12,21 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import lx.af.base.BaseActivity;
 import lx.af.demo.R;
+import lx.af.demo.base.BaseDemoActivity;
 
-public class ActivityMain extends BaseActivity implements
-        BaseActivity.ActionBarCallbacks {
+public class ActivityMain extends BaseDemoActivity implements
+        BaseDemoActivity.ActionBarCallbacks {
 
     public final static ArrayList<DemoButtonData> BUTTON_DATA_LIST =
             new ArrayList<>();
 
     static {
-        BUTTON_DATA_LIST.add(new DemoButtonData("StorageManagerUtils",
+        BUTTON_DATA_LIST.add(new DemoButtonData("Test",
+                ActivityTest.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Swipe Refresh List",
+                ActivitySwipeRefresh.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("StorageManagerHack",
                 ActivityStorageUtilsDemo.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Home Key Watcher",
                 ActivityHomeWatcherDemo.class));
@@ -73,22 +77,22 @@ public class ActivityMain extends BaseActivity implements
 
         public DemoButton(Context context, DemoButtonData data) {
             super(context);
-            this.mContext = context;
-            this.mData = data;
-            this.initView();
+            mContext = context;
+            mData = data;
+            initView();
         }
 
         private void initView() {
-            this.setTag(this.mData.mTitle); // so that we could find it later
-            this.setText(this.mData.mTitle);
-            this.setBackgroundResource(R.drawable.btn_action);
-            this.setOnClickListener(this);
+            setTag(mData.mTitle); // so that we could find it later
+            setText(mData.mTitle);
+            setBackgroundResource(R.drawable.btn_action);
+            setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(this.mContext, this.mData.mActivity);
-            this.mContext.startActivity(intent);
+            Intent intent = new Intent(mContext, mData.mActivity);
+            mContext.startActivity(intent);
         }
 
         public static void addToLinearLayout(LinearLayout parent, DemoButton button) {
@@ -106,8 +110,8 @@ public class ActivityMain extends BaseActivity implements
         Class mActivity;
 
         DemoButtonData(String title, Class activity) {
-            this.mTitle = title;
-            this.mActivity = activity;
+            mTitle = title;
+            mActivity = activity;
         }
     }
 

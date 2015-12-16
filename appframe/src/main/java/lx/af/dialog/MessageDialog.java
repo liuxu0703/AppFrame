@@ -51,7 +51,7 @@ public class MessageDialog extends Dialog {
         this(context, null, context.getString(msgResId), false, confirmListener, null);
     }
 
-    private MessageDialog(Context context, String title, String msg, boolean cancelEnabled,
+    public MessageDialog(Context context, String title, String msg, boolean cancelEnabled,
                          View.OnClickListener confirmListener,
                          View.OnClickListener cancelListener) {
         super(context, R.style.dialog_custom);

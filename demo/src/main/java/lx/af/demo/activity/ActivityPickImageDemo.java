@@ -23,11 +23,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 import lx.af.activity.ImageBrowserActivity;
-import lx.af.activity.MultiImageSelectorActivity;
-import lx.af.activity.MultiImageSelectorBrowser;
+import lx.af.activity.ImageSelectActivity;
+import lx.af.activity.ImageSelectBrowser;
 import lx.af.base.BaseActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
+import lx.af.utils.ActivityUtils.ActivityResultCallback;
+import lx.af.utils.ActivityUtils.ImageSelector;
 import lx.af.utils.PathUtils;
 import lx.af.utils.log.Log;
 import lx.af.view.SquareImageView;
@@ -39,7 +41,7 @@ import lx.af.view.crop.Crop;
  */
 public class ActivityPickImageDemo extends BaseDemoActivity implements
         View.OnClickListener,
-        BaseActivity.ActionBarImpl,
+        BaseDemoActivity.ActionBarImpl,
         BaseActivity.SwipeBackImpl {
 
     // activity request code
@@ -65,12 +67,12 @@ public class ActivityPickImageDemo extends BaseDemoActivity implements
         findViewById(R.id.activity_avatar_btn_from_gallery).setOnClickListener(this);
         findViewById(R.id.activity_avatar_btn_from_multi_selector).setOnClickListener(this);
         findViewById(R.id.activity_avatar_btn_multi_image).setOnClickListener(this);
-        mEditorSize = getView(R.id.activity_avatar_editor_size);
-        mEditorAspectW = getView(R.id.activity_avatar_editor_aspect_width);
-        mEditorAspectH = getView(R.id.activity_avatar_editor_aspect_height);
-        mRadioGroup = getView(R.id.activity_avatar_radio_group);
-        mImageGrid = getView(R.id.activity_avatar_img_grid);
-        RadioButton radio = getView(R.id.activity_avatar_radio_9);
+        mEditorSize = obtainView(R.id.activity_avatar_editor_size);
+        mEditorAspectW = obtainView(R.id.activity_avatar_editor_aspect_width);
+        mEditorAspectH = obtainView(R.id.activity_avatar_editor_aspect_height);
+        mRadioGroup = obtainView(R.id.activity_avatar_radio_group);
+        mImageGrid = obtainView(R.id.activity_avatar_img_grid);
+        RadioButton radio = obtainView(R.id.activity_avatar_radio_9);
         radio.setChecked(true);
 
         mImageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,7 +130,7 @@ public class ActivityPickImageDemo extends BaseDemoActivity implements
             }
             case AC_REQUEST_CODE_MULTI_SELECTOR: {
                 ArrayList<String> list = data.getStringArrayListExtra(
-                        MultiImageSelectorActivity.EXTRA_RESULT);
+                        ImageSelectActivity.EXTRA_RESULT);
                 if (list != null && list.size() != 0) {
                     Uri uri = Uri.parse("file://" + list.get(0));
                     String targetPath = PathUtils.generateGallerySavePath("crop");
@@ -150,7 +152,7 @@ public class ActivityPickImageDemo extends BaseDemoActivity implements
             }
             case AC_REQUEST_CODE_MULTI_IMAGE: {
                 ArrayList<String> list = data.getStringArrayListExtra(
-                        MultiImageSelectorActivity.EXTRA_RESULT);
+                        ImageSelectActivity.EXTRA_RESULT);
                 if (list != null && list.size() != 0) {
                     ArrayList<String> uris = new ArrayList<>(list.size());
                     for (String path : list) {
@@ -189,7 +191,7 @@ public class ActivityPickImageDemo extends BaseDemoActivity implements
             }
             case R.id.activity_avatar_btn_multi_image: {
                 int count = getSelectCount();
-                startMultiImageSelector(count, true, AC_REQUEST_CODE_MULTI_IMAGE);
+                startMultiImageSelector(count, true);
                 break;
             }
         }
@@ -208,10 +210,26 @@ public class ActivityPickImageDemo extends BaseDemoActivity implements
         return 9;
     }
 
+    private void startMultiImageSelector(int count, boolean showCamera) {
+        ImageSelector.of(this).count(count).showCamera(showCamera).start(
+                new ActivityResultCallback<ArrayList<String>>() {
+                    @Override
+                    public void onActivityResult(int requestCode, ArrayList<String> list) {
+                        if (list != null && list.size() != 0) {
+                            ArrayList<String> uris = new ArrayList<>(list.size());
+                            for (String path : list) {
+                                uris.add(Uri.parse("file://" + path).toString());
+                            }
+                            mImageGrid.setAdapter(new ImageAdapter(ActivityPickImageDemo.this, uris));
+                        }
+                    }
+                });
+    }
+
     private void startMultiImageSelector(int count, boolean showCamera, int requestCode) {
-        Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, showCamera);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, count);
+        Intent intent = new Intent(this, ImageSelectActivity.class);
+        intent.putExtra(ImageSelectActivity.EXTRA_SHOW_CAMERA, showCamera);
+        intent.putExtra(ImageSelectActivity.EXTRA_SELECT_COUNT, count);
         startActivityForResult(intent, requestCode);
     }
 
@@ -238,8 +256,8 @@ public class ActivityPickImageDemo extends BaseDemoActivity implements
 
     private void startImageBrowser(ArrayList<String> imgUris, String currentUri) {
         Intent intent = new Intent(this, ImageBrowserActivity.class);
-        intent.putExtra(MultiImageSelectorBrowser.EXTRA_IMAGE_URI_LIST, imgUris);
-        intent.putExtra(MultiImageSelectorBrowser.EXTRA_CURRENT_IMAGE_URI, currentUri);
+        intent.putExtra(ImageSelectBrowser.EXTRA_IMAGE_URI_LIST, imgUris);
+        intent.putExtra(ImageSelectBrowser.EXTRA_CURRENT_IMAGE_URI, currentUri);
         startActivity(intent);
     }
 

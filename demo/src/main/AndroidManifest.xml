@@ -29,6 +29,11 @@
         </activity>
 
         <activity
+            android:name=".activity.ActivityTest"
+            android:screenOrientation="portrait"
+            android:label="File Picker" >
+        </activity>
+        <activity
             android:name=".activity.ActivityFilePickerDemo"
             android:screenOrientation="portrait"
             android:label="File Picker" >
@@ -57,6 +62,11 @@
         </activity>
         <activity
             android:name=".activity.ActivityAutoSlidePager"
+            android:screenOrientation="portrait"
+            android:label="Auto Slide Pager" >
+        </activity>
+        <activity
+            android:name=".activity.ActivitySwipeRefresh"
             android:screenOrientation="portrait"
             android:label="Auto Slide Pager" >
         </activity>

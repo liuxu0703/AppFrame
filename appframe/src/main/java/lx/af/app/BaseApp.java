@@ -2,13 +2,16 @@ package lx.af.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import lx.af.R;
 import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.KV;
@@ -59,6 +62,19 @@ public class BaseApp extends Application{
     // init UniversalImageLoader
     private static void initImageLoader(Context context) {
         int cpu_count = Runtime.getRuntime().availableProcessors();
+
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.img_gallery_default)
+                .showImageForEmptyUri(R.drawable.img_gallery_default)
+                .showImageOnFail(R.drawable.img_gallery_default)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .threadPoolSize(cpu_count + 1)
@@ -66,10 +82,10 @@ public class BaseApp extends Application{
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCacheSizePercentage(12)
                 .memoryCacheExtraOptions(480, 480)
-                .diskCacheSize(100 * 1024 * 1024)
+                .diskCacheSize(60 * 1024 * 1024)
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .writeDebugLogs()
-                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
+                .defaultDisplayImageOptions(defaultOptions)
                 .build();
         ImageLoader.getInstance().init(config);
     }

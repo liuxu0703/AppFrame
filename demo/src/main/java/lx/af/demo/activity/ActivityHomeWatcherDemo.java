@@ -13,7 +13,7 @@ import lx.af.utils.HomeWatcher;
  *
  */
 public class ActivityHomeWatcherDemo extends BaseDemoActivity implements
-        BaseActivity.ActionBarImpl,
+        BaseDemoActivity.ActionBarImpl,
         BaseActivity.SwipeBackImpl,
         HomeWatcher.OnHomePressedListener {
 

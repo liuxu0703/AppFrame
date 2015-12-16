@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bkg_1">
+
+    <lx.af.view.SwipeRefresh.SwipeRefreshListLayout
+        android:id="@+id/activity_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/activity_swipe_refresh_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/grey"
+            android:dividerHeight="1px" >
+        </ListView>
+    </lx.af.view.SwipeRefresh.SwipeRefreshListLayout>
+
+</RelativeLayout>

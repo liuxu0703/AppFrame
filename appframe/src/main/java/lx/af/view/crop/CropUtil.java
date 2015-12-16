@@ -16,13 +16,11 @@
 
 package lx.af.view.crop;
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -36,7 +34,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import lx.af.activity.CropImageActivity;
+import lx.af.activity.ImageCropActivity;
 
 /*
  * Modified from original in AOSP.
@@ -71,7 +69,7 @@ public class CropUtil {
                     return ExifInterface.ORIENTATION_UNDEFINED;
             }
         } catch (IOException e) {
-            Log.e(CropImageActivity.TAG, "Error getting Exif data", e);
+            Log.e(ImageCropActivity.TAG, "Error getting Exif data", e);
             return 0;
         }
     }
@@ -85,7 +83,7 @@ public class CropUtil {
             exifDest.saveAttributes();
             return true;
         } catch (IOException e) {
-            Log.e(CropImageActivity.TAG, "Error copying Exif data", e);
+            Log.e(ImageCropActivity.TAG, "Error copying Exif data", e);
             return false;
         }
     }

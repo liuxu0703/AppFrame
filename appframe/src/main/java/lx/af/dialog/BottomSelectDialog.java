@@ -85,7 +85,7 @@ public class BottomSelectDialog extends Dialog {
         lp.width = ScreenUtils.getScreenWidth();
         dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         dialogWindow.setAttributes(lp);
-        dialogWindow.setWindowAnimations(R.style.pop_window_bottom_anim);
+        dialogWindow.setWindowAnimations(R.style.bottom_pop_menu_anim);
 
         findViewById(R.id.dlg_bottom_selector_cancel).setOnClickListener(new View.OnClickListener() {
             @Override

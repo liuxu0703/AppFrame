@@ -27,7 +27,7 @@ import lx.af.view.FilePicker.FilePickerList;
 
 public final class ActivityPlayViewDemo extends BaseDemoActivity implements
         OnClickListener,
-        BaseActivity.ActionBarImpl {
+        BaseDemoActivity.ActionBarImpl {
 
     private int mScreenWidth;
     private int mVideoSize;
@@ -43,10 +43,10 @@ public final class ActivityPlayViewDemo extends BaseDemoActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_view);
-        mContentView = getView(R.id.apv_layout);
-        mPlayBtn = getView(R.id.apv_play_btn);
+        mContentView = obtainView(R.id.apv_layout);
+        mPlayBtn = obtainView(R.id.apv_play_btn);
         mPlayBtn.setOnClickListener(this);
-        mBtnLoad = getView(R.id.apv_btn_load);
+        mBtnLoad = obtainView(R.id.apv_btn_load);
         mBtnLoad.setOnClickListener(this);
 
         mContainer1 = new LinearLayout(this);

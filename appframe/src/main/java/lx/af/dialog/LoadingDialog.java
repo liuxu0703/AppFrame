@@ -20,6 +20,7 @@ public class LoadingDialog extends Dialog {
     private TextView mTv;
     private ProgressWheel mProgress;
     private DismissHandler mDismissHandler;
+    private String mMessage;
     private long mMinDismissTime = 0;
     private long mStartTime;
 
@@ -52,9 +53,10 @@ public class LoadingDialog extends Dialog {
 
         mTv = (TextView) findViewById(R.id.dlg_loading_text);
         mProgress = (ProgressWheel) findViewById(R.id.dlg_loading_progress);
+        mMessage = text;
 
-        if (!TextUtils.isEmpty(text)) {
-            mTv.setText(text);
+        if (!TextUtils.isEmpty(mMessage)) {
+            mTv.setText(mMessage);
         } else {
             mTv.setVisibility(View.GONE);
         }
@@ -94,8 +96,9 @@ public class LoadingDialog extends Dialog {
      * @param msg message
      */
     public void setMessage(String msg) {
-        if (TextUtils.isEmpty(msg)) {
-            mTv.setText(msg);
+        if (!isEqual(mMessage, msg)) {
+            mMessage = msg;
+            mTv.setText(mMessage);
         }
     }
 
@@ -117,6 +120,16 @@ public class LoadingDialog extends Dialog {
      */
     public void setLoadingMinTime(int millis) {
         mMinDismissTime = (long) millis;
+    }
+
+    private static boolean isEqual(String str1, String str2) {
+        if (str1 == null && str2 == null) {
+            return true;
+        }
+        if (str1 != null && str2 != null) {
+            return str1.equals(str2);
+        }
+        return false;
     }
 
     /**

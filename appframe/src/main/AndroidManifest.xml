@@ -16,19 +16,19 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name="lx.af.activity.CropImageActivity"
+            android:name=".activity.ImageCropActivity"
             android:label="@string/crop_image_title"
             android:screenOrientation="portrait"
             android:theme="@style/activity_theme_no_translucent" >
         </activity>
         <activity
-            android:name="lx.af.activity.MultiImageSelectorActivity"
+            android:name=".activity.ImageSelectActivity"
             android:label="@string/mis_title"
             android:screenOrientation="portrait"
             android:theme="@style/activity_theme_no_translucent" >
         </activity>
         <activity
-            android:name="lx.af.activity.MultiImageSelectorBrowser"
+            android:name=".activity.ImageSelectBrowser"
             android:label="Image Browser"
             android:screenOrientation="portrait"
             android:theme="@style/activity_theme_no_translucent" >

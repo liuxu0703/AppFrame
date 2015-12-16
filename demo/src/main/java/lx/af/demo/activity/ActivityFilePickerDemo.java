@@ -1,6 +1,5 @@
 package lx.af.demo.activity;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -23,7 +22,7 @@ import lx.af.view.FilePicker.FilePickerList;
 
 final public class ActivityFilePickerDemo extends BaseDemoActivity implements
         View.OnClickListener,
-        BaseActivity.ActionBarImpl,
+        BaseDemoActivity.ActionBarImpl,
         BaseActivity.SwipeBackImpl {
 
     TextView mTvFolder;

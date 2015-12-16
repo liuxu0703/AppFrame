@@ -8,14 +8,15 @@ import android.widget.TextView;
 
 import lx.af.base.BaseActivity;
 import lx.af.demo.R;
+import lx.af.demo.base.BaseDemoActivity;
 import lx.af.view.AutoSlidePager.AutoSlidePager;
 
 /**
  * author: lx
  * date: 15-10-26
  */
-public class ActivityAutoSlidePager extends BaseActivity implements
-        BaseActivity.ActionBarImpl,
+public class ActivityAutoSlidePager extends BaseDemoActivity implements
+        BaseDemoActivity.ActionBarImpl,
         BaseActivity.SwipeBackImpl,
         View.OnClickListener {
 
@@ -35,12 +36,12 @@ public class ActivityAutoSlidePager extends BaseActivity implements
         findViewById(R.id.aasp_btn_hide_page_aaa).setOnClickListener(this);
         findViewById(R.id.aasp_btn_hide_page_ddd).setOnClickListener(this);
 
-        mPage_aaa = getView(R.id.aasp_page_aaa);
-        mPage_ddd = getView(R.id.aasp_page_ddd);
-        mTvPageInfo1 = getView(R.id.aasp_tv_page_info1);
-        mTvPageInfo2 = getView(R.id.aasp_tv_page_info2);
+        mPage_aaa = obtainView(R.id.aasp_page_aaa);
+        mPage_ddd = obtainView(R.id.aasp_page_ddd);
+        mTvPageInfo1 = obtainView(R.id.aasp_tv_page_info1);
+        mTvPageInfo2 = obtainView(R.id.aasp_tv_page_info2);
 
-        mSlidePager1 = getView(R.id.aasp_slide_pager1);
+        mSlidePager1 = obtainView(R.id.aasp_slide_pager1);
         mSlidePager1.setOnPageSelectListener(new AutoSlidePager.OnPageSelectListener() {
             @Override
             public void onPageSelected(int position, View view) {
@@ -49,7 +50,7 @@ public class ActivityAutoSlidePager extends BaseActivity implements
             }
         });
 
-        mSlidePager2 = getView(R.id.aasp_slide_pager2);
+        mSlidePager2 = obtainView(R.id.aasp_slide_pager2);
         mSlidePager2.setOnPageSelectListener(new AutoSlidePager.OnPageSelectListener() {
             @Override
             public void onPageSelected(int position, View view) {

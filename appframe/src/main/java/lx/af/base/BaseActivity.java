@@ -1,18 +1,15 @@
 package lx.af.base;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import java.util.LinkedList;
 
 import lx.af.R;
 import lx.af.dialog.LoadingDialog;
@@ -21,21 +18,27 @@ import lx.af.utils.ScreenUtils;
 import lx.af.view.SwipeBack.SwipeBackLayout;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * author: liuxu
  * date: 2015-02-06
  *
  * activity base
+ * TODO: double click finish
  */
 public abstract class BaseActivity extends FragmentActivity {
 
     protected String TAG;
 
     private LoadingDialog mLoadingDialog;
-    private View mActionBarContentView;
     private SwipeBackLayout mSwipeBackLayout;
+    private View mCContentView;  // custom content view
+    private View mCActionBar;  // custom action bar
+
     private boolean mIsForeground = false;
+
+    private final LinkedList<LifeCycleListener> mLifeCycleListeners = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         if (this instanceof SwipeBackImpl) {
             initSwipeBack();
+        }
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityCreated(this);
         }
     }
 
@@ -55,21 +61,55 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityStarted(this);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mIsForeground = true;
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityResumed(this);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mIsForeground = false;
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityPaused(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityStopped(this);
+        }
     }
 
     @Override
     protected void onDestroy() {
         dismissLoadingDialog();
         super.onDestroy();
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityDestroyed(this);
+        }
+        mLifeCycleListeners.clear();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityResult(this, requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -110,43 +150,61 @@ public abstract class BaseActivity extends FragmentActivity {
                 return v;
             }
         }
-        if (mActionBarContentView != null) {
-            v = mActionBarContentView.findViewById(id);
+        if (mCContentView != null) {
+            v = mCContentView.findViewById(id);
         }
         return v;
     }
 
     @Override
     public void setContentView(int layoutResID) {
-        if (this instanceof ActionBarImpl) {
-            super.setContentView(R.layout.activity_base);
-            LayoutInflater inflater = LayoutInflater.from(this);
-            View contentView = inflater.inflate(layoutResID, null);
-            initActionBar(contentView, null);
-        } else {
-            super.setContentView(layoutResID);
-        }
-    }
-
-    @Override
-    public void setContentView(View view, ViewGroup.LayoutParams params) {
-        if (this instanceof ActionBarImpl) {
-            super.setContentView(R.layout.activity_base);
-            initActionBar(view, params);
-        } else {
-            super.setContentView(view, params);
-        }
+        View contentView = View.inflate(this, layoutResID, null);
+        setContentViewInner(contentView, null);
     }
 
     @Override
     public void setContentView(View view) {
-        if (this instanceof ActionBarImpl) {
-            super.setContentView(R.layout.activity_base);
-            initActionBar(view, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        } else {
-            super.setContentView(view);
-        }
+        setContentViewInner(view, null);
     }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        setContentViewInner(view, params);
+    }
+
+    /**
+     * check if the activity is running in foreground.
+     * AKA, if the activity is in life cycle between onResume() and onPause().
+     * @return true if running in foreground.
+     */
+    public boolean isForeground() {
+        return mIsForeground;
+    }
+
+    /**
+     * get and convert view
+     * @param id view id for findViewById() method
+     * @param <T> subclass of View
+     * @return the view
+     */
+    @SuppressWarnings("unchecked")
+    public  <T extends View> T obtainView(int id) {
+        return (T) findViewById(id);
+    }
+
+    public void addLifeCycleListener(LifeCycleListener listener) {
+        if (mLifeCycleListeners.contains(listener)) {
+            return;
+        }
+        mLifeCycleListeners.add(listener);
+    }
+
+    public void removeLifeCycleListener(LifeCycleListener listener) {
+        mLifeCycleListeners.remove(listener);
+    }
+
+    // ======================================
+    // about loading dialog and toast
 
     public void showToastLong(String msg){
         AlertUtils.showToastLong(msg);
@@ -176,13 +234,20 @@ public abstract class BaseActivity extends FragmentActivity {
         showLoadingDialog(msg, false);
     }
 
-    public void showLoadingDialog(String msg, boolean cancelable){
-        dismissLoadingDialog();
-        if (mLoadingDialog == null) {
-            mLoadingDialog = new LoadingDialog(BaseActivity.this, msg);
-            mLoadingDialog.setCancelable(cancelable);
-        }
-        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
+    public void showLoadingDialog(final String msg, boolean cancelable) {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            // loading dialog already fired, just change the message
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mLoadingDialog.setMessage(msg);
+                }
+            });
+        } else {
+            if (mLoadingDialog == null) {
+                mLoadingDialog = new LoadingDialog(BaseActivity.this, msg);
+                mLoadingDialog.setCancelable(cancelable);
+            }
             mLoadingDialog.show();
         }
     }
@@ -194,31 +259,9 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
-    /**
-     * check if the activity is running in foreground.
-     * AKA, if the activity is in life cycle between onResume() and onPause().
-     * @return true if running in foreground.
-     */
-    public boolean isForeground() {
-        return mIsForeground;
-    }
-
-    /**
-     * get and convert view
-     * @param id view id for findViewById() method
-     * @param <T> subclass of View
-     * @return the view
-     */
-    @SuppressWarnings("unchecked")
-    public  <T extends View> T getView(int id) {
-        return (T)findViewById(id);
-    }
-
-
-    // ========================================================
+    // ======================================
     // about swipe back
 
-    // by zhangzz
     private void initSwipeBack() {
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
         getWindow().getDecorView().setBackgroundDrawable(null);
@@ -235,131 +278,71 @@ public abstract class BaseActivity extends FragmentActivity {
     public interface SwipeBackImpl {
     }
 
+    // ======================================
+    // about action bar
 
-    // ========================================================
-    // add by liuxu, 2015-01-12, about action bar
-
-    protected View obtainActionBar() {
+    protected ActionBarAdapter getActionBarAdapter() {
         return null;
     }
 
-    private void initActionBar(View contentView, ViewGroup.LayoutParams params) {
-        mActionBarContentView = contentView;
-        FrameLayout frame = getView(R.id.activity_base_content_frame);
-        frame.removeAllViews();
+    private void setContentViewInner(View view, ViewGroup.LayoutParams params) {
+        mCContentView = view;
         if (params == null) {
-            frame.addView(contentView);
-        } else {
-            frame.addView(contentView, params);
+            params = new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT);
         }
-        View actionBar = getView(R.id.activity_base_action_bar);
-        ImageView back = getView(R.id.action_bar_back);
-        TextView title = getView(R.id.action_bar_title);
-        // use activity label as default action bar title
-        title.setText(getTitle());
-
-        if (this instanceof ActionBarCallbacks) {
-            final ActionBarCallbacks callbacks = (ActionBarCallbacks) this;
-
-            // check if menu is valid
-            View menu = callbacks.onCreateActionBarMenu();
-            if (menu != null) {
-                ViewStub stub = getView(R.id.action_bar_menu_stub);
-                stub.inflate();
-                FrameLayout menuFrame = getView(R.id.activity_base_action_bar_menu_frame);
-                menuFrame.addView(menu);
+        ActionBarAdapter adapter = getActionBarAdapter();
+        if (adapter == null) {
+            super.setContentView(view, params);
+        } else {
+            mCActionBar = adapter.getActionBarView(this);
+            ActionBarAdapter.Type type = adapter.getActionBarType();
+            type = type == null ? ActionBarAdapter.Type.NORMAL : type;
+            switch (type) {
+                case NORMAL: {
+                    // use LinearLayout as content view
+                    LinearLayout contentView = new LinearLayout(this);
+                    contentView.setOrientation(LinearLayout.VERTICAL);
+                    contentView.addView(mCActionBar, MATCH_PARENT, WRAP_CONTENT);
+                    contentView.addView(mCContentView, params);
+                    super.setContentView(contentView);
+                    break;
+                }
+                case OVERLAY: {
+                    // use RelativeLayout as content view
+                    RelativeLayout contentView = new RelativeLayout(this);
+                    RelativeLayout.LayoutParams ap = new RelativeLayout.LayoutParams(
+                            MATCH_PARENT, WRAP_CONTENT);
+                    ap.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    contentView.addView(mCActionBar, ap);
+                    contentView.addView(mCContentView, params);
+                    super.setContentView(contentView);
+                    break;
+                }
             }
-
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!callbacks.onActionBarBackClicked(v)) {
-                        BaseActivity.this.finish();
-                    }
-                }
-            });
-            // TODO: adjust title width according to width of back and menu
-            callbacks.onActionBarCreated(actionBar, back, title, menu);
-
-        } else {
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BaseActivity.this.finish();
-                }
-            });
         }
     }
 
-    /**
-     * create a default text button to be used as menu.
-     * call this in ActionBarCallbacks.onCreateActionBarMenu() to generate a menu.
-     * @param context context
-     * @return the button
-     */
-    public static TextView createMenuDefaultTxtBtn(Context context) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        return (TextView) inflater.inflate(R.layout.action_bar_menu_txt_btn, null);
+    // ======================================
+    // interface
+
+    public interface LifeCycleListener {
+        void onActivityCreated(BaseActivity activity);
+        void onActivityStarted(BaseActivity activity);
+        void onActivityResumed(BaseActivity activity);
+        void onActivityPaused(BaseActivity activity);
+        void onActivityStopped(BaseActivity activity);
+        void onActivityDestroyed(BaseActivity activity);
+        void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data);
     }
 
-    /**
-     * create a default image button to be used as menu.
-     * call this in ActionBarCallbacks.onCreateActionBarMenu() to generate a menu.
-     * @param context context
-     * @return the button
-     */
-    public static ImageView createMenuDefaultImgBtn(Context context) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        return (ImageView) inflater.inflate(R.layout.action_bar_menu_img_btn, null);
+    public static class LifeCycleAdapter implements LifeCycleListener {
+        public void onActivityCreated(BaseActivity activity) {}
+        public void onActivityStarted(BaseActivity activity) {}
+        public void onActivityResumed(BaseActivity activity) {}
+        public void onActivityPaused(BaseActivity activity) {}
+        public void onActivityStopped(BaseActivity activity) {}
+        public void onActivityDestroyed(BaseActivity activity) {}
+        public void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data) {}
     }
-
-    /**
-     * by implementing this interface, activity extends from BaseActivity
-     * will get an ActionBar with a back button and a title uses activity
-     * label as text.
-     * if menu button is needed, or further customize is needed, try implement
-     * ActionBarCallbacks instead.
-     */
-    public interface ActionBarImpl {
-    }
-
-    /**
-     * by implementing this interface, activity extends from BaseActivity
-     * will get an ActionBar with a back button, a title uses activity
-     * label as text, and a menu button.
-     * if only back button and title is needed, try implement ActionBarImpl
-     * instead.
-     */
-    public interface ActionBarCallbacks extends ActionBarImpl {
-
-        /**
-         * called to get a view for menu.
-         * @return the menu view, or null if menu is not needed.
-         * @see #createMenuDefaultImgBtn to create a default ImageView as menu
-         * @see #createMenuDefaultTxtBtn to create a default TextView as menu
-         */
-        public View onCreateActionBarMenu();
-
-        /**
-         * called when the ActionBar is first inflated.
-         * @param actionBar the action bar
-         * @param back back button
-         * @param title TextView for title
-         * @param menu the menu, can be null
-         */
-        public void onActionBarCreated(View actionBar, ImageView back, TextView title, @Nullable View menu);
-
-        /**
-         * called when back button is clicked.
-         * Activity.finish() will be called if false is returned from this method
-         * @param back back button
-         * @return true if click event is handled, false otherwise
-         */
-        public boolean onActionBarBackClicked(View back);
-
-    }
-
-
-    // ========================================================
 
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <lx.af.view.MultiImageSelector.view.ImageGridView
+    <lx.af.view.ImageSelector.view.ImageGridView
         android:id="@+id/mis_fragment_img_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,7 +27,7 @@
         android:textSize="14sp"
         tools:text="2015年4月1日" />
 
-    <lx.af.view.MultiImageSelector.view.FolderListView
+    <lx.af.view.ImageSelector.view.FolderListView
         android:id="@+id/mis_fragment_folder_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
-import lx.af.activity.CropImageActivity;
+import lx.af.activity.ImageCropActivity;
 
 /**
  * Builder for crop Intents and utils for handling result
@@ -144,10 +144,10 @@ public class Crop {
      * Get Intent to start crop Activity
      *
      * @param context Context
-     * @return Intent for CropImageActivity
+     * @return Intent for ImageCropActivity
      */
     public Intent getIntent(Context context) {
-        cropIntent.setClass(context, CropImageActivity.class);
+        cropIntent.setClass(context, ImageCropActivity.class);
         return cropIntent;
     }
 
@@ -164,7 +164,7 @@ public class Crop {
      * Retrieve error that caused crop to fail
      *
      * @param result Result Intent
-     * @return Throwable handled in CropImageActivity
+     * @return Throwable handled in ImageCropActivity
      */
     public static Throwable getError(Intent result) {
         return (Throwable) result.getSerializableExtra(Extra.ERROR);

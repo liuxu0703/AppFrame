@@ -11,10 +11,10 @@ import android.widget.TextView;
 import lx.af.base.BaseActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
-import lx.af.utils.StorageManagerUtils;
+import lx.af.utils.StorageManagerHack;
 
 final public class ActivityStorageUtilsDemo extends BaseDemoActivity implements
-        BaseActivity.ActionBarImpl,
+        BaseDemoActivity.ActionBarImpl,
         BaseActivity.SwipeBackImpl {
 
     private LinearLayout mContainer;
@@ -30,11 +30,11 @@ final public class ActivityStorageUtilsDemo extends BaseDemoActivity implements
     }
 
     private void displayVolumePaths() {
-        String[] paths = StorageManagerUtils.getVolumePaths(this);
+        String[] paths = StorageManagerHack.getVolumePaths(this);
         if (paths != null) {
             InfoGroup group = new InfoGroup(this, "Volume Path");
             for (String path : paths) {
-                String state = StorageManagerUtils.getVolumeState(this, path);
+                String state = StorageManagerHack.getVolumeState(this, path);
                 group.addField(path, state);
             }
             group.addToLinearLayout(mContainer);
@@ -42,9 +42,9 @@ final public class ActivityStorageUtilsDemo extends BaseDemoActivity implements
     }
 
     private void displayVolumeDetail() {
-        StorageManagerUtils.RefStorageVolume[] volumes = StorageManagerUtils.getVolumeList(this);
+        StorageManagerHack.RefStorageVolume[] volumes = StorageManagerHack.getVolumeList(this);
         if (volumes != null) {
-            for (StorageManagerUtils.RefStorageVolume v : volumes) {
+            for (StorageManagerHack.RefStorageVolume v : volumes) {
                 try {
                     v.initAllFields();
                     Log.d("liuxu", "volume info: " + v);

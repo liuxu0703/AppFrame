@@ -52,7 +52,7 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
-    <style name="pop_window_bottom_anim">
+    <style name="bottom_pop_menu_anim">
         <item name="android:windowEnterAnimation">@anim/slide_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/slide_bottom_out</item>
     </style>

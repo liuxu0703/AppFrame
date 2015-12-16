@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
-import lx.af.activity.CropImageActivity;
+import lx.af.activity.ImageCropActivity;
 
 public class CropImageView extends ImageViewTouchBase {
 
@@ -87,7 +87,7 @@ public class CropImageView extends ImageViewTouchBase {
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
-        CropImageActivity cropImageActivity = (CropImageActivity) context;
+        ImageCropActivity cropImageActivity = (ImageCropActivity) context;
         if (cropImageActivity.isSaving()) {
             return false;
         }

@@ -1,7 +1,6 @@
 package lx.af.activity;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -97,10 +96,10 @@ public class ImageBrowserActivity extends BaseActivity {
         mAnimActionBarHide = AnimationUtils.loadAnimation(this, R.anim.slide_top_in);
         mAnimBottomBarHide = AnimationUtils.loadAnimation(this, R.anim.slide_bottom_out);
 
-        mPager = getView(R.id.activity_image_browser_pager);
-        mTvPageIdx = getView(R.id.activity_image_browser_page_idx);
-        mActionBar = getView(R.id.activity_image_browser_action_bar);
-        mBottomBar = getView(R.id.activity_image_browser_function_bar);
+        mPager = obtainView(R.id.activity_image_browser_pager);
+        mTvPageIdx = obtainView(R.id.activity_image_browser_page_idx);
+        mActionBar = obtainView(R.id.activity_image_browser_action_bar);
+        mBottomBar = obtainView(R.id.activity_image_browser_function_bar);
         findViewById(R.id.activity_image_browser_action_bar_back)
                 .setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +144,7 @@ public class ImageBrowserActivity extends BaseActivity {
 
         View menu = getActionBarMenu();
         if (menu != null) {
-            FrameLayout menuContainer = getView(R.id.activity_image_browser_menu_container);
+            FrameLayout menuContainer = obtainView(R.id.activity_image_browser_menu_container);
             menuContainer.addView(menu, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         }
 

@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
 /**
- * created by liuxu. many methods here are collected from various sites.
+ * created by liuxu. many methods here are collected from various source.
  *
  * methods about network state.
  */
@@ -15,10 +15,10 @@ public final class NetStateUtils {
 
     private static Application sApp;
 
-    public static final int NETTYPE_NO = 0;
-    public static final int NETTYPE_WIFI = 1;
-    public static final int NETTYPE_2G = 2;
-    public static final int NETTYPE_3G = 3;
+    public static final int NET_TYPE_NO = 0;
+    public static final int NET_TYPE_WIFI = 1;
+    public static final int NET_TYPE_2G = 2;
+    public static final int NET_TYPE_3G = 3;
 
     private NetStateUtils() {
     }
@@ -27,8 +27,18 @@ public final class NetStateUtils {
         sApp = app;
     }
 
-    public static boolean isNetAvailable() {
-        return NetStateUtils.getAvailableNetWorkInfo() != null;
+    public static boolean isNetConnected() {
+        return getAvailableNetWorkInfo() != null;
+    }
+
+    public static boolean isWifiConnected() {
+        NetworkInfo networkInfo = getAvailableNetWorkInfo();
+        if (networkInfo != null) {
+            if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean isThirdGeneration() {
@@ -43,16 +53,6 @@ public final class NetStateUtils {
             default:
                 return true;
         }
-    }
-
-    public static boolean isWifi() {
-        NetworkInfo networkInfo = getAvailableNetWorkInfo();
-        if (networkInfo != null) {
-            if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static NetworkInfo getAvailableNetWorkInfo() {
@@ -136,7 +136,7 @@ public final class NetStateUtils {
         if (networkInfo != null && networkInfo.isAvailable()
                 && networkInfo.isConnected()) {
             if (ConnectivityManager.TYPE_WIFI == networkInfo.getType()) {
-                return NETTYPE_WIFI;
+                return NET_TYPE_WIFI;
             } else {
                 TelephonyManager telephonyManager = (TelephonyManager) sApp
                         .getSystemService(Context.TELEPHONY_SERVICE);
@@ -145,13 +145,13 @@ public final class NetStateUtils {
                     case TelephonyManager.NETWORK_TYPE_GPRS:
                     case TelephonyManager.NETWORK_TYPE_CDMA:
                     case TelephonyManager.NETWORK_TYPE_EDGE:
-                        return NETTYPE_2G;
+                        return NET_TYPE_2G;
                     default:
-                        return NETTYPE_3G;
+                        return NET_TYPE_3G;
                 }
             }
         } else {
-            return NETTYPE_NO;
+            return NET_TYPE_NO;
         }
     }
 }

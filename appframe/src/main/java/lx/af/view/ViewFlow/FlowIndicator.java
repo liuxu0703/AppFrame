@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Patrik �kerfeldt
+ * Copyright (C) 2011 Patrik Åkerfeldt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package lx.af.view.ViewFlow;
-
 
 /**
  * An interface which defines the contract between a ViewFlow and a

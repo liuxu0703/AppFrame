@@ -1,6 +1,7 @@
 package lx.af.utils;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -200,7 +201,7 @@ public final class BitmapUtils {
      * @param v the view
      * @return bitmap
      */
-    public static Bitmap captureView(View v) {
+    public static Bitmap capture(View v) {
         v.setDrawingCacheEnabled(true);
         v.buildDrawingCache();
         return v.getDrawingCache();
@@ -211,7 +212,7 @@ public final class BitmapUtils {
      * @param activity the activity
      * @return bitmap
      */
-    public static Bitmap captureActivityView(Activity activity) {
+    public static Bitmap capture(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.buildDrawingCache();
         Bitmap bitmap = view.getDrawingCache();

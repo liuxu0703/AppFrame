@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2011 Patrik Åkerfeldt
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *		http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package lx.af.view.ViewFlow;
 
 import android.content.Context;
@@ -14,22 +29,58 @@ import android.view.animation.AnimationUtils;
 
 import lx.af.R;
 
+/**
+ * A FlowIndicator which draws circles (one for each view). 
+ * <br/>
+ * Available attributes are:<br/>
+ * <ul>
+ * <li>
+ * activeColor: Define the color used to draw the active circle (default to white)
+ * </li>
+ * <li>
+ * inactiveColor: Define the color used to draw the inactive circles (default to 0x44FFFFFF)
+ * </li>
+ * <li>
+ * inactiveType: Define how to draw the inactive circles, either stroke or fill (default to stroke)
+ * </li>
+ * <li>
+ * activeType: Define how to draw the active circle, either stroke or fill (default to fill)
+ * </li>
+ * <li>
+ * fadeOut: Define the time (in ms) until the indicator will fade out (default to 0 = never fade out)
+ * </li>
+ * <li>
+ * radius: Define the circle outer radius (default to 4.0)
+ * </li>
+ * <li>
+ * spacing: Define the circle spacing (default to 4.0)
+ * </li>
+ * <li>
+ * snap: If true, the 'active' indicator snaps from one page to the next; otherwise, it moves smoothly.
+ * </li>
+ * </ul>
+ */
 public class CircleFlowIndicator extends View implements FlowIndicator,
 		AnimationListener {
 	private static final int STYLE_STROKE = 0;
 	private static final int STYLE_FILL = 1;
 
-	private float radius = 10;
+	private float mRadius = 4;
+	private float mRadiusInactive = 4;
+	private float mRadiusActive = 4;
+	private float spacing = 4;
 	private int fadeOutTime = 0;
 	private final Paint mPaintInactive = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final Paint mPaintActive = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private ViewFlow viewFlow;
 	private int currentScroll = 0;
+	private int currentPosition = 0;
 	private int flowWidth = 0;
 	private FadeTimer timer;
 	public AnimationListener animationListener = this;
 	private Animation animation;
 	private boolean mCentered = false;
+	private boolean mSnap = false;
 
 	/**
 	 * Default constructor
@@ -51,36 +102,45 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 		super(context, attrs);
 		// Retrieve styles attributs
 		TypedArray a = context.obtainStyledAttributes(attrs,
-				R.styleable.CircleFlowIndicator);
+				R.styleable.ViewFlowCircleIndicator);
 
-		// Gets the inactive circle type, defaulting to "fill"
-		int activeType = a.getInt(R.styleable.CircleFlowIndicator_activeType,
+		// Gets the active circle type, defaulting to "fill"
+		int activeType = a.getInt(R.styleable.ViewFlowCircleIndicator_activeType,
 				STYLE_FILL);
 		
 		int activeDefaultColor = 0xFFFFFFFF;
 		
-		// Get a custom inactive color if there is one
+		// Get a custom active color if there is one
 		int activeColor = a
-				.getColor(R.styleable.CircleFlowIndicator_activeColor,
+				.getColor(R.styleable.ViewFlowCircleIndicator_indicatorActiveColor,
 						activeDefaultColor);
 
 		// Gets the inactive circle type, defaulting to "stroke"
 		int inactiveType = a.getInt(
-				R.styleable.CircleFlowIndicator_inactiveType, STYLE_STROKE);
+				R.styleable.ViewFlowCircleIndicator_inactiveType, STYLE_STROKE);
 
-		int inactiveDefaultColor = 0xFFFFFFFF;
+		int inactiveDefaultColor = 0x44FFFFFF;
 		// Get a custom inactive color if there is one
 		int inactiveColor = a.getColor(
-				R.styleable.CircleFlowIndicator_inactiveColor,
+				R.styleable.ViewFlowCircleIndicator_indicatorInactiveColor,
 				inactiveDefaultColor);
 
 		// Retrieve the radius
-		radius = a.getDimension(R.styleable.CircleFlowIndicator_radius, 6.0f);
+		mRadius = a.getDimension(R.styleable.ViewFlowCircleIndicator_radius, 4.0f);
+		mRadiusActive = mRadius;
+		mRadiusInactive = mRadius;
+
+		// Retrieve the spacing
+		spacing = a.getDimension(R.styleable.ViewFlowCircleIndicator_spacing, 4.0f);
+		// We want the spacing to be center-to-center
+		spacing += 2 * mRadiusActive;
 		
 		// Retrieve the fade out time
-		fadeOutTime = a.getInt(R.styleable.CircleFlowIndicator_fadeOut, 0);
+		fadeOutTime = a.getInt(R.styleable.ViewFlowCircleIndicator_fadeOut, 0);
 		
-		mCentered = a.getBoolean(R.styleable.CircleFlowIndicator_centered, false);
+		mCentered = a.getBoolean(R.styleable.ViewFlowCircleIndicator_centered, false);
+
+		mSnap = a.getBoolean(R.styleable.ViewFlowCircleIndicator_snap, false);
 		
 		initColors(activeColor, inactiveColor, activeType, inactiveType);
 	}
@@ -89,11 +149,17 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 			int inactiveType) {
 		// Select the paint type given the type attr
 		switch (inactiveType) {
-		case STYLE_STROKE:
-			mPaintInactive.setStyle(Style.STROKE);
+		case STYLE_FILL:
+			mPaintInactive.setStyle(Style.FILL);
 			break;
 		default:
-			mPaintInactive.setStyle(Style.FILL);
+			mPaintInactive.setStyle(Style.STROKE);
+			float strokeWidth = mPaintInactive.getStrokeWidth();
+			if (strokeWidth == 0.0f) {
+				// It draws in "hairline mode", which is 1 px wide.
+				strokeWidth = 1.0f / getResources().getDisplayMetrics().density;
+			}
+			mRadiusInactive -= strokeWidth / 2.0f;
 		}
 		mPaintInactive.setColor(inactiveColor);
 
@@ -101,6 +167,12 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 		switch (activeType) {
 		case STYLE_STROKE:
 			mPaintActive.setStyle(Style.STROKE);
+			float strokeWidth = mPaintInactive.getStrokeWidth();
+			if (strokeWidth == 0.0f) {
+				// It draws in "hairline mode", which is 1 px wide.
+				strokeWidth = 1.0f / getResources().getDisplayMetrics().density;
+			}
+			mRadiusActive -= strokeWidth / 2.0f;
 			break;
 		default:
 			mPaintActive.setStyle(Style.FILL);
@@ -116,44 +188,36 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		int count = 5;
+		int count = 3;
 		if (viewFlow != null) {
 			count = viewFlow.getViewsCount();
 		}
 		
-		if(count>1){
-			float circleSeparation = 2*radius+radius+radius;
-			//this is the amount the first circle should be offset to make the entire thing centered
-			float centeringOffset = 0;
-			
-			int leftPadding = getPaddingLeft();
-			
-			// Draw stroked circles
-			for (int iLoop = 0; iLoop < count; iLoop++) {
-				canvas.drawCircle(leftPadding + radius
-						+ (iLoop * circleSeparation) + centeringOffset,
-						getPaddingTop() + radius, radius, mPaintInactive);
-				
-//				canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), 
-//						R.drawable.viewflow_indicator_inactive), leftPadding + 
-//						+ (iLoop * circleSeparation) + centeringOffset, 
-//						getPaddingTop(), mPaintInactive);
-			}
-			float cx = 0;
+		//this is the amount the first circle should be offset to make the entire thing centered
+		float centeringOffset = 0;
+		
+		int leftPadding = getPaddingLeft();
+		
+		// Draw stroked circles
+		for (int iLoop = 0; iLoop < count; iLoop++) {
+			canvas.drawCircle(leftPadding + mRadius
+					+ (iLoop * spacing) + centeringOffset,
+					getPaddingTop() + mRadius, mRadiusInactive, mPaintInactive);
+		}
+		float cx = 0;
+		if (mSnap) {
+			cx = currentPosition * spacing;
+		} else {
 			if (flowWidth != 0) {
 				// Draw the filled circle according to the current scroll
-				cx = (currentScroll * (2 * radius + radius+radius)) / flowWidth;
+				cx = (currentScroll * spacing) / flowWidth;
 			}
-			// The flow width has been upadated yet. Draw the default position
-			canvas.drawCircle(leftPadding + radius + cx+centeringOffset, getPaddingTop()
-					+ radius, radius, mPaintActive);
-//			canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), 
-//					R.drawable.viewflow_indicator_active), leftPadding + cx+centeringOffset,
-//					getPaddingTop(), mPaintActive);
-			
+			// else, the flow width hasn't been updated yet. Draw the default position.
 		}
+		canvas.drawCircle(leftPadding + mRadius + cx+centeringOffset, getPaddingTop()
+				+ mRadius, mRadiusActive, mPaintActive);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -163,6 +227,12 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 */
 	@Override
 	public void onSwitched(View view, int position) {
+		currentPosition = position;
+		if (mSnap) {
+			setVisibility(View.VISIBLE);
+			resetTimer();
+			invalidate();
+		}
 	}
 
 	/*
@@ -174,9 +244,9 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 */
 	@Override
 	public void setViewFlow(ViewFlow view) {
-//		resetTimer();
+		resetTimer();
 		viewFlow = view;
-		flowWidth = viewFlow.getWidth();
+		flowWidth = viewFlow.getChildWidth();
 		invalidate();
 	}
 
@@ -188,11 +258,13 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 */
 	@Override
 	public void onScrolled(int h, int v, int oldh, int oldv) {
-		setVisibility(View.VISIBLE);
-//		resetTimer();
 		currentScroll = h;
-		flowWidth = viewFlow.getWidth();
-		invalidate();
+		flowWidth = viewFlow.getChildWidth();
+		if (!mSnap) {
+			setVisibility(View.VISIBLE);
+			resetTimer();
+			invalidate();
+		}
 	}
 
 	/*
@@ -210,7 +282,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 * Determines the width of this view
 	 * 
 	 * @param measureSpec
-	 *            A measureSpec packed into an int
+	 *			  A measureSpec packed into an int
 	 * @return The width of the view, honoring constraints from measureSpec
 	 */
 	private int measureWidth(int measureSpec) {
@@ -224,12 +296,13 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 		}
 		// Calculate the width according the views count
 		else {
-			int count = 5;
+			int count = 3;
 			if (viewFlow != null) {
 				count = viewFlow.getViewsCount();
 			}
+			// Remember that spacing is centre-to-centre
 			result = (int) (getPaddingLeft() + getPaddingRight()
-					+ (count * 2 * radius) + (count - 1) * (radius*2) + 1);
+					+ (2 * mRadius) + (count - 1) * spacing);
 			// Respect AT_MOST value if that was what is called for by
 			// measureSpec
 			if (specMode == MeasureSpec.AT_MOST) {
@@ -243,7 +316,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 * Determines the height of this view
 	 * 
 	 * @param measureSpec
-	 *            A measureSpec packed into an int
+	 *			  A measureSpec packed into an int
 	 * @return The height of the view, honoring constraints from measureSpec
 	 */
 	private int measureHeight(int measureSpec) {
@@ -257,7 +330,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 		}
 		// Measure the height
 		else {
-			result = (int) (2 * radius + getPaddingTop() + getPaddingBottom() + 1);
+			result = (int) (2 * mRadius + getPaddingTop() + getPaddingBottom() + 1);
 			// Respect AT_MOST value if that was what is called for by
 			// measureSpec
 			if (specMode == MeasureSpec.AT_MOST) {
@@ -271,7 +344,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 * Sets the fill color
 	 * 
 	 * @param color
-	 *            ARGB value for the text
+	 *			  ARGB value for the text
 	 */
 	public void setFillColor(int color) {
 		mPaintActive.setColor(color);
@@ -282,7 +355,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 * Sets the stroke color
 	 * 
 	 * @param color
-	 *            ARGB value for the text
+	 *			  ARGB value for the text
 	 */
 	public void setStrokeColor(int color) {
 		mPaintInactive.setColor(color);
@@ -354,7 +427,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		//setVisibility(View.GONE);
+		setVisibility(View.GONE);
 	}
 
 	@Override
