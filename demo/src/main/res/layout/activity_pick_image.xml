@@ -29,7 +29,7 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/activity_avatar_btn_from_gallery"
+            android:id="@+id/apid_btn_from_gallery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -37,7 +37,7 @@
             android:text="gallery" />
 
         <Button
-            android:id="@+id/activity_avatar_btn_from_camera"
+            android:id="@+id/apid_btn_from_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -45,7 +45,7 @@
             android:text="camera" />
 
         <Button
-            android:id="@+id/activity_avatar_btn_from_multi_selector"
+            android:id="@+id/apid_btn_from_multi_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -77,7 +77,7 @@
             android:text="size"/>
 
         <EditText
-            android:id="@+id/activity_avatar_editor_size"
+            android:id="@+id/apid_editor_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -104,7 +104,7 @@
             android:text="aspect"/>
 
         <EditText
-            android:id="@+id/activity_avatar_editor_aspect_width"
+            android:id="@+id/apid_editor_aspect_width"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -124,7 +124,7 @@
             android:text=":"/>
 
         <EditText
-            android:id="@+id/activity_avatar_editor_aspect_height"
+            android:id="@+id/apid_editor_aspect_height"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -161,14 +161,14 @@
         android:orientation="horizontal" >
 
         <RadioGroup
-            android:id="@+id/activity_avatar_radio_group"
+            android:id="@+id/apid_radio_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <RadioButton
-                android:id="@+id/activity_avatar_radio_1"
+                android:id="@+id/apid_radio_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -176,7 +176,7 @@
                 android:text="1 pic" />
 
             <RadioButton
-                android:id="@+id/activity_avatar_radio_4"
+                android:id="@+id/apid_radio_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -184,7 +184,7 @@
                 android:text="4 pic" />
 
             <RadioButton
-                android:id="@+id/activity_avatar_radio_9"
+                android:id="@+id/apid_radio_9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -193,7 +193,7 @@
         </RadioGroup>
 
         <Button
-            android:id="@+id/activity_avatar_btn_multi_image"
+            android:id="@+id/apid_btn_multi_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -217,11 +217,22 @@
         android:background="#6e6e6e" />
 
     <GridView
-        android:id="@+id/activity_avatar_img_grid"
+        android:id="@+id/apid_img_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
-        android:horizontalSpacing="5dp"
-        android:verticalSpacing="5dp"
         android:numColumns="3" />
+
+    <RelativeLayout
+        android:id="@+id/apid_avatar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/apid_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null" />
+    </RelativeLayout>
 </LinearLayout>

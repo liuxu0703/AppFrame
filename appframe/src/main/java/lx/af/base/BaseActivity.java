@@ -3,6 +3,7 @@ package lx.af.base;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ public abstract class BaseActivity extends FragmentActivity {
             initSwipeBack();
         }
         for (LifeCycleListener listener : mLifeCycleListeners) {
-            listener.onActivityCreated(this);
+            listener.onActivityCreated(this, savedInstanceState);
         }
     }
 
@@ -57,6 +58,22 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onPostCreate(savedInstanceState);
         if (this instanceof SwipeBackImpl) {
             mSwipeBackLayout.attachToActivity(this);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivitySaveInstanceState(this, outState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onActivityRestoreInstanceState(this, savedInstanceState);
         }
     }
 
@@ -326,23 +343,27 @@ public abstract class BaseActivity extends FragmentActivity {
     // interface
 
     public interface LifeCycleListener {
-        void onActivityCreated(BaseActivity activity);
+        void onActivityCreated(BaseActivity activity, Bundle savedInstanceState);
         void onActivityStarted(BaseActivity activity);
         void onActivityResumed(BaseActivity activity);
         void onActivityPaused(BaseActivity activity);
         void onActivityStopped(BaseActivity activity);
         void onActivityDestroyed(BaseActivity activity);
         void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data);
+        void onActivitySaveInstanceState(BaseActivity activity, Bundle outState);
+        void onActivityRestoreInstanceState(BaseActivity activity, Bundle savedInstanceState);
     }
 
     public static class LifeCycleAdapter implements LifeCycleListener {
-        public void onActivityCreated(BaseActivity activity) {}
+        public void onActivityCreated(BaseActivity activity, Bundle savedInstanceState) {}
         public void onActivityStarted(BaseActivity activity) {}
         public void onActivityResumed(BaseActivity activity) {}
         public void onActivityPaused(BaseActivity activity) {}
         public void onActivityStopped(BaseActivity activity) {}
         public void onActivityDestroyed(BaseActivity activity) {}
         public void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data) {}
+        public void onActivitySaveInstanceState(BaseActivity activity, Bundle outState) {}
+        public void onActivityRestoreInstanceState(BaseActivity activity, Bundle savedInstanceState) {}
     }
 
 }

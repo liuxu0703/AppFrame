@@ -153,6 +153,15 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
     }
 
     /**
+     * get object list. for read purpose only!
+     * for performance's seek, we do not return a copy of the list.
+     * should not change its data!
+     */
+    public List<T> getList() {
+        return mObjects;
+    }
+
+    /**
      * @return The Context associated with this adapter.
      */
     public Context getContext() {
@@ -166,11 +175,6 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
      */
     public int getPosition(T item) {
         return mObjects.indexOf(item);
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
     }
 
     @Override

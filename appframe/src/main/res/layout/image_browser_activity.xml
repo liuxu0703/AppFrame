@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <lx.af.view.ImageBrowser.IBGalleryViewPager
+    <lx.af.activity.ImageBrowser.IBGalleryViewPager
         android:id="@+id/activity_image_browser_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -26,7 +26,23 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         for (LifeCycleListener listener : mLifeCycleListeners) {
-            listener.onFragmentCreate(this);
+            listener.onFragmentCreate(savedInstanceState, this);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onFragmentSaveInstanceState(this, outState);
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        for (LifeCycleListener listener : mLifeCycleListeners) {
+            listener.onFragmentViewStateRestored(this, savedInstanceState);
         }
     }
 
@@ -163,19 +179,23 @@ public abstract class BaseFragment extends Fragment {
     // interface
 
     public interface LifeCycleListener {
-        void onFragmentCreate(BaseFragment fragment);
+        void onFragmentCreate(Bundle savedInstanceState, BaseFragment fragment);
         void onFragmentResume(BaseFragment fragment);
         void onFragmentPause(BaseFragment fragment);
         void onFragmentDestroy(BaseFragment fragment);
         void onFragmentActivityResult(BaseFragment fragment, int requestCode, int resultCode, Intent data);
+        void onFragmentSaveInstanceState(BaseFragment fragment, Bundle outState);
+        void onFragmentViewStateRestored(BaseFragment fragment, Bundle savedInstanceState);
     }
 
     public static class LifeCycleAdapter implements LifeCycleListener {
-        public void onFragmentCreate(BaseFragment fragment) {}
+        public void onFragmentCreate(Bundle savedInstanceState, BaseFragment fragment) {}
         public void onFragmentResume(BaseFragment fragment) {}
         public void onFragmentPause(BaseFragment fragment) {}
         public void onFragmentDestroy(BaseFragment fragment) {}
         public void onFragmentActivityResult(BaseFragment fragment, int requestCode, int resultCode, Intent data) {}
+        public void onFragmentSaveInstanceState(BaseFragment fragment, Bundle outState) {}
+        public void onFragmentViewStateRestored(BaseFragment fragment, Bundle savedInstanceState) {}
     }
 
 }

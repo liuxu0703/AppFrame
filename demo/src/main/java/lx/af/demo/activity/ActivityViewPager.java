@@ -2,6 +2,7 @@ package lx.af.demo.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -19,7 +20,7 @@ import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
 import lx.af.utils.ActivityUtils.ImageSelector;
-import lx.af.utils.view.ViewPagerAutoFlipper;
+import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
 
 /**
  * author: lx
@@ -79,7 +80,7 @@ public class ActivityViewPager extends BaseDemoActivity implements
             case R.id.avp_pager_btn_activity: {
                 ImageSelector.of(this).count(9).showCamera(false).start(new ActivityResultCallback<ArrayList<String>>() {
                     @Override
-                    public void onActivityResult(int requestCode, ArrayList<String> result) {
+                    public void onActivityResult(int requestCode, @NonNull ArrayList<String> result) {
                         List<String> uris = new ArrayList<>(result.size());
                         for (String path : result) {
                             uris.add(Uri.parse("file://" + path).toString());

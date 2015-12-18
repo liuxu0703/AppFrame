@@ -1,12 +1,11 @@
 package lx.af.utils.ActivityUtils;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 
 import lx.af.base.BaseActivity;
 import lx.af.base.BaseFragment;
+import lx.af.utils.log.Log;
 
 /**
  * author: lx
@@ -49,21 +48,20 @@ abstract class ActivityResultHandler<T> implements
         }
     }
 
-    protected abstract T extractResult(@NonNull Intent data);
+    protected abstract T extractResult(int resultCode, Intent data);
 
     @Override
     public void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data) {
+        Log.d("liuxu", "111 ResultHandler, onActivityResult, request="+requestCode+", result="+resultCode+", data="+data);
         if (requestCode == mRequestCode) {
             activity.removeLifeCycleListener(this);
         } else {
             return;
         }
-        if (resultCode != Activity.RESULT_OK || data == null) {
-            return;
-        }
-        T result = extractResult(data);
+        T result = extractResult(resultCode, data);
+        Log.d("liuxu", "111 ResultHandler, onActivityResult, result=" + resultCode + ", ret=" + result);
         if (result != null) {
-            mCallback.onActivityResult(requestCode, result);
+            mCallback.onActivityResult(resultCode, result);
         }
     }
 
@@ -74,19 +72,17 @@ abstract class ActivityResultHandler<T> implements
         } else {
             return;
         }
-        if (resultCode != Activity.RESULT_OK || data == null) {
-            return;
-        }
-        T result = extractResult(data);
+        T result = extractResult(resultCode, data);
         if (result != null) {
-            mCallback.onActivityResult(requestCode, result);
+            mCallback.onActivityResult(resultCode, result);
         }
     }
 
     // ====================================
 
+
     @Override
-    public void onActivityCreated(BaseActivity activity) {
+    public void onActivityCreated(BaseActivity activity, Bundle savedInstanceState) {
     }
 
     @Override
@@ -111,7 +107,7 @@ abstract class ActivityResultHandler<T> implements
     }
 
     @Override
-    public void onFragmentCreate(BaseFragment fragment) {
+    public void onFragmentCreate(Bundle savedInstanceState, BaseFragment fragment) {
     }
 
     @Override

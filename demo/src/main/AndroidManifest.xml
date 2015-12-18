@@ -50,7 +50,7 @@
             android:theme="@style/activity_theme_no_translucent" >
         </activity>
         <activity
-            android:name=".activity.ActivityPickImageDemo"
+            android:name=".activity.ActivityImageOperateDemo"
             android:label="Image Pick and Crop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" >

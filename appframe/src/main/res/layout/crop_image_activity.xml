@@ -48,7 +48,7 @@
             android:text="@android:string/ok" />
     </RelativeLayout>
 
-    <lx.af.view.crop.CropImageView
+    <lx.af.activity.ImageCropper.CropImageView
         android:id="@+id/activity_crop_image_crop_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
