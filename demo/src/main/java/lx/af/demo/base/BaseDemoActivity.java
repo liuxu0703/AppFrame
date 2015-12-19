@@ -3,7 +3,6 @@ package lx.af.demo.base;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,9 +47,7 @@ public class BaseDemoActivity extends BaseActivity {
                 // check if menu is valid
                 View menu = callbacks.onCreateActionBarMenu();
                 if (menu != null) {
-                    ViewStub stub = obtainView(R.id.action_bar_menu_stub);
-                    stub.inflate();
-                    FrameLayout menuFrame = obtainView(R.id.activity_base_action_bar_menu_frame);
+                    FrameLayout menuFrame = obtainView(R.id.action_bar_menu_frame);
                     menuFrame.addView(menu);
                 }
 
@@ -62,9 +59,7 @@ public class BaseDemoActivity extends BaseActivity {
                         }
                     }
                 });
-                // TODO: adjust title width according to width of back and menu
                 callbacks.onActionBarCreated(view, back, title, menu);
-
             } else {
                 back.setOnClickListener(new View.OnClickListener() {
                     @Override

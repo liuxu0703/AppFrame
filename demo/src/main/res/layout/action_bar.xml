@@ -27,14 +27,13 @@
         android:textSize="18sp"
         android:textColor="@android:color/white" />
 
-    <ViewStub
-        android:id="@+id/action_bar_menu_stub"
+    <FrameLayout
+        android:id="@+id/action_bar_menu_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:layout_centerVertical="true"
-        android:layout="@layout/action_bar_menu_frame" />
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

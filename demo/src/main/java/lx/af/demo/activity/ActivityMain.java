@@ -2,8 +2,10 @@ package lx.af.demo.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -83,6 +85,8 @@ public class ActivityMain extends BaseDemoActivity implements
         private void initView() {
             setTag(mData.mTitle); // so that we could find it later
             setText(mData.mTitle);
+            setTextColor(Color.WHITE);
+            setGravity(Gravity.CENTER);
             setBackgroundResource(R.drawable.btn_action);
             setOnClickListener(this);
         }
