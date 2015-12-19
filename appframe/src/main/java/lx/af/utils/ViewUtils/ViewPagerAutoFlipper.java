@@ -125,11 +125,13 @@ public class ViewPagerAutoFlipper implements
         @Override
         public void run() {
             if (mViewPager == null) {
+                // unlikely
                 return;
             }
             if (mViewPager.getWindowToken() == null) {
                 // window token no longer valid, exit loop
                 mViewPager.removeCallbacks(mFlipRunnable);
+                mViewPager.removeOnPageChangeListener(ViewPagerAutoFlipper.this);
                 return;
             }
 
