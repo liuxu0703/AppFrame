@@ -24,22 +24,18 @@ public class ActivityMain extends BaseDemoActivity implements
     static {
         BUTTON_DATA_LIST.add(new DemoButtonData("Test",
                 ActivityTest.class));
-        BUTTON_DATA_LIST.add(new DemoButtonData("ViewPager Auto Flip",
-                ActivityViewPager.class));
-        BUTTON_DATA_LIST.add(new DemoButtonData("Swipe Refresh List",
-                ActivitySwipeRefresh.class));
-        BUTTON_DATA_LIST.add(new DemoButtonData("StorageManagerHack",
-                ActivityStorageUtilsDemo.class));
-        BUTTON_DATA_LIST.add(new DemoButtonData("Home Key Watcher",
-                ActivityHomeWatcherDemo.class));
-        BUTTON_DATA_LIST.add(new DemoButtonData("File Picker",
-                ActivityFilePickerDemo.class));
-        BUTTON_DATA_LIST.add(new DemoButtonData("Auto Slide Pager",
-                ActivityAutoSlidePager.class));
-        BUTTON_DATA_LIST.add(new DemoButtonData("Video Play",
-                ActivityPlayViewDemo.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Image Pick and Crop",
                 ActivityImageOperateDemo.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("ViewPager Auto Flip",
+                ActivityViewPager.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Auto Slide Pager",
+                ActivityAutoSlidePager.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Swipe Refresh List",
+                ActivitySwipeRefresh.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Home Key Watcher",
+                ActivityHomeWatcherDemo.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Video Play",
+                ActivityPlayViewDemo.class));
     }
 
 

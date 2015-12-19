@@ -204,9 +204,9 @@ public class ImageCropper extends ActivityLauncherBase<Uri> {
             }
             case FROM_GALLERY: {
                 if (mActivity != null) {
-                    ImageByGallery.of(mActivity).start(mUriResultCallback);
+                    MediaPicker.of(mActivity).pickImage().start(mUriResultCallback);
                 } else {
-                    ImageByGallery.of(mFragment).start(mUriResultCallback);
+                    MediaPicker.of(mFragment).pickImage().start(mUriResultCallback);
                 }
                 break;
             }

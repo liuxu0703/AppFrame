@@ -56,7 +56,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pick_image);
+        setContentView(R.layout.activity_image_operate);
         findViewById(R.id.apid_btn_from_camera).setOnClickListener(this);
         findViewById(R.id.apid_btn_from_gallery).setOnClickListener(this);
         findViewById(R.id.apid_btn_from_multi_selector).setOnClickListener(this);

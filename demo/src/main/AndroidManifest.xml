@@ -34,16 +34,6 @@
             android:label="File Picker" >
         </activity>
         <activity
-            android:name=".activity.ActivityFilePickerDemo"
-            android:screenOrientation="portrait"
-            android:label="File Picker" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityStorageUtilsDemo"
-            android:screenOrientation="portrait"
-            android:label="Storage" >
-        </activity>
-        <activity
             android:name=".activity.ActivityPlayViewDemo"
             android:label="Video"
             android:screenOrientation="portrait"

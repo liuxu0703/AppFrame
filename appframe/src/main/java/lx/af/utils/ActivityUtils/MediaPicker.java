@@ -11,22 +11,42 @@ import android.support.v4.app.Fragment;
  * author: lx
  * date: 15-12-16
  */
-public class ImageByGallery extends ActivityLauncherBase<Uri> {
+public class MediaPicker extends ActivityLauncherBase<Uri> {
 
-    protected ImageByGallery(Activity activity) {
+    private String mMimeType;
+
+    protected MediaPicker(Activity activity) {
         super(activity);
     }
 
-    protected ImageByGallery(Fragment fragment) {
+    protected MediaPicker(Fragment fragment) {
         super(fragment);
     }
 
-    public static ImageByGallery of(Activity activity) {
-        return new ImageByGallery(activity);
+    public static MediaPicker of(Activity activity) {
+        return new MediaPicker(activity);
     }
 
-    public static ImageByGallery of(Fragment fragment) {
-        return new ImageByGallery(fragment);
+    public static MediaPicker of(Fragment fragment) {
+        return new MediaPicker(fragment);
+    }
+
+
+    public MediaPicker mimeType(String mimeType) {
+        mMimeType = mimeType;
+        return this;
+    }
+
+    public MediaPicker pickImage() {
+        return mimeType("image/*");
+    }
+
+    public MediaPicker pickVideo() {
+        return mimeType("video/*");
+    }
+
+    public MediaPicker pickAudio() {
+        return mimeType("audio/*");
     }
 
     @Override
@@ -49,13 +69,13 @@ public class ImageByGallery extends ActivityLauncherBase<Uri> {
     @Override
     public Intent createIntent() {
         Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mMimeType);
         return intent;
     }
 
     @Override
     protected int getDefaultRequestCode() {
-        return RequestCode.IMAGE_FROM_GALLERY;
+        return RequestCode.MEDIA_PICKER;
     }
 
 }
