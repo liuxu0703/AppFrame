@@ -19,7 +19,6 @@ import lx.af.demo.base.BaseDemoActivity;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
 import lx.af.utils.ActivityUtils.ContentPicker;
-import lx.af.utils.ActivityUtils.MediaPicker;
 import lx.af.utils.ScreenUtils;
 import lx.af.view.MediaPlayButton;
 import lx.af.view.VideoPlayView;
@@ -149,7 +148,6 @@ public final class ActivityPlayViewDemo extends BaseDemoActivity implements
             } else if (mPlayView.isPaused()) {
                 mPlayView.start();
             } else {
-                //MediaPicker.of(ActivityPlayViewDemo.this).pickVideo().start(new ActivityResultCallback<Uri>() {
                 ContentPicker.of(ActivityPlayViewDemo.this).pickVideo().start(new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(int resultCode, @NonNull Uri result) {

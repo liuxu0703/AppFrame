@@ -3,7 +3,6 @@ package lx.af.demo.activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import lx.af.base.BaseActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.HomeWatcher;
@@ -14,7 +13,6 @@ import lx.af.utils.HomeWatcher;
  */
 public class ActivityHomeWatcherDemo extends BaseDemoActivity implements
         BaseDemoActivity.ActionBarImpl,
-        BaseActivity.SwipeBackImpl,
         HomeWatcher.OnHomePressedListener {
 
     private HomeWatcher mHomeWatcher;

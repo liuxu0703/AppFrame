@@ -22,7 +22,6 @@ import java.util.List;
 
 import lx.af.activity.ImageBrowser.ImageBrowserActivity;
 import lx.af.adapter.AbsListAdapter;
-import lx.af.base.BaseActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
@@ -38,8 +37,7 @@ import lx.af.utils.log.Log;
  */
 public class ActivityImageOperateDemo extends BaseDemoActivity implements
         View.OnClickListener,
-        BaseDemoActivity.ActionBarImpl,
-        BaseActivity.SwipeBackImpl {
+        BaseDemoActivity.ActionBarImpl {
 
     private GridView mImageGrid;
     private ImageView mAvatar;

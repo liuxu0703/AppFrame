@@ -1,7 +1,6 @@
 package lx.af.base;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -12,11 +11,8 @@ import android.widget.RelativeLayout;
 
 import java.util.LinkedList;
 
-import lx.af.R;
 import lx.af.dialog.LoadingDialog;
 import lx.af.utils.AlertUtils;
-import lx.af.utils.ScreenUtils;
-import lx.af.view.SwipeBack.SwipeBackLayout;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -33,7 +29,6 @@ public abstract class BaseActivity extends FragmentActivity {
     protected String TAG;
 
     private LoadingDialog mLoadingDialog;
-    private SwipeBackLayout mSwipeBackLayout;
     private View mCContentView;  // custom content view
     private View mCActionBar;  // custom action bar
 
@@ -45,9 +40,6 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         TAG = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
-        if (this instanceof SwipeBackImpl) {
-            initSwipeBack();
-        }
         for (LifeCycleListener listener : mLifeCycleListeners) {
             listener.onActivityCreated(this, savedInstanceState);
         }
@@ -56,9 +48,6 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (this instanceof SwipeBackImpl) {
-            mSwipeBackLayout.attachToActivity(this);
-        }
     }
 
     @Override
@@ -129,30 +118,8 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
-    }
-
     public void startActivity(Class cls) {
         startActivity(new Intent(BaseActivity.this, cls));
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
-    }
-
-    public void finishWithoutAnim(){
-        super.finish();
     }
 
     @Override
@@ -160,12 +127,6 @@ public abstract class BaseActivity extends FragmentActivity {
         View v = super.findViewById(id);
         if (v != null) {
             return v;
-        }
-        if (mSwipeBackLayout != null) {
-            v = mSwipeBackLayout.findViewById(id);
-            if (v != null) {
-                return v;
-            }
         }
         if (mCContentView != null) {
             v = mCContentView.findViewById(id);
@@ -274,25 +235,6 @@ public abstract class BaseActivity extends FragmentActivity {
             mLoadingDialog.dismiss();
             mLoadingDialog = null;
         }
-    }
-
-    // ======================================
-    // about swipe back
-
-    private void initSwipeBack() {
-        getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        getWindow().getDecorView().setBackgroundDrawable(null);
-        mSwipeBackLayout = new SwipeBackLayout(this);
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        mSwipeBackLayout.setEdgeSize(ScreenUtils.getScreenWidth());
-    }
-
-    /**
-     * by implementing this interface, sub class of BaseActivity will get the ability
-     * of "finish activity by swiping back screen".
-     * NOTE: AppTheme should be set properly in AndroidManifest.xml.
-     */
-    public interface SwipeBackImpl {
     }
 
     // ======================================

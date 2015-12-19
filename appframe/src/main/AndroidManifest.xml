@@ -16,28 +16,24 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".activity.ImageCropper.ImageCropActivity"
+            android:name=".activity$ImageCropper.ImageCropActivity"
             android:label="@string/crop_image_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/activity_theme_no_translucent" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.ImageSelector.ImageSelectActivity"
+            android:name=".activity$ImageSelector.ImageSelectActivity"
             android:label="@string/mis_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/activity_theme_no_translucent" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.ImageSelector.ImageSelectBrowser"
-            android:label="Image Browser"
-            android:screenOrientation="portrait"
-            android:theme="@style/activity_theme_no_translucent" >
+            android:name=".activity$ImageSelector.ImageSelectBrowser"
+            android:label="Image Selector Browser"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.ImageBrowser.ImageBrowserActivity"
+            android:name=".activity$ImageBrowser.ImageBrowserActivity"
             android:label="Image Browser"
-            android:screenOrientation="portrait"
-            android:theme="@style/activity_theme_no_translucent" >
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

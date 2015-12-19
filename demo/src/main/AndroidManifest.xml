@@ -20,8 +20,7 @@
         <activity
             android:name=".activity.ActivityMain"
             android:label="Demo for AppFrame"
-            android:screenOrientation="portrait"
-            android:theme="@style/activity_theme_no_translucent" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,8 +35,7 @@
         <activity
             android:name=".activity.ActivityPlayViewDemo"
             android:label="Video"
-            android:screenOrientation="portrait"
-            android:theme="@style/activity_theme_no_translucent" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.ActivityImageOperateDemo"

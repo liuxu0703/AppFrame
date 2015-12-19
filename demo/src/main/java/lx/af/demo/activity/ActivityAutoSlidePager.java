@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import lx.af.base.BaseActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.view.AutoSlidePager.AutoSlidePager;
@@ -17,7 +16,6 @@ import lx.af.view.AutoSlidePager.AutoSlidePager;
  */
 public class ActivityAutoSlidePager extends BaseDemoActivity implements
         BaseDemoActivity.ActionBarImpl,
-        BaseActivity.SwipeBackImpl,
         View.OnClickListener {
 
 

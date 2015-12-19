@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@android:style/Theme.Translucent.NoTitleBar">
+    <style name="AppTheme" parent="@android:style/Theme.NoTitleBar">
         <item name="android:screenOrientation">portrait</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
@@ -9,23 +9,11 @@
         <item name="android:windowAnimationStyle">@style/DefaultActivityAnimation</item>
     </style>
 
-    <style name="activity_theme_no_translucent">
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
     <style name="DefaultActivityAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_left_in</item>
         <item name="android:activityOpenExitAnimation">@anim/slide_left_out</item>
         <item name="android:activityCloseEnterAnimation">@anim/slide_right_in</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
-    </style>
-
-    <style name="SwipeBackLayout">
-        <item name="edge_size">50dip</item>
-        <item name="shadow_left">@drawable/swipe_back_left_shadow</item>
-        <item name="shadow_right">@drawable/swipe_back_right_shadow</item>
-        <item name="shadow_bottom">@drawable/swipe_back_bottom_shadow</item>
     </style>
 
     <style name="dialog_activity" parent="@android:style/Theme.Translucent">
