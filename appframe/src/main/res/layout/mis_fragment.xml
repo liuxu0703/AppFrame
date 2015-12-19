@@ -56,7 +56,6 @@
             android:drawableRight="@drawable/mis_folder_indicator"
             android:drawablePadding="5dp"
             tools:text="所有图片" />
-
-        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
