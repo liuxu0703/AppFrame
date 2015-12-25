@@ -1,12 +1,18 @@
 package lx.af.demo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import lx.af.activity.ImageBrowser.ImageBrowserActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.consts.TestRes;
 import lx.af.utils.log.Log;
 import lx.af.view.kenburnsview.KenBurnsView;
 
@@ -34,9 +40,19 @@ public class ActivityTest extends BaseDemoActivity implements
 
     @Override
     public void onClick(View v) {
-        current = current.equals(L) ? T : L;
-        Log.d("liuxu", "11111 activity test, load url: " + current);
-        ImageLoader.getInstance().displayImage(current, kbv);
+//        current = current.equals(L) ? T : L;
+//        Log.d("liuxu", "11111 activity test, load url: " + current);
+//        ImageLoader.getInstance().displayImage(current, kbv);
+
+        ArrayList<String> uris = TestRes.asArrayList(TestRes.TEST_IMG_SCENE);
+        startImageBrowser(uris, uris.get(3));
+    }
+
+    private void startImageBrowser(ArrayList<String> imgUris, String currentUri) {
+        Intent intent = new Intent(this, ImageBrowserActivity.class);
+        intent.putExtra(ImageBrowserActivity.EXTRA_IMAGE_URI_LIST, imgUris);
+        intent.putExtra(ImageBrowserActivity.EXTRA_CURRENT_IMAGE_URI, currentUri);
+        startActivity(intent);
     }
 
 }

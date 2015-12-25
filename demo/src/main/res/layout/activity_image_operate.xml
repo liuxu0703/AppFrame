@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:background="@color/activity_bkg_1"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -216,23 +217,27 @@
         android:layout_marginTop="5dp"
         android:background="#6e6e6e" />
 
-    <GridView
-        android:id="@+id/apid_img_grid"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
-        android:numColumns="3" />
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/apid_avatar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/apid_avatar"
+        <lx.af.view.NineGrid.NineGridLayout
+            android:id="@+id/apid_img_9_grid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:contentDescription="@null" />
-    </RelativeLayout>
+            android:background="#e3e3e3"
+            android:padding="5dp"
+            app:gridSpaceSize="5dp" />
+
+        <!--<lx.af.view.NineGrid.NineGridLayout-->
+        <!--android:id="@+id/apid_img_9_grid"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="5dp"-->
+        <!--app:viewSizeOneColumn="180dp"-->
+        <!--app:viewSizeTwoColumn="100dp"-->
+        <!--app:viewSizeThreeColumn="75dp"-->
+        <!--app:gridSpaceSize="5dp" />-->
+    </ScrollView>
+
 </LinearLayout>

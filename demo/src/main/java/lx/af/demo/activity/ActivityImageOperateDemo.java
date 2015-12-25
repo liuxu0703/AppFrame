@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -30,6 +29,8 @@ import lx.af.utils.ActivityUtils.ImageSelector;
 import lx.af.utils.PathUtils;
 import lx.af.utils.ScreenUtils;
 import lx.af.utils.log.Log;
+import lx.af.view.NineGrid.NineGridLayout;
+import lx.af.view.NineGrid.NineImageUILAdapter;
 
 /**
  * Created by liuxu on 15-2-9.
@@ -39,13 +40,12 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         View.OnClickListener,
         BaseDemoActivity.ActionBarImpl {
 
-    private GridView mImageGrid;
-    private ImageView mAvatar;
-    private View mAvatarContainer;
     private EditText mEditorSize;
     private EditText mEditorAspectW;
     private EditText mEditorAspectH;
     private RadioGroup mRadioGroup;
+    private NineGridLayout mImageGrid;
+    private NineImageUILAdapter mImageGridAdapter;
 
     private int mCropMaxSize;
     private int mCropAspectX;
@@ -63,19 +63,18 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         mEditorAspectW = obtainView(R.id.apid_editor_aspect_width);
         mEditorAspectH = obtainView(R.id.apid_editor_aspect_height);
         mRadioGroup = obtainView(R.id.apid_radio_group);
-        mImageGrid = obtainView(R.id.apid_img_grid);
-        mAvatar = obtainView(R.id.apid_avatar);
-        mAvatarContainer = obtainView(R.id.apid_avatar_layout);
+        mImageGrid = obtainView(R.id.apid_img_9_grid);
         RadioButton radio = obtainView(R.id.apid_radio_9);
         radio.setChecked(true);
 
-        mImageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mImageGridAdapter = new NineImageUILAdapter(mImageGrid);
+        mImageGridAdapter.setOnItemClickListener(new NineImageUILAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageAdapter adapter = (ImageAdapter) parent.getAdapter();
-                ArrayList<String> preSelect = new ArrayList<>(adapter.getCount());
-                preSelect.addAll(adapter.getList());
-                startImageBrowser(preSelect, adapter.getItem(position));
+            public void onItemClicked(View view, NineImageUILAdapter adapter, int position) {
+                List<String> arr = adapter.getImageUris();
+                ArrayList<String> uris = new ArrayList<>(adapter.getCount());
+                uris.addAll(arr);
+                startImageBrowser(uris, adapter.getData(position));
             }
         });
     }
@@ -126,9 +125,9 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         @Override
         public void onActivityResult(int resultCode, @NonNull Uri result) {
             Log.d(TAG, "crop image result: " + result);
-            ImageLoader.getInstance().displayImage(result.toString(), mAvatar);
-            mAvatarContainer.setVisibility(View.VISIBLE);
-            mImageGrid.setVisibility(View.GONE);
+            List<String> list = new ArrayList<>(1);
+            list.add(result.toString());
+            mImageGridAdapter.setImageUris(list);
         }
     };
 
@@ -140,9 +139,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
                 for (String path : list) {
                     uris.add(Uri.parse("file://" + path).toString());
                 }
-                mImageGrid.setAdapter(new ImageAdapter(ActivityImageOperateDemo.this, uris));
-                mImageGrid.setVisibility(View.VISIBLE);
-                mAvatarContainer.setVisibility(View.GONE);
+                mImageGridAdapter.setImageUris(uris);
             }
         }
     };

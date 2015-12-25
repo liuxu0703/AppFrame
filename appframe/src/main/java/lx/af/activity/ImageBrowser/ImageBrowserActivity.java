@@ -1,11 +1,10 @@
 package lx.af.activity.ImageBrowser;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,14 +12,16 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import lx.af.R;
+import lx.af.activity.ImageBrowser.ImagePagerAdapter.ClickImageCallback;
+import lx.af.activity.ImageBrowser.ImagePagerAdapter.LoadImageCallback;
 import lx.af.base.BaseActivity;
-import lx.af.activity.ImageBrowser.IBImageViewContainer.LoadImageCallback;
+import lx.af.utils.log.Log;
+import lx.af.view.ProgressWheel;
 
 /**
  * author: lx
@@ -37,11 +38,9 @@ public class ImageBrowserActivity extends BaseActivity {
     /** image uri for init display */
     public static final String EXTRA_IMAGE_URI_LIST = "IMImageBrowserActivity.uri_list";
 
-
     public enum ImageValidation {
         UNKNOWN, VALID, INVALID,
     }
-
 
     // hide function bar after X milliseconds without further operation
     private static final int FUNCTION_BAR_HIDE_DELAY = 3000;
@@ -51,16 +50,17 @@ public class ImageBrowserActivity extends BaseActivity {
     private Animation mAnimActionBarHide;
     private Animation mAnimBottomBarHide;
 
-    private IBGalleryViewPager mPager;
+    private ViewPager mPager;
     private TextView mTvPageIdx;
     private View mActionBar;
+    private ProgressWheel mProgress;
     private FrameLayout mBottomBar;
 
+    private ImagePagerAdapter mAdapter;
     private Handler mUIHandler = new Handler();
     private List<String> mImgUris;
     private Map<String, ImageInfo> mImgInfoMap;
     private String mCurrentImgUri;
-    private Map<String, SoftReference<IBImageViewContainer>> mImageMap = new HashMap<>();
 
     private Runnable mHideFunctionBarRunnable = new Runnable() {
         @Override
@@ -81,11 +81,11 @@ public class ImageBrowserActivity extends BaseActivity {
             Toast.makeText(this, R.string.image_Browser_toast_list_null, Toast.LENGTH_SHORT).show();
             finish();
             return;
-        } else {
-            mImgInfoMap = new HashMap<>(mImgUris.size());
-            for (String uri : mImgUris) {
-                mImgInfoMap.put(uri, new ImageInfo(uri));
-            }
+        }
+
+        mImgInfoMap = new HashMap<>(mImgUris.size());
+        for (String uri : mImgUris) {
+            mImgInfoMap.put(uri, new ImageInfo(uri));
         }
 
         mAnimActionBarShow = AnimationUtils.loadAnimation(this, R.anim.slide_top_out);
@@ -97,6 +97,7 @@ public class ImageBrowserActivity extends BaseActivity {
         mTvPageIdx = obtainView(R.id.activity_image_browser_page_idx);
         mActionBar = obtainView(R.id.activity_image_browser_action_bar);
         mBottomBar = obtainView(R.id.activity_image_browser_function_bar);
+        mProgress = obtainView(R.id.activity_image_browser_loading);
         findViewById(R.id.activity_image_browser_action_bar_back)
                 .setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,26 +115,79 @@ public class ImageBrowserActivity extends BaseActivity {
         }
         currentIdx = currentIdx == -1 ? 0 : currentIdx;
         mTvPageIdx.setText((currentIdx + 1) + "/" + mImgUris.size());
-        mPager.setAdapter(new ImagePaperAdapter(this, mImgUris));
+        if (mImgUris.size() == 1) {
+            mTvPageIdx.setVisibility(View.GONE);
+        }
+
+        mAdapter = new ImagePagerAdapter(mImgUris);
+        mAdapter.setLoadImageCallback(mLoadImageCallback);
+        mAdapter.setClickImageCallback(mClickImageCallback);
+
+        mPager.setAdapter(mAdapter);
         mPager.setOffscreenPageLimit(1);
         mPager.setCurrentItem(currentIdx);
-        mPager.setOnPageChangeListener(new OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mCurrentImgUri = mImgUris.get(position);
-                onBrowseImage(mImgUris, position);
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                mTvPageIdx.setText((mPager.getCurrentItem() + 1) + "/" + mImgUris.size());
-            }
-        });
+        mPager.addOnPageChangeListener(mViewPagerChangeListener);
     }
+
+    private OnPageChangeListener mViewPagerChangeListener = new OnPageChangeListener() {
+        @Override
+        public void onPageSelected(int position) {
+            mCurrentImgUri = mImgUris.get(position);
+            onBrowseImage(mImgUris, position);
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            mTvPageIdx.setText((mPager.getCurrentItem() + 1) + "/" + mImgUris.size());
+        }
+    };
+
+    private LoadImageCallback mLoadImageCallback = new LoadImageCallback() {
+        @Override
+        public void onImageLoadStart(String imgUri) {
+            if (mCurrentImgUri.equals(imgUri)) {
+                Log.d("liuxu", "111 activity load start, start spin 1111111111111111");
+                mProgress.setVisibility(View.VISIBLE);
+                mProgress.spin();
+            }
+        }
+
+        @Override
+        public void onImageLoadProgress(String imgUri, int current, int total) {
+            if (mCurrentImgUri.equals(imgUri)) {
+                int progress = current * 360 / total;
+                int percentage = current * 100 / total;
+                mProgress.setProgress(progress);
+                mProgress.setText(percentage + "%");
+            }
+        }
+
+        @Override
+        public void onImageLoadComplete(String imgUri, boolean loadSuccess) {
+            if (mCurrentImgUri.equals(imgUri)) {
+                Log.d("liuxu", "111 activity load complete, uri="+imgUri);
+                mProgress.setVisibility(View.GONE);
+            }
+            ImageBrowserActivity.this.onImageLoadComplete(imgUri, loadSuccess);
+        }
+    };
+
+    private ClickImageCallback mClickImageCallback = new ClickImageCallback() {
+        @Override
+        public void onImageClicked(String imageUri, View view) {
+            hideShowFunctionBar();
+            ImageBrowserActivity.this.onImageClicked(imageUri, view);
+        }
+
+        @Override
+        public boolean onImageLongClicked(String imageUri, View view) {
+            return ImageBrowserActivity.this.onImageLongClicked(imageUri, view);
+        }
+    };
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -161,8 +215,6 @@ public class ImageBrowserActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mImageMap = null;
-        System.gc();
     }
 
     @Override
@@ -198,63 +250,7 @@ public class ImageBrowserActivity extends BaseActivity {
         }
     }
 
-    private class ImagePaperAdapter extends IBPagerAdapter {
-
-        public ImagePaperAdapter(Context context, List<String> resources) {
-            super(context, resources);
-        }
-
-        @Override
-        public void setPrimaryItem(ViewGroup container, int position,
-                                   Object object) {
-            super.setPrimaryItem(container, position, object);
-            IBGalleryViewPager pager = (IBGalleryViewPager) container;
-            IBImageViewContainer img = (IBImageViewContainer) object;
-            pager.mCurrentView = img.getImageView();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup view, int position) {
-            IBImageViewContainer touchImageView = null;
-            String url = mResources.get(position);
-            if (mImageMap.containsKey(url)) {
-                SoftReference<IBImageViewContainer> softReference = mImageMap.get(url);
-                if (softReference.get() != null) {
-                    touchImageView = softReference.get();
-                }
-            }
-
-            if (touchImageView == null) {
-                touchImageView = new IBImageViewContainer(mContext);
-                touchImageView.setUri(mResources.get(position));
-                touchImageView.setLoadImageCallback(mLoadImageCallback);
-                touchImageView.setLayoutParams(new LayoutParams(
-                        LayoutParams.MATCH_PARENT,
-                        LayoutParams.MATCH_PARENT));
-            }
-
-            touchImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    hideShowFunctionBar();
-                }
-            });
-
-            view.addView(touchImageView, 0);
-            return touchImageView;
-        }
-
-        private LoadImageCallback mLoadImageCallback = new LoadImageCallback() {
-            @Override
-            public void onImageLoadComplete(String imgUri, boolean loadSuccess) {
-                ImageBrowserActivity.this.onImageLoadComplete(imgUri, loadSuccess);
-            }
-        };
-    }
-
-
     // ==========================================
-
 
     protected String getCurrentImageUri() {
         return mCurrentImgUri;
@@ -277,6 +273,22 @@ public class ImageBrowserActivity extends BaseActivity {
         }
         ImageInfo info = mImgInfoMap.get(imgUri);
         info.valid = success ? ImageValidation.VALID : ImageValidation.INVALID;
+    }
+
+    /**
+     * called when click on an image
+     */
+    public void onImageClicked(String imageUri, View view) {
+        Log.d("liuxu", "111 activity onImageClicked, uri="+imageUri);
+    }
+
+    /**
+     * called when long click on an image.
+     * @return true if the event is handled
+     */
+    public boolean onImageLongClicked(String imageUri, View view) {
+        Log.d("liuxu", "111 activity onImageLongClicked, uri="+imageUri);
+        return false;
     }
 
     /**
@@ -327,6 +339,14 @@ public class ImageBrowserActivity extends BaseActivity {
             Toast.makeText(this,
                     R.string.image_Browser_toast_load_image_fail, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    protected void onImageClicked() {
+
+    }
+
+    protected void onImageLongClick() {
+
     }
 
 

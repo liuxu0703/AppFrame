@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <lx.af.activity.ImageBrowser.IBGalleryViewPager
+    <lx.af.activity.ImageBrowser.HackyViewPager
         android:id="@+id/activity_image_browser_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,4 +58,20 @@
         android:background="#28000000"
         android:visibility="gone" />
 
+    <lx.af.view.ProgressWheel
+        xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_image_browser_loading"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        ProgressWheel:text=""
+        ProgressWheel:textColor="#fff"
+        ProgressWheel:textSize="14sp"
+        ProgressWheel:rimColor="#44696969"
+        ProgressWheel:barLength="30dp"
+        ProgressWheel:barColor="#339BB9"
+        ProgressWheel:barWidth="5dp"
+        ProgressWheel:rimWidth="5dp"
+        ProgressWheel:spinSpeed="4dp" />
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package lx.af.demo.consts;
 
+import java.util.ArrayList;
+
 /**
  * author: lx
  * date: 15-12-15
@@ -68,4 +70,13 @@ public final class TestRes {
             "http://www.ld12.com/upimg358/allimg/c140813/140N4GA61210-464X.jpg",
             "http://www.ld12.com/upimg358/allimg/c140813/140N4GB02550-62U6.jpg",
     };
+
+    public static ArrayList<String> asArrayList(String[] res) {
+        ArrayList<String> list = new ArrayList<>(res.length);
+        for (String s : res) {
+            list.add(s);
+        }
+        return list;
+    }
+
 }

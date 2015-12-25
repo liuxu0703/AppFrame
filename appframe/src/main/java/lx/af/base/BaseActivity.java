@@ -26,7 +26,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  */
 public abstract class BaseActivity extends FragmentActivity {
 
-    protected String TAG;
+    public String TAG;
 
     private LoadingDialog mLoadingDialog;
     private View mCContentView;  // custom content view
