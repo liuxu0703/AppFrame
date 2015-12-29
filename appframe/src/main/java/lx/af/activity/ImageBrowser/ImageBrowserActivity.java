@@ -41,7 +41,12 @@ public class ImageBrowserActivity extends BaseActivity {
     public static final String EXTRA_AUTO_HIDE_FUNCTION_BAR = "ImageBrowserActivity_auto_hide_action_bar";
 
     public enum ImageValidation {
-        UNKNOWN, VALID, INVALID,
+        /** image has not be loaded, validation state unknown */
+        UNKNOWN,
+        /** uri load success and image displayed */
+        VALID,
+        /** uri load failed or image cannot be displayed */
+        INVALID,
     }
 
     // hide function bar after X milliseconds without further operation
@@ -229,13 +234,68 @@ public class ImageBrowserActivity extends BaseActivity {
 
     // ==========================================
 
+    /**
+     * @return current displayed image uri
+     */
     protected String getCurrentImageUri() {
         return mCurrentImgUri;
     }
 
+    /**
+     * @return validation of current displayed image
+     */
     protected ImageValidation getCurrentImageValidation() {
         ImageInfo info = mImgInfoMap.get(mCurrentImgUri);
         return info.valid;
+    }
+
+    /**
+     * generate a action bar menu button. called on activity create.
+     * the button will be shown on the right side of the action bar, with
+     * both width and height as WRAP_CONTENT.
+     * @return the menu button view, or null if you do not want one.
+     */
+    protected View getActionBarMenu() {
+        return null;
+    }
+
+    /**
+     * generate a bottom bar view. called on activity create.
+     * the view will be added to the bottom of the activity ui, with
+     * width as MATCH_PARENT and height as WRAP_CONTENT.
+     * @return the bottom bar view, or null if you do not want one.
+     */
+    protected View getBottomBar() {
+        return null;
+    }
+
+    /**
+     * @return true and the action bar will always be shown, and tap image
+     *         will exit image browser.
+     */
+    protected boolean isTapExit() {
+        return mIsTapExit;
+    }
+
+    /**
+     * @return true and the action bar and bottom bar (if presents) will be
+     *         hidden in 3 seconds without any operation on the image;
+     *         false and the action bar and bottom bar will always be shown.
+     */
+    protected boolean isAutoHideFunctionBar() {
+        return mIsAutoHideFunctionBar;
+    }
+
+    /**
+     * called when an image is browsed.
+     * @param images list of uri of all images
+     * @param position current browsed image uri position
+     */
+    protected void onBrowseImage(List<String> images, int position) {
+        if (getCurrentImageValidation() == ImageValidation.INVALID) {
+            Toast.makeText(this,
+                    R.string.image_Browser_toast_load_image_fail, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -274,43 +334,6 @@ public class ImageBrowserActivity extends BaseActivity {
     }
 
     /**
-     * @return true and the action bar will always be shown, and tap image
-     *         will exit image browser.
-     */
-    protected boolean isTapExit() {
-        return mIsTapExit;
-    }
-
-    /**
-     * @return true and the action bar and bottom bar (if presents) will be
-     *         hidden in 3 seconds without any operation on the image;
-     *         false and the action bar and bottom bar will always be shown.
-     */
-    protected boolean isAutoHideFunctionBar() {
-        return mIsAutoHideFunctionBar;
-    }
-
-    /**
-     * generate a action bar menu button. called on activity create.
-     * the button will be shown on the right side of the action bar, with
-     * both width and height as WRAP_CONTENT.
-     * @return the menu button view, or null if you do not want one.
-     */
-    protected View getActionBarMenu() {
-        return null;
-    }
-
-    /**
-     * generate a bottom bar view. called on activity create.
-     * the view will be added to the bottom of the activity ui, with
-     * width as MATCH_PARENT and height as WRAP_CONTENT.
-     * @return the bottom bar view, or null if you do not want one.
-     */
-    protected View getBottomBar() {
-        return null;
-    }
-
-    /**
      * called when action bar back button is clicked
      * @return true if the event is handled;
      *         false if you want this class to handle it.
@@ -319,17 +342,6 @@ public class ImageBrowserActivity extends BaseActivity {
         return false;
     }
 
-    /**
-     * called when an image is browsed.
-     * @param images list of uri of all images
-     * @param position current browsed image uri position
-     */
-    protected void onBrowseImage(List<String> images, int position) {
-        if (getCurrentImageValidation() == ImageValidation.INVALID) {
-            Toast.makeText(this,
-                    R.string.image_Browser_toast_load_image_fail, Toast.LENGTH_SHORT).show();
-        }
-    }
 
     // ==========================================
 
