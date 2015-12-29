@@ -331,15 +331,6 @@ public class ImageBrowserActivity extends BaseActivity {
         }
     }
 
-    protected void onImageClicked() {
-
-    }
-
-    protected void onImageLongClick() {
-
-    }
-
-
     // ==========================================
 
 
