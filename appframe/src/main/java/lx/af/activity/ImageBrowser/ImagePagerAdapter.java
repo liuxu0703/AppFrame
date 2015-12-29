@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import java.util.List;
 
 import lx.af.R;
+import lx.af.view.ProgressWheel;
 import lx.af.view.photoview.PhotoView;
 import lx.af.view.photoview.PhotoViewAttacher.OnViewTapListener;
 
@@ -23,9 +24,7 @@ import lx.af.view.photoview.PhotoViewAttacher.OnViewTapListener;
  */
 class ImagePagerAdapter extends PagerAdapter implements
         OnViewTapListener,
-        View.OnLongClickListener,
-        ImageLoadingListener,
-        ImageLoadingProgressListener {
+        View.OnLongClickListener {
 
     private static DisplayImageOptions sDisplayImageOptions;
 
@@ -40,15 +39,20 @@ class ImagePagerAdapter extends PagerAdapter implements
     @Override
     public View instantiateItem(ViewGroup container, int position) {
         String uri = mUriList.get(position);
-        PhotoView photoView = new PhotoView(container.getContext());
+        View itemView = View.inflate(container.getContext(), R.layout.image_browser_item, null);
+        ProgressWheel progress = (ProgressWheel)
+                itemView.findViewById(R.id.image_browser_item_loading);
+        PhotoView photoView = (PhotoView)
+                itemView.findViewById(R.id.image_browser_item_image);
         photoView.setOnViewTapListener(this);
         photoView.setOnLongClickListener(this);
         photoView.setTag(uri);
+        LoadListener listener = new LoadListener(progress, uri, mLoadImageCallback);
         ImageLoader.getInstance().displayImage(
-                uri, photoView, getDisplayImageOptions(), this, this);
-        container.addView(photoView,
+                uri, photoView, getDisplayImageOptions(), listener, listener);
+        container.addView(itemView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        return photoView;
+        return itemView;
     }
 
     @Override
@@ -64,47 +68,6 @@ class ImagePagerAdapter extends PagerAdapter implements
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == object;
-    }
-
-    @Override
-    public void onProgressUpdate(String imageUri, View view, int current, int total) {
-        if (mLoadImageCallback != null) {
-            mLoadImageCallback.onImageLoadProgress(imageUri, current, total);
-        }
-    }
-
-    @Override
-    public void onLoadingStarted(String imageUri, View view) {
-        if (mLoadImageCallback != null) {
-            mLoadImageCallback.onImageLoadStart(imageUri);
-        }
-    }
-
-    @Override
-    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-        if (mLoadImageCallback != null) {
-            mLoadImageCallback.onImageLoadComplete(imageUri, true);
-        }
-    }
-
-    @Override
-    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-        PhotoView p = (PhotoView) view;
-        p.setImageResource(R.drawable.img_gallery_default);
-        if (mLoadImageCallback != null) {
-            mLoadImageCallback.onImageLoadComplete(imageUri, false);
-        }
-    }
-
-    @Override
-    public void onLoadingCancelled(String imageUri, View view) {
-        if (view != null) {
-            PhotoView p = (PhotoView) view;
-            p.setImageResource(R.drawable.img_gallery_default);
-        }
-        if (mLoadImageCallback != null) {
-            mLoadImageCallback.onImageLoadComplete(imageUri, false);
-        }
     }
 
     @Override
@@ -125,9 +88,75 @@ class ImagePagerAdapter extends PagerAdapter implements
         }
     }
 
+    private static class LoadListener implements ImageLoadingListener, ImageLoadingProgressListener {
+
+        ProgressWheel progress;
+        String uri;
+        LoadImageCallback callback;
+
+        public LoadListener(ProgressWheel progress, String uri, LoadImageCallback c) {
+            this.progress = progress;
+            this.uri = uri;
+            this.callback = c;
+        }
+
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+            if (uri.equals(imageUri)) {
+                progress.setVisibility(View.VISIBLE);
+                progress.spin();
+            }
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            if (uri.equals(imageUri)) {
+                progress.stopSpinning();
+                progress.setVisibility(View.GONE);
+            }
+            if (callback != null) {
+                callback.onImageLoadComplete(imageUri, false);
+            }
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            if (uri.equals(imageUri)) {
+                progress.stopSpinning();
+                progress.setVisibility(View.GONE);
+            }
+            if (callback != null) {
+                callback.onImageLoadComplete(imageUri, true);
+            }
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+            if (uri.equals(imageUri)) {
+                progress.stopSpinning();
+                progress.setVisibility(View.GONE);
+            }
+            if (callback != null) {
+                callback.onImageLoadComplete(imageUri, false);
+            }
+        }
+
+        @Override
+        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+            if (uri.equals(imageUri)) {
+                int pro = current * 360 / total;
+                int percentage = current * 100 / total;
+                progress.setProgress(pro);
+                progress.setText(percentage + "%");
+            }
+        }
+    }
+
     private static DisplayImageOptions getDisplayImageOptions() {
         if (sDisplayImageOptions == null) {
             sDisplayImageOptions = new DisplayImageOptions.Builder()
+                    .showImageForEmptyUri(R.drawable.img_gallery_default)
+                    .showImageOnFail(R.drawable.img_gallery_default)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .considerExifParams(true)
@@ -145,9 +174,8 @@ class ImagePagerAdapter extends PagerAdapter implements
         mClickImageCallback = c;
     }
 
+
     public interface LoadImageCallback {
-        void onImageLoadStart(String imgUri);
-        void onImageLoadProgress(String imgUri, int current, int total);
         void onImageLoadComplete(String imgUri, boolean loadSuccess);
     }
 

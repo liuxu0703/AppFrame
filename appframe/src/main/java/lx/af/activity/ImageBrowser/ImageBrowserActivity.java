@@ -20,8 +20,6 @@ import lx.af.R;
 import lx.af.activity.ImageBrowser.ImagePagerAdapter.ClickImageCallback;
 import lx.af.activity.ImageBrowser.ImagePagerAdapter.LoadImageCallback;
 import lx.af.base.BaseActivity;
-import lx.af.utils.log.Log;
-import lx.af.view.ProgressWheel;
 
 /**
  * author: lx
@@ -34,9 +32,13 @@ import lx.af.view.ProgressWheel;
 public class ImageBrowserActivity extends BaseActivity {
 
     /** image uri list to be displayed */
-    public static final String EXTRA_CURRENT_IMAGE_URI = "IMImageBrowserActivity.uri_current";
+    public static final String EXTRA_CURRENT_IMAGE_URI = "ImageBrowserActivity_uri_current";
     /** image uri for init display */
-    public static final String EXTRA_IMAGE_URI_LIST = "IMImageBrowserActivity.uri_list";
+    public static final String EXTRA_IMAGE_URI_LIST = "ImageBrowserActivity_uri_list";
+    /** exit browser by tap image */
+    public static final String EXTRA_TAP_EXIT = "ImageBrowserActivity_tap_exit";
+    /** auto hide function bar (action bar + bottom bar) */
+    public static final String EXTRA_AUTO_HIDE_FUNCTION_BAR = "ImageBrowserActivity_auto_hide_action_bar";
 
     public enum ImageValidation {
         UNKNOWN, VALID, INVALID,
@@ -53,7 +55,6 @@ public class ImageBrowserActivity extends BaseActivity {
     private ViewPager mPager;
     private TextView mTvPageIdx;
     private View mActionBar;
-    private ProgressWheel mProgress;
     private FrameLayout mBottomBar;
 
     private ImagePagerAdapter mAdapter;
@@ -61,6 +62,9 @@ public class ImageBrowserActivity extends BaseActivity {
     private List<String> mImgUris;
     private Map<String, ImageInfo> mImgInfoMap;
     private String mCurrentImgUri;
+
+    private boolean mIsAutoHideFunctionBar = true;
+    private boolean mIsTapExit = false;
 
     private Runnable mHideFunctionBarRunnable = new Runnable() {
         @Override
@@ -76,6 +80,9 @@ public class ImageBrowserActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         mCurrentImgUri = bundle.getString(EXTRA_CURRENT_IMAGE_URI);
         mImgUris = bundle.getStringArrayList(EXTRA_IMAGE_URI_LIST);
+        mIsTapExit = bundle.getBoolean(EXTRA_TAP_EXIT, false);
+        mIsAutoHideFunctionBar = bundle.getBoolean(EXTRA_AUTO_HIDE_FUNCTION_BAR, !mIsTapExit);
+
         if (mImgUris == null || mImgUris.size() == 0) {
             //throw new IllegalStateException("image uri list null !");
             Toast.makeText(this, R.string.image_Browser_toast_list_null, Toast.LENGTH_SHORT).show();
@@ -97,7 +104,6 @@ public class ImageBrowserActivity extends BaseActivity {
         mTvPageIdx = obtainView(R.id.activity_image_browser_page_idx);
         mActionBar = obtainView(R.id.activity_image_browser_action_bar);
         mBottomBar = obtainView(R.id.activity_image_browser_function_bar);
-        mProgress = obtainView(R.id.activity_image_browser_loading);
         findViewById(R.id.activity_image_browser_action_bar_back)
                 .setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,30 +154,7 @@ public class ImageBrowserActivity extends BaseActivity {
 
     private LoadImageCallback mLoadImageCallback = new LoadImageCallback() {
         @Override
-        public void onImageLoadStart(String imgUri) {
-            if (mCurrentImgUri.equals(imgUri)) {
-                Log.d("liuxu", "111 activity load start, start spin 1111111111111111");
-                mProgress.setVisibility(View.VISIBLE);
-                mProgress.spin();
-            }
-        }
-
-        @Override
-        public void onImageLoadProgress(String imgUri, int current, int total) {
-            if (mCurrentImgUri.equals(imgUri)) {
-                int progress = current * 360 / total;
-                int percentage = current * 100 / total;
-                mProgress.setProgress(progress);
-                mProgress.setText(percentage + "%");
-            }
-        }
-
-        @Override
         public void onImageLoadComplete(String imgUri, boolean loadSuccess) {
-            if (mCurrentImgUri.equals(imgUri)) {
-                Log.d("liuxu", "111 activity load complete, uri="+imgUri);
-                mProgress.setVisibility(View.GONE);
-            }
             ImageBrowserActivity.this.onImageLoadComplete(imgUri, loadSuccess);
         }
     };
@@ -179,7 +162,6 @@ public class ImageBrowserActivity extends BaseActivity {
     private ClickImageCallback mClickImageCallback = new ClickImageCallback() {
         @Override
         public void onImageClicked(String imageUri, View view) {
-            hideShowFunctionBar();
             ImageBrowserActivity.this.onImageClicked(imageUri, view);
         }
 
@@ -205,10 +187,7 @@ public class ImageBrowserActivity extends BaseActivity {
         }
 
         if (!isAutoHideFunctionBar()) {
-            mActionBar.setVisibility(View.VISIBLE);
-            if (bar != null) {
-                mBottomBar.setVisibility(View.VISIBLE);
-            }
+            showFunctionBar();
         }
     }
 
@@ -223,30 +202,28 @@ public class ImageBrowserActivity extends BaseActivity {
         overridePendingTransition(0, R.anim.image_browser_exit);
     }
 
-    private void hideFunctionBar() {
+    protected void hideFunctionBar() {
         mActionBar.startAnimation(mAnimActionBarHide);
         mActionBar.setVisibility(View.GONE);
         mBottomBar.startAnimation(mAnimBottomBarHide);
         mBottomBar.setVisibility(View.GONE);
     }
 
-    private void showFunctionBar() {
+    protected void showFunctionBar() {
         mActionBar.startAnimation(mAnimActionBarShow);
         mActionBar.setVisibility(View.VISIBLE);
         mBottomBar.startAnimation(mAnimBottomBarShow);
         mBottomBar.setVisibility(View.VISIBLE);
     }
 
-    private void hideShowFunctionBar() {
-        if (isAutoHideFunctionBar()) {
-            if (mActionBar.getVisibility() == View.VISIBLE) {
-                hideFunctionBar();
-                mUIHandler.removeCallbacks(mHideFunctionBarRunnable);
-            } else {
-                showFunctionBar();
-                mUIHandler.removeCallbacks(mHideFunctionBarRunnable);
-                mUIHandler.postDelayed(mHideFunctionBarRunnable, FUNCTION_BAR_HIDE_DELAY);
-            }
+    protected void hideShowFunctionBar() {
+        if (mActionBar.getVisibility() == View.VISIBLE) {
+            hideFunctionBar();
+            mUIHandler.removeCallbacks(mHideFunctionBarRunnable);
+        } else {
+            showFunctionBar();
+            mUIHandler.removeCallbacks(mHideFunctionBarRunnable);
+            mUIHandler.postDelayed(mHideFunctionBarRunnable, FUNCTION_BAR_HIDE_DELAY);
         }
     }
 
@@ -279,7 +256,13 @@ public class ImageBrowserActivity extends BaseActivity {
      * called when click on an image
      */
     public void onImageClicked(String imageUri, View view) {
-        Log.d("liuxu", "111 activity onImageClicked, uri="+imageUri);
+        if (isTapExit()) {
+            finish();
+            return;
+        }
+        if (isAutoHideFunctionBar()) {
+            hideShowFunctionBar();
+        }
     }
 
     /**
@@ -287,8 +270,15 @@ public class ImageBrowserActivity extends BaseActivity {
      * @return true if the event is handled
      */
     public boolean onImageLongClicked(String imageUri, View view) {
-        Log.d("liuxu", "111 activity onImageLongClicked, uri="+imageUri);
         return false;
+    }
+
+    /**
+     * @return true and the action bar will always be shown, and tap image
+     *         will exit image browser.
+     */
+    protected boolean isTapExit() {
+        return mIsTapExit;
     }
 
     /**
@@ -297,7 +287,7 @@ public class ImageBrowserActivity extends BaseActivity {
      *         false and the action bar and bottom bar will always be shown.
      */
     protected boolean isAutoHideFunctionBar() {
-        return true;
+        return mIsAutoHideFunctionBar;
     }
 
     /**
