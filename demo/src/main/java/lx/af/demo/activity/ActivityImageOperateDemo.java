@@ -24,6 +24,7 @@ import lx.af.adapter.AbsListAdapter;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
+import lx.af.utils.ActivityUtils.ImageBrowser;
 import lx.af.utils.ActivityUtils.ImageCropper;
 import lx.af.utils.ActivityUtils.ImageSelector;
 import lx.af.utils.PathUtils;
@@ -71,10 +72,12 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         mImageGridAdapter.setOnItemClickListener(new NineImageUILAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, NineImageUILAdapter adapter, int position) {
-                List<String> arr = adapter.getImageUris();
-                ArrayList<String> uris = new ArrayList<>(adapter.getCount());
-                uris.addAll(arr);
-                startImageBrowser(uris, adapter.getData(position));
+                ImageBrowser.of(ActivityImageOperateDemo.this)
+                        .uris(adapter.getImageUris())
+                        .currentUri(adapter.getData(position))
+                        .currentView(view)
+                        .tapExit(true)
+                        .start();
             }
         });
     }
