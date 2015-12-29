@@ -3,10 +3,6 @@ package lx.af.activity.ImageSelector;
 import android.net.Uri;
 import android.text.TextUtils;
 
-/**
- * 图片实体
- * Created by Nereo on 2015/4/7.
- */
 class ImageModel {
     public String path;
     public String name;

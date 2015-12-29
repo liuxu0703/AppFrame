@@ -11,7 +11,7 @@ import lx.af.R;
  * Created by liuxu on 15-4-22.
  *
  */
-public class ImageOptions {
+class ImageOptions {
 
     private static DisplayImageOptions sDisplayImageOptions = new DisplayImageOptions.Builder()
             .showImageOnLoading(R.drawable.img_gallery_default)
@@ -22,6 +22,7 @@ public class ImageOptions {
             .considerExifParams(true)
             .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
             .bitmapConfig(Bitmap.Config.RGB_565)
+            .delayBeforeLoading(20)
             .build();
 
     private static DisplayImageOptions sScrollImageOptions = new DisplayImageOptions.Builder()

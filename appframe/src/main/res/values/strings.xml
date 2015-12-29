@@ -23,7 +23,6 @@
     <string name="mis_folder_img_amount"><xliff:g>%d</xliff:g>张</string>
     <string name="mis_finish_btn">完成</string>
     <string name="mis_finish_btn_with_amount">完成(<xliff:g>%d</xliff:g>/<xliff:g>%d</xliff:g>)</string>
-    <string name="mis_error_load_timeout">加载图片超时</string>
     <string name="mis_image_browser_select">选择</string>
 
     <string name="toast_path_sdcard_not_mounted">存储卡不可用</string>

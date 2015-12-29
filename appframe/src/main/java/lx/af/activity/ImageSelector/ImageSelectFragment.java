@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -29,30 +30,26 @@ import java.util.List;
 import java.util.Locale;
 
 import lx.af.R;
-import lx.af.base.BaseFragment;
-import lx.af.dialog.LoadingDialog;
-import lx.af.dialog.MessageDialog;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.PathUtils;
-import lx.af.utils.log.Log;
+import lx.af.view.ProgressWheel;
 
 /**
- * 图片选择Fragment
- * Created by Nereo on 2015/4/7.
- *
  * import and modified by liuxu on 2015.04.22 (heavily modified ...)
+ *
+ * Created by Nereo on 2015/4/7. link:
  * https://github.com/lovetuzitong/MultiImageSelector
  */
-public class ImageSelectFragment extends BaseFragment implements
+public class ImageSelectFragment extends Fragment implements
         ImageGridAdapter.OnItemClickListener {
 
     private static final String TAG = "MultiImageSelector";
 
-    /** 最大图片选择次数，int类型 */
+    /** select number limit */
     public static final String EXTRA_SELECT_COUNT = "max_select_count";
-    /** 是否显示相机，boolean类型 */
+    /** enable/disable taken image by camera. default is true */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
-    /** 默认选择的数据集 */
+    /** pre-selected image items */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_result";
 
     private static final int LOADER_ALL = 0;
@@ -72,12 +69,12 @@ public class ImageSelectFragment extends BaseFragment implements
     private FolderListView mFolderListView;
     private TextView mTimeLineText;
     private TextView mCategoryText;
+    private ProgressWheel mLoadingProgress;
 
     private ImageGridAdapter mImageAdapter;
     private Callback mCallback;
     private File mCameraFile;
     private Animation mAnimTimeLineHide;
-    private LoadingDialog mLoadingDialog;
 
     private int mDesireImageCount;
     private boolean mIsShowCamera;
@@ -142,6 +139,7 @@ public class ImageSelectFragment extends BaseFragment implements
         });
 
         mGridView = (ImageGridView) view.findViewById(R.id.mis_fragment_img_grid_view);
+        mLoadingProgress = (ProgressWheel) view.findViewById(R.id.mis_fragment_loading_progress);
         initImageGridView();
     }
 
@@ -312,9 +310,6 @@ public class ImageSelectFragment extends BaseFragment implements
         startActivityForResult(intent, AC_IMAGE_BROWSER);
     }
 
-    /**
-     * 选择图片操作
-     */
     private void selectImageFromGrid(ImageItemView view, ImageModel image) {
         if (image != null) {
             if (mDesireImageCount > 1) {
@@ -372,28 +367,14 @@ public class ImageSelectFragment extends BaseFragment implements
         return thumbPath;
     }
 
-    private LoadingDialog getLoadingDialog() {
-        if (mLoadingDialog == null) {
-            mLoadingDialog = new LoadingDialog(getActivity(), R.string.dlg_loading_default_message);
-            mLoadingDialog.setCancelable(true);
-            mLoadingDialog.setLoadingTimeout(15 * 1000, new LoadingDialog.OnTimeoutListener() {
-                @Override
-                public void onTimeout() {
-                    Log.w(TAG, "loading timeout");
-                    new MessageDialog.Builder(getActivity())
-                            .setMessage(R.string.mis_error_load_timeout)
-                            .setCancelListener(null)
-                            .setConfirmListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    getActivity().finish();
-                                }
-                            })
-                            .create().show();
-                }
-            });
-        }
-        return mLoadingDialog;
+    private void showLoading() {
+        mLoadingProgress.spin();
+        mLoadingProgress.setVisibility(View.VISIBLE);
+    }
+
+    private void dismissLoading() {
+        mLoadingProgress.stopSpinning();
+        mLoadingProgress.setVisibility(View.GONE);
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -432,9 +413,7 @@ public class ImageSelectFragment extends BaseFragment implements
                 return;
             }
 
-            final LoadingDialog loadingDialog = getLoadingDialog();
-            loadingDialog.show();
-
+            showLoading();
             GlobalThreadManager.runInThreadPool(new Runnable() {
                 @Override
                 public void run() {
@@ -479,17 +458,19 @@ public class ImageSelectFragment extends BaseFragment implements
                     } while (!data.isClosed() && data.moveToNext());
 
                     mIsFolderGenerated = true;
-                    GlobalThreadManager.runInUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            loadingDialog.dismiss();
-                            mImageAdapter.setData(images);
-                            if (mResultList != null && mResultList.size() > 0) {
-                                mImageAdapter.setDefaultSelected(mResultList);
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dismissLoading();
+                                mImageAdapter.setData(images);
+                                if (mResultList != null && mResultList.size() > 0) {
+                                    mImageAdapter.setDefaultSelected(mResultList);
+                                }
+                                mFolderListView.setData(mResultFolder);
                             }
-                            mFolderListView.setData(mResultFolder);
-                        }
-                    });
+                        });
+                    }
                 }
             });
         }

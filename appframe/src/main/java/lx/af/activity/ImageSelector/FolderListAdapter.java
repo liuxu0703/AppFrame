@@ -15,13 +15,6 @@ import java.util.List;
 
 import lx.af.R;
 
-/**
- * 文件夹Adapter
- * Created by Nereo on 2015/4/7.
- *
- * import and modified by liuxu on 2015.04.22
- * https://github.com/lovetuzitong/MultiImageSelector
- */
 class FolderListAdapter extends BaseAdapter {
 
     private Context mContext;

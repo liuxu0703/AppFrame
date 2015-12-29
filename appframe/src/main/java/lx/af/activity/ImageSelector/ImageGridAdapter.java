@@ -16,9 +16,6 @@ import lx.af.utils.ScreenUtils;
 import lx.af.activity.ImageSelector.ImageItemView.OnItemViewClickListener;
 
 /**
- * 图片Adapter
- * Created by Nereo on 2015/4/7.
- *
  * import and modified by liuxu on 2015.04.22
  */
 class ImageGridAdapter extends BaseAdapter {
@@ -60,9 +57,6 @@ class ImageGridAdapter extends BaseAdapter {
         return mShowCamera;
     }
 
-    /**
-     * 选择某个图片，改变选择状态
-     */
     public void select(ImageModel image) {
         if (mSelectedImages.contains(image)) {
             mSelectedImages.remove(image);
@@ -71,9 +65,6 @@ class ImageGridAdapter extends BaseAdapter {
         }
     }
 
-    /**
-     * 通过图片路径设置默认选择
-     */
     public void setDefaultSelected(ArrayList<String> resultList) {
         mSelectedImages.clear();
         for (String path : resultList) {
@@ -115,9 +106,6 @@ class ImageGridAdapter extends BaseAdapter {
         return list;
     }
 
-    /**
-     * 设置数据集
-     */
     public void setData(List<ImageModel> images) {
         mSelectedImages.clear();
         if (images != null && images.size()>0) {
@@ -174,15 +162,14 @@ class ImageGridAdapter extends BaseAdapter {
         } else if (type == TYPE_NORMAL) {
             if (view == null || !(view instanceof ImageItemView)) {
                 view = new ImageItemView(mGridView, mItemClickListener);
+                /** Fixed View Size */
+                GridView.LayoutParams lp = (GridView.LayoutParams) view.getLayoutParams();
+                if (lp == null || lp.height != mItemSize) {
+                    view.setLayoutParams(mItemLayoutParams);
+                }
             }
             ImageItemView itemView = (ImageItemView) view;
             itemView.setData(getItem(i));
-        }
-
-        /** Fixed View Size */
-        GridView.LayoutParams lp = (GridView.LayoutParams) view.getLayoutParams();
-        if (lp == null || lp.height != mItemSize) {
-            view.setLayoutParams(mItemLayoutParams);
         }
 
         return view;

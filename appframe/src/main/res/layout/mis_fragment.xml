@@ -58,4 +58,18 @@
             tools:text="所有图片" />
     </RelativeLayout>
 
+    <lx.af.view.ProgressWheel
+        xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/mis_fragment_loading_progress"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        ProgressWheel:rimColor="#40696969"
+        ProgressWheel:barLength="75dp"
+        ProgressWheel:barColor="#696969"
+        ProgressWheel:barWidth="4dp"
+        ProgressWheel:rimWidth="0dp"
+        ProgressWheel:contourColor="#00000000"
+        ProgressWheel:spinSpeed="2dp" />
+
 </RelativeLayout>

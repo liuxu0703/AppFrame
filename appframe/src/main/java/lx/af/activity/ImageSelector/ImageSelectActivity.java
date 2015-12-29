@@ -14,10 +14,9 @@ import lx.af.R;
 import lx.af.base.BaseActivity;
 
 /**
- * 多图选择
- * Created by Nereo on 2015/4/7.
+ * import and modified by liuxu on 2015.04.22 (heavily modified ...)
  *
- * import and modified by liuxu on 2015.04.22
+ * Created by Nereo on 2015/4/7. link:
  * https://github.com/lovetuzitong/MultiImageSelector
  */
 public class ImageSelectActivity extends BaseActivity implements

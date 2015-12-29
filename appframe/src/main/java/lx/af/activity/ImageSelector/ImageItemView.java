@@ -3,6 +3,8 @@ package lx.af.activity.ImageSelector;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,12 +25,13 @@ import lx.af.R;
 @SuppressLint("ViewConstructor")
 class ImageItemView extends FrameLayout implements View.OnClickListener {
 
-    private static final ImageSize IMAGE_SIZE = new ImageSize(100, 100);
+    private static final ImageSize IMAGE_SIZE = new ImageSize(64, 64);
 
     private ImageGridView mGridView;
     private ImageView mImage;
     private ImageView mCheck;
     private View mWrapper;
+    private Animation mShowAnim;
 
     private ImageModel mData;
     private OnItemViewClickListener mClickListener;
@@ -45,6 +48,11 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
         }
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            if (mShowAnim == null) {
+                mShowAnim = new AlphaAnimation(0.2f, 1.0f);
+                mShowAnim.setDuration(200);
+            }
+            view.startAnimation(mShowAnim);
         }
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
@@ -78,7 +86,8 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
         DisplayImageOptions options = mGridView.isScrolling() ?
                 ImageOptions.getScrollImageOptions() : ImageOptions.getDisplayImageOptions();
         ImageLoader.getInstance().displayImage(
-                imgUri, new ImageViewAware(mImage), options, IMAGE_SIZE, mImageLoadListener, null);
+                imgUri, new ImageViewAware(mImage, false), options, IMAGE_SIZE,
+                mImageLoadListener, null);
     }
 
     public void toggleCheck() {
