@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import lx.af.base.BaseActivity;
-import lx.af.base.BaseFragment;
+import lx.af.base.AbsBaseActivity;
+import lx.af.base.AbsBaseFragment;
 
 /**
  * author: lx
@@ -47,13 +47,13 @@ abstract class ActivityLauncherBase<T> {
         Intent intent = createIntent();
         if (c != null) {
             ResultHandler handler;
-            if (mActivity != null && mActivity instanceof BaseActivity) {
-                handler = new ResultHandler((BaseActivity) mActivity, intent, requestCode, c);
-            } else if (mFragment != null && mFragment instanceof BaseFragment) {
-                handler = new ResultHandler((BaseFragment) mFragment, intent, requestCode, c);
+            if (mActivity != null && mActivity instanceof AbsBaseActivity) {
+                handler = new ResultHandler((AbsBaseActivity) mActivity, intent, requestCode, c);
+            } else if (mFragment != null && mFragment instanceof AbsBaseFragment) {
+                handler = new ResultHandler((AbsBaseFragment) mFragment, intent, requestCode, c);
             } else {
                 throw new IllegalArgumentException(
-                        "ActivityResultCallback only support BaseActivity and BaseFragment");
+                        "ActivityResultCallback only support AbsBaseActivity and AbsBaseFragment");
             }
             handler.start();
         } else {
@@ -85,12 +85,12 @@ abstract class ActivityLauncherBase<T> {
 
     private class ResultHandler extends ActivityResultHandler<T> {
 
-        public ResultHandler(BaseActivity activity, Intent intent,
+        public ResultHandler(AbsBaseActivity activity, Intent intent,
                              int requestCode, ActivityResultCallback<T> c) {
             super(activity, intent, requestCode, c);
         }
 
-        public ResultHandler(BaseFragment fragment, Intent intent,
+        public ResultHandler(AbsBaseFragment fragment, Intent intent,
                              int requestCode, ActivityResultCallback<T> c) {
             super(fragment, intent, requestCode, c);
         }
@@ -101,22 +101,22 @@ abstract class ActivityLauncherBase<T> {
         }
 
         @Override
-        public void onActivitySaveInstanceState(BaseActivity activity, Bundle outState) {
+        public void onActivitySaveInstanceState(AbsBaseActivity activity, Bundle outState) {
             onSaveInstanceState(outState);
         }
 
         @Override
-        public void onActivityRestoreInstanceState(BaseActivity activity, Bundle savedInstanceState) {
+        public void onActivityRestoreInstanceState(AbsBaseActivity activity, Bundle savedInstanceState) {
             onRestoreInstanceState(savedInstanceState);
         }
 
         @Override
-        public void onFragmentSaveInstanceState(BaseFragment fragment, Bundle outState) {
+        public void onFragmentSaveInstanceState(AbsBaseFragment fragment, Bundle outState) {
             onSaveInstanceState(outState);
         }
 
         @Override
-        public void onFragmentViewStateRestored(BaseFragment fragment, Bundle savedInstanceState) {
+        public void onFragmentViewStateRestored(AbsBaseFragment fragment, Bundle savedInstanceState) {
             onRestoreInstanceState(savedInstanceState);
         }
     }

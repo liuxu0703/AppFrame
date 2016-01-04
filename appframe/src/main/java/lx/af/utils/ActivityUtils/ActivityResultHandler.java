@@ -3,8 +3,8 @@ package lx.af.utils.ActivityUtils;
 import android.content.Intent;
 import android.os.Bundle;
 
-import lx.af.base.BaseActivity;
-import lx.af.base.BaseFragment;
+import lx.af.base.AbsBaseActivity;
+import lx.af.base.AbsBaseFragment;
 import lx.af.utils.log.Log;
 
 /**
@@ -12,17 +12,17 @@ import lx.af.utils.log.Log;
  * date: 15-12-6
  */
 abstract class ActivityResultHandler<T> implements
-    BaseActivity.LifeCycleListener,
-    BaseFragment.LifeCycleListener {
+    AbsBaseActivity.LifeCycleListener,
+    AbsBaseFragment.LifeCycleListener {
 
-    private BaseActivity mActivity;
-    private BaseFragment mFragment;
+    private AbsBaseActivity mActivity;
+    private AbsBaseFragment mFragment;
 
     private Intent mIntent;
     private int mRequestCode;
     private ActivityResultCallback<T> mCallback;
 
-    public ActivityResultHandler(BaseActivity activity, Intent intent,
+    public ActivityResultHandler(AbsBaseActivity activity, Intent intent,
                                  int requestCode, ActivityResultCallback<T> c) {
         this.mActivity = activity;
         this.mIntent = intent;
@@ -30,7 +30,7 @@ abstract class ActivityResultHandler<T> implements
         this.mCallback = c;
     }
 
-    public ActivityResultHandler(BaseFragment fragment, Intent intent,
+    public ActivityResultHandler(AbsBaseFragment fragment, Intent intent,
                                  int requestCode, ActivityResultCallback<T> c) {
         this.mFragment = fragment;
         this.mIntent = intent;
@@ -51,7 +51,7 @@ abstract class ActivityResultHandler<T> implements
     protected abstract T extractResult(int resultCode, Intent data);
 
     @Override
-    public void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(AbsBaseActivity activity, int requestCode, int resultCode, Intent data) {
         Log.d("liuxu", "111 ResultHandler, onActivityResult, request="+requestCode+", result="+resultCode+", data="+data);
         if (requestCode == mRequestCode) {
             activity.removeLifeCycleListener(this);
@@ -66,7 +66,7 @@ abstract class ActivityResultHandler<T> implements
     }
 
     @Override
-    public void onFragmentActivityResult(BaseFragment fragment, int requestCode, int resultCode, Intent data) {
+    public void onFragmentActivityResult(AbsBaseFragment fragment, int requestCode, int resultCode, Intent data) {
         if (requestCode == mRequestCode) {
             fragment.removeLifeCycleListener(this);
         } else {
@@ -82,43 +82,43 @@ abstract class ActivityResultHandler<T> implements
 
 
     @Override
-    public void onActivityCreated(BaseActivity activity, Bundle savedInstanceState) {
+    public void onActivityCreated(AbsBaseActivity activity, Bundle savedInstanceState) {
     }
 
     @Override
-    public void onActivityStarted(BaseActivity activity) {
+    public void onActivityStarted(AbsBaseActivity activity) {
     }
 
     @Override
-    public void onActivityResumed(BaseActivity activity) {
+    public void onActivityResumed(AbsBaseActivity activity) {
     }
 
     @Override
-    public void onActivityPaused(BaseActivity activity) {
+    public void onActivityPaused(AbsBaseActivity activity) {
 
     }
 
     @Override
-    public void onActivityStopped(BaseActivity activity) {
+    public void onActivityStopped(AbsBaseActivity activity) {
     }
 
     @Override
-    public void onActivityDestroyed(BaseActivity activity) {
+    public void onActivityDestroyed(AbsBaseActivity activity) {
     }
 
     @Override
-    public void onFragmentCreate(Bundle savedInstanceState, BaseFragment fragment) {
+    public void onFragmentCreate(Bundle savedInstanceState, AbsBaseFragment fragment) {
     }
 
     @Override
-    public void onFragmentResume(BaseFragment fragment) {
+    public void onFragmentResume(AbsBaseFragment fragment) {
     }
 
     @Override
-    public void onFragmentPause(BaseFragment fragment) {
+    public void onFragmentPause(AbsBaseFragment fragment) {
     }
 
     @Override
-    public void onFragmentDestroy(BaseFragment fragment) {
+    public void onFragmentDestroy(AbsBaseFragment fragment) {
     }
 }

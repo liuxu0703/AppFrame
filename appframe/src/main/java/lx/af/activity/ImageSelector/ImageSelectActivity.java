@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.R;
-import lx.af.base.BaseActivity;
+import lx.af.base.AbsBaseActivity;
 
 /**
  * import and modified by liuxu on 2015.04.22 (heavily modified ...)
@@ -19,7 +19,7 @@ import lx.af.base.BaseActivity;
  * Created by Nereo on 2015/4/7. link:
  * https://github.com/lovetuzitong/MultiImageSelector
  */
-public class ImageSelectActivity extends BaseActivity implements
+public class ImageSelectActivity extends AbsBaseActivity implements
         View.OnClickListener,
         ImageSelectFragment.Callback {
 

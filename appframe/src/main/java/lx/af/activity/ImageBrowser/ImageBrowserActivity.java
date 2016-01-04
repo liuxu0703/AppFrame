@@ -19,7 +19,7 @@ import java.util.Map;
 import lx.af.R;
 import lx.af.activity.ImageBrowser.ImagePagerAdapter.ClickImageCallback;
 import lx.af.activity.ImageBrowser.ImagePagerAdapter.LoadImageCallback;
-import lx.af.base.BaseActivity;
+import lx.af.base.AbsBaseActivity;
 
 /**
  * author: lx
@@ -29,7 +29,7 @@ import lx.af.base.BaseActivity;
  * if you want to add menu button or bottom bar, subclass this activity
  * and override {@link #getActionBarMenu()}, {@link #getBottomBar()}.
  */
-public class ImageBrowserActivity extends BaseActivity {
+public class ImageBrowserActivity extends AbsBaseActivity {
 
     /** image uri list to be displayed */
     public static final String EXTRA_CURRENT_IMAGE_URI = "ImageBrowserActivity_uri_current";

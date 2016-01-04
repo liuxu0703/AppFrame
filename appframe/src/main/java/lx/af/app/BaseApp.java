@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import lx.af.R;
 import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
+import lx.af.net.request.VolleyManager;
 import lx.af.utils.KV;
 import lx.af.utils.AlertUtils;
 import lx.af.utils.CrashHandler;
@@ -43,6 +44,7 @@ public class BaseApp extends Application{
         KV.init(this);
         CrashHandler.init();
         GlobalThreadManager.init(this);
+        VolleyManager.init(this);
         initImageLoader(this);
 
         AlertUtils.init(this);

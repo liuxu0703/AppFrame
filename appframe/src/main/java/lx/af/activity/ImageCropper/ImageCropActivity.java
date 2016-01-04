@@ -41,13 +41,13 @@ import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 
 import lx.af.R;
-import lx.af.base.BaseActivity;
+import lx.af.base.AbsBaseActivity;
 import lx.af.manager.GlobalThreadManager;
 
 /*
  * Modified from original in AOSP.
  */
-public class ImageCropActivity extends BaseActivity implements View.OnClickListener {
+public class ImageCropActivity extends AbsBaseActivity implements View.OnClickListener {
 
 
     public interface Extra {

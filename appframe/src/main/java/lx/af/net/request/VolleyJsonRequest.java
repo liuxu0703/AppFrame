@@ -6,10 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import lx.af.utils.log.Log;
 
 /**
  * author: lx
@@ -20,7 +16,6 @@ import lx.af.utils.log.Log;
 public class VolleyJsonRequest<T> extends VolleyStringRequest<T> {
 
     private static Gson sGson = new Gson();
-    private static Pattern sPattern = Pattern.compile("\\s*|\t|\r|\n");
 
     private TypeToken<T> mTypeToken;
 
@@ -31,18 +26,7 @@ public class VolleyJsonRequest<T> extends VolleyStringRequest<T> {
 
     @Override
     protected T parseResult(@NonNull String data) {
-        String replaced = replaceBlank(data);
-        Log.d("liuxu", "parse data, origin   : " + data);
-        Log.d("liuxu", "parse data, replaced : " + replaced);
-        return sGson.fromJson(replaceBlank(data), mTypeToken.getType());
+        return sGson.fromJson(data, mTypeToken.getType());
     }
 
-    private static String replaceBlank(String str) {
-        String dest = "";
-        if (str != null) {
-            Matcher m = sPattern.matcher(str);
-            dest = m.replaceAll("");
-        }
-        return dest;
-    }
 }

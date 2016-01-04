@@ -7,15 +7,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import lx.af.base.AbsBaseActivity;
 import lx.af.base.ActionBarAdapter;
-import lx.af.base.BaseActivity;
 import lx.af.demo.R;
 
 /**
  * Created by liuxu on 15-6-11.
  *
  */
-public class BaseDemoActivity extends BaseActivity {
+public class BaseDemoActivity extends AbsBaseActivity {
 
     @Override
     protected ActionBarAdapter getActionBarAdapter() {
@@ -74,7 +74,7 @@ public class BaseDemoActivity extends BaseActivity {
     };
 
     /**
-     * by implementing this interface, activity extends from BaseActivity
+     * by implementing this interface, activity extends from AbsBaseActivity
      * will get an ActionBar with a back button and a title uses activity
      * label as text.
      * if menu button is needed, or further customize is needed, try implement
@@ -84,7 +84,7 @@ public class BaseDemoActivity extends BaseActivity {
     }
 
     /**
-     * by implementing this interface, activity extends from BaseActivity
+     * by implementing this interface, activity extends from AbsBaseActivity
      * will get an ActionBar with a back button, a title uses activity
      * label as text, and a menu button.
      * if only back button and title is needed, try implement ActionBarImpl
