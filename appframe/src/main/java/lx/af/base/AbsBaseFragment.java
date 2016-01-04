@@ -14,7 +14,7 @@ import lx.af.utils.AlertUtils;
  * Created by liuxu on 15-2-11.
  *
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class AbsBaseFragment extends Fragment {
 
     protected String TAG;
 
@@ -179,23 +179,23 @@ public abstract class BaseFragment extends Fragment {
     // interface
 
     public interface LifeCycleListener {
-        void onFragmentCreate(Bundle savedInstanceState, BaseFragment fragment);
-        void onFragmentResume(BaseFragment fragment);
-        void onFragmentPause(BaseFragment fragment);
-        void onFragmentDestroy(BaseFragment fragment);
-        void onFragmentActivityResult(BaseFragment fragment, int requestCode, int resultCode, Intent data);
-        void onFragmentSaveInstanceState(BaseFragment fragment, Bundle outState);
-        void onFragmentViewStateRestored(BaseFragment fragment, Bundle savedInstanceState);
+        void onFragmentCreate(Bundle savedInstanceState, AbsBaseFragment fragment);
+        void onFragmentResume(AbsBaseFragment fragment);
+        void onFragmentPause(AbsBaseFragment fragment);
+        void onFragmentDestroy(AbsBaseFragment fragment);
+        void onFragmentActivityResult(AbsBaseFragment fragment, int requestCode, int resultCode, Intent data);
+        void onFragmentSaveInstanceState(AbsBaseFragment fragment, Bundle outState);
+        void onFragmentViewStateRestored(AbsBaseFragment fragment, Bundle savedInstanceState);
     }
 
     public static class LifeCycleAdapter implements LifeCycleListener {
-        public void onFragmentCreate(Bundle savedInstanceState, BaseFragment fragment) {}
-        public void onFragmentResume(BaseFragment fragment) {}
-        public void onFragmentPause(BaseFragment fragment) {}
-        public void onFragmentDestroy(BaseFragment fragment) {}
-        public void onFragmentActivityResult(BaseFragment fragment, int requestCode, int resultCode, Intent data) {}
-        public void onFragmentSaveInstanceState(BaseFragment fragment, Bundle outState) {}
-        public void onFragmentViewStateRestored(BaseFragment fragment, Bundle savedInstanceState) {}
+        public void onFragmentCreate(Bundle savedInstanceState, AbsBaseFragment fragment) {}
+        public void onFragmentResume(AbsBaseFragment fragment) {}
+        public void onFragmentPause(AbsBaseFragment fragment) {}
+        public void onFragmentDestroy(AbsBaseFragment fragment) {}
+        public void onFragmentActivityResult(AbsBaseFragment fragment, int requestCode, int resultCode, Intent data) {}
+        public void onFragmentSaveInstanceState(AbsBaseFragment fragment, Bundle outState) {}
+        public void onFragmentViewStateRestored(AbsBaseFragment fragment, Bundle savedInstanceState) {}
     }
 
 }

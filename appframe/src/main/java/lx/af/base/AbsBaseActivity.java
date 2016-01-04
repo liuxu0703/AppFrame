@@ -24,7 +24,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * activity base
  * TODO: double click finish
  */
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class AbsBaseActivity extends FragmentActivity {
 
     public String TAG;
 
@@ -119,7 +119,7 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     public void startActivity(Class cls) {
-        startActivity(new Intent(BaseActivity.this, cls));
+        startActivity(new Intent(AbsBaseActivity.this, cls));
     }
 
     @Override
@@ -223,7 +223,7 @@ public abstract class BaseActivity extends FragmentActivity {
             });
         } else {
             if (mLoadingDialog == null) {
-                mLoadingDialog = new LoadingDialog(BaseActivity.this, msg);
+                mLoadingDialog = new LoadingDialog(AbsBaseActivity.this, msg);
                 mLoadingDialog.setCancelable(cancelable);
             }
             mLoadingDialog.show();
@@ -285,27 +285,27 @@ public abstract class BaseActivity extends FragmentActivity {
     // interface
 
     public interface LifeCycleListener {
-        void onActivityCreated(BaseActivity activity, Bundle savedInstanceState);
-        void onActivityStarted(BaseActivity activity);
-        void onActivityResumed(BaseActivity activity);
-        void onActivityPaused(BaseActivity activity);
-        void onActivityStopped(BaseActivity activity);
-        void onActivityDestroyed(BaseActivity activity);
-        void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data);
-        void onActivitySaveInstanceState(BaseActivity activity, Bundle outState);
-        void onActivityRestoreInstanceState(BaseActivity activity, Bundle savedInstanceState);
+        void onActivityCreated(AbsBaseActivity activity, Bundle savedInstanceState);
+        void onActivityStarted(AbsBaseActivity activity);
+        void onActivityResumed(AbsBaseActivity activity);
+        void onActivityPaused(AbsBaseActivity activity);
+        void onActivityStopped(AbsBaseActivity activity);
+        void onActivityDestroyed(AbsBaseActivity activity);
+        void onActivityResult(AbsBaseActivity activity, int requestCode, int resultCode, Intent data);
+        void onActivitySaveInstanceState(AbsBaseActivity activity, Bundle outState);
+        void onActivityRestoreInstanceState(AbsBaseActivity activity, Bundle savedInstanceState);
     }
 
     public static class LifeCycleAdapter implements LifeCycleListener {
-        public void onActivityCreated(BaseActivity activity, Bundle savedInstanceState) {}
-        public void onActivityStarted(BaseActivity activity) {}
-        public void onActivityResumed(BaseActivity activity) {}
-        public void onActivityPaused(BaseActivity activity) {}
-        public void onActivityStopped(BaseActivity activity) {}
-        public void onActivityDestroyed(BaseActivity activity) {}
-        public void onActivityResult(BaseActivity activity, int requestCode, int resultCode, Intent data) {}
-        public void onActivitySaveInstanceState(BaseActivity activity, Bundle outState) {}
-        public void onActivityRestoreInstanceState(BaseActivity activity, Bundle savedInstanceState) {}
+        public void onActivityCreated(AbsBaseActivity activity, Bundle savedInstanceState) {}
+        public void onActivityStarted(AbsBaseActivity activity) {}
+        public void onActivityResumed(AbsBaseActivity activity) {}
+        public void onActivityPaused(AbsBaseActivity activity) {}
+        public void onActivityStopped(AbsBaseActivity activity) {}
+        public void onActivityDestroyed(AbsBaseActivity activity) {}
+        public void onActivityResult(AbsBaseActivity activity, int requestCode, int resultCode, Intent data) {}
+        public void onActivitySaveInstanceState(AbsBaseActivity activity, Bundle outState) {}
+        public void onActivityRestoreInstanceState(AbsBaseActivity activity, Bundle savedInstanceState) {}
     }
 
 }
