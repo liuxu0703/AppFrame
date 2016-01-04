@@ -184,20 +184,20 @@ public abstract class AbsBaseActivity extends FragmentActivity {
     // ======================================
     // about loading dialog and toast
 
-    public void showToastLong(String msg){
-        AlertUtils.showToastLong(msg);
+    public void toastLong(String msg){
+        AlertUtils.toastLong(msg);
     }
 
-    public void showToastLong(int resId){
-        AlertUtils.showToastLong(resId);
+    public void toastLong(int resId){
+        AlertUtils.toastLong(resId);
     }
 
-    public void showToastShort(String msg){
-        AlertUtils.showToastShort(msg);
+    public void toastShort(String msg){
+        AlertUtils.toastShort(msg);
     }
 
-    public void showToastShort(int resId){
-        AlertUtils.showToastShort(resId);
+    public void toastShort(int resId){
+        AlertUtils.toastShort(resId);
     }
 
     public void showLoadingDialog(int id){

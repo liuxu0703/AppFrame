@@ -65,16 +65,16 @@ public class PathUtils {
      */
     public static boolean ensurePathExistsWithErrorToast(String path, boolean isDir) {
         if (!isSdcardMounted()) {
-            AlertUtils.showToastShort(R.string.toast_path_sdcard_not_mounted);
+            AlertUtils.toastShort(R.string.toast_path_sdcard_not_mounted);
             return false;
         }
         if (isSdcardFull()) {
-            AlertUtils.showToastShort(R.string.toast_path_sdcard_full);
+            AlertUtils.toastShort(R.string.toast_path_sdcard_full);
             return false;
         }
         boolean success = isDir ? ensureDirExists(path) : ensureParentExists(path);
         if (!success) {
-            AlertUtils.showToastShort(R.string.toast_path_create_dir_fail);
+            AlertUtils.toastShort(R.string.toast_path_create_dir_fail);
             return false;
         } else {
             return true;

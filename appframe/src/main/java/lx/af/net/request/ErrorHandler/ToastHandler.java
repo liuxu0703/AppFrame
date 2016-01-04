@@ -59,7 +59,7 @@ public class ToastHandler implements IHandler {
     }
 
     protected static void toast(final String msg) {
-        AlertUtils.showToastShort(msg);
+        AlertUtils.toastShort(msg);
     }
 
 }

@@ -22,19 +22,19 @@ public final class AlertUtils {
         sApp = app;
     }
 
-    public static void showToastLong(int resId) {
-        showToastLong(sApp.getString(resId));
+    public static void toastLong(int resId) {
+        toastLong(sApp.getString(resId));
     }
 
-    public static void showToastLong(String msg) {
+    public static void toastLong(String msg) {
         showToast(msg, Toast.LENGTH_LONG);
     }
 
-    public static void showToastShort(int resId) {
-        showToastShort(sApp.getString(resId));
+    public static void toastShort(int resId) {
+        toastShort(sApp.getString(resId));
     }
 
-    public static void showToastShort(String msg) {
+    public static void toastShort(String msg) {
         showToast(msg, Toast.LENGTH_SHORT);
     }
 
