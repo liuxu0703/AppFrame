@@ -1,7 +1,5 @@
 package lx.af.utils.ViewInject;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
@@ -20,24 +18,10 @@ public final class ViewInjectUtils {
 
     /**
      * user {@link ViewInject} annotation to assign View fields
+     * @param target must has a "findViewById" method, or exception will throw
      */
-    public static void inject(Activity activity) {
-        injectInner(activity, activity);
-    }
-
-    /**
-     * user {@link ViewInject} annotation to assign View fields
-     */
-    public static void inject(View view) {
-        injectInner(view, view);
-    }
-
-    /**
-     * user {@link ViewInject} annotation to assign View fields
-     * @param rootView fragment root view
-     */
-    public static void inject(Fragment fragment, View rootView) {
-        injectInner(fragment, rootView);
+    public static void inject(Object target) {
+        injectInner(target, target);
     }
 
     /**
