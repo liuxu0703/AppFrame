@@ -2,6 +2,7 @@ package lx.af.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -9,9 +10,10 @@ import java.util.LinkedList;
 
 import lx.af.dialog.LoadingDialog;
 import lx.af.utils.AlertUtils;
+import lx.af.utils.ViewInject.ViewInjectUtils;
 
 /**
- * Created by liuxu on 15-2-11.
+ * Created by liuxu on 15-12-11.
  *
  */
 public abstract class AbsBaseFragment extends Fragment {
@@ -28,6 +30,12 @@ public abstract class AbsBaseFragment extends Fragment {
         for (LifeCycleListener listener : mLifeCycleListeners) {
             listener.onFragmentCreate(savedInstanceState, this);
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ViewInjectUtils.inject(this, view);
     }
 
     @Override
@@ -80,13 +88,6 @@ public abstract class AbsBaseFragment extends Fragment {
         }
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        if (getActivity() != null) {
-            startActivity(intent);
-        }
-    }
-
     public void startActivity(Class cls){
         if (getActivity() != null) {
             startActivity(new Intent(getActivity(), cls));
@@ -94,13 +95,18 @@ public abstract class AbsBaseFragment extends Fragment {
     }
 
     /**
-     * get and convert view
+     * get and convert view.
+     * designed to be used only in {@link Fragment#onViewCreated(View, Bundle)}.
+     * if used elsewhere, this method may return a null object.
      * @param id view id for findViewById() method
      * @param <T> subclass of View
      * @return the view
      */
     @SuppressWarnings("unchecked")
     public  <T extends View> T obtainView(int id) {
+        if (getView() == null) {
+            return null;
+        }
         return (T) getView().findViewById(id);
     }
 

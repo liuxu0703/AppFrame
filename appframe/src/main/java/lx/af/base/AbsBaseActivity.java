@@ -13,13 +13,14 @@ import java.util.LinkedList;
 
 import lx.af.dialog.LoadingDialog;
 import lx.af.utils.AlertUtils;
+import lx.af.utils.ViewInject.ViewInjectUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * author: liuxu
- * date: 2015-02-06
+ * date: 2015-12-06
  *
  * activity base
  * TODO: double click finish
@@ -279,6 +280,8 @@ public abstract class AbsBaseActivity extends FragmentActivity {
                 }
             }
         }
+
+        ViewInjectUtils.inject(this);
     }
 
     // ======================================
