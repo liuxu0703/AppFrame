@@ -45,6 +45,7 @@ public class ActivityMain extends BaseDemoActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        enableFeature(FEATURE_DOUBLE_BACK_EXIT);
         setContentView(R.layout.activity_main);
         LinearLayout buttonContainer = (LinearLayout) this
                 .findViewById(R.id.main_container);

@@ -1,7 +1,8 @@
 package lx.af.demo.base;
 
-import lx.af.app.AbsBaseApp;
+import lx.af.base.AbsBaseApp;
 import lx.af.utils.PathUtils;
+import lx.af.utils.log.LogUtils;
 
 /**
  * Created by liuxu on 15-6-11.

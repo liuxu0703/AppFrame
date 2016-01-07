@@ -36,6 +36,7 @@ public class ActivityTest extends BaseDemoActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        enableFeature(FEATURE_DOUBLE_BACK_EXIT);
         setContentView(R.layout.activity_test);
         //findViewById(R.id.test_btn_1).setOnClickListener(this);
         //kbv = obtainView(R.id.test_kbv);
@@ -44,6 +45,7 @@ public class ActivityTest extends BaseDemoActivity implements
     @Override
     public void onClick(View v) {
         toastShort("btn clicked !!!");
+        disableFeature(FEATURE_DOUBLE_BACK_EXIT);
 //        current = current.equals(L) ? T : L;
 //        Log.d("liuxu", "11111 activity test, load url: " + current);
 //        ImageLoader.getInstance().displayImage(current, kbv);
