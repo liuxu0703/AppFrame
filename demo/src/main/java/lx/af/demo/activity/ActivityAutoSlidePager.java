@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import lx.af.demo.R;
+import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.view.AutoSlidePager.AutoSlidePager;
 
@@ -15,7 +16,7 @@ import lx.af.view.AutoSlidePager.AutoSlidePager;
  * date: 15-10-26
  */
 public class ActivityAutoSlidePager extends BaseDemoActivity implements
-        BaseDemoActivity.ActionBarImpl,
+        ActionBar.Default,
         View.OnClickListener {
 
 

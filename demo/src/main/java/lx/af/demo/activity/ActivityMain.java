@@ -15,10 +15,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import lx.af.demo.R;
+import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 
 public class ActivityMain extends BaseDemoActivity implements
-        BaseDemoActivity.ActionBarCallbacks {
+        ActionBar.Default.OnCreateCallback {
 
     public final static ArrayList<DemoButtonData> BUTTON_DATA_LIST =
             new ArrayList<>();
@@ -54,18 +55,8 @@ public class ActivityMain extends BaseDemoActivity implements
     }
 
     @Override
-    public View onCreateActionBarMenu() {
-        return null;
-    }
-
-    @Override
     public void onActionBarCreated(View actionBar, ImageView back, TextView title, @Nullable View menu) {
         back.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public boolean onActionBarBackClicked(View back) {
-        return false;
     }
 
     private static class DemoButton extends Button implements View.OnClickListener {

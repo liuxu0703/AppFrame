@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import lx.af.demo.R;
+import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
 import lx.af.utils.ActivityUtils.ImageSelector;
@@ -28,7 +29,7 @@ import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
  */
 public class ActivityViewPager extends BaseDemoActivity implements
         View.OnClickListener,
-        BaseDemoActivity.ActionBarImpl {
+        ActionBar.Default {
 
     public static final String[] TEST_IMG_SCENE = new String[]{
             "http://www.bz55.com/uploads/allimg/150309/139-150309101A0.jpg",

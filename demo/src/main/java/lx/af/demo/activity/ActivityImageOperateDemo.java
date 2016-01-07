@@ -22,6 +22,7 @@ import java.util.List;
 import lx.af.activity.ImageBrowser.ImageBrowserActivity;
 import lx.af.adapter.AbsListAdapter;
 import lx.af.demo.R;
+import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
 import lx.af.utils.ActivityUtils.ImageBrowser;
@@ -39,7 +40,7 @@ import lx.af.view.NineGrid.NineImageUILAdapter;
  */
 public class ActivityImageOperateDemo extends BaseDemoActivity implements
         View.OnClickListener,
-        BaseDemoActivity.ActionBarImpl {
+        ActionBar.Default {
 
     private EditText mEditorSize;
     private EditText mEditorAspectW;

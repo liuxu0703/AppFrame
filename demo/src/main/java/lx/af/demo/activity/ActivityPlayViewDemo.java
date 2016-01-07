@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.concurrent.TimeUnit;
 
 import lx.af.demo.R;
+import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
@@ -25,7 +26,7 @@ import lx.af.view.VideoPlayView;
 
 public final class ActivityPlayViewDemo extends BaseDemoActivity implements
         OnClickListener,
-        BaseDemoActivity.ActionBarImpl {
+        ActionBar.Default {
 
     private MediaPlayButton mPlayBtn;
     private Button mBtnLoad;

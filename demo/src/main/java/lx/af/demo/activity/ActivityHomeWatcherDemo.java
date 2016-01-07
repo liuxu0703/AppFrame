@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import lx.af.demo.R;
+import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.utils.HomeWatcher;
 
@@ -12,7 +13,7 @@ import lx.af.utils.HomeWatcher;
  *
  */
 public class ActivityHomeWatcherDemo extends BaseDemoActivity implements
-        BaseDemoActivity.ActionBarImpl,
+        ActionBar.Default,
         HomeWatcher.OnHomePressedListener {
 
     private HomeWatcher mHomeWatcher;

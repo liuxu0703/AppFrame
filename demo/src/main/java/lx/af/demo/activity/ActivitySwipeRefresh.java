@@ -18,6 +18,7 @@ import java.util.Random;
 import lx.af.adapter.AbsListAdapter;
 import lx.af.demo.R;
 import lx.af.demo.adapter.ImagePagerAdapter;
+import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.demo.consts.TestRes;
 import lx.af.manager.GlobalThreadManager;
@@ -31,7 +32,7 @@ import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
 public class ActivitySwipeRefresh extends BaseDemoActivity implements
         SwipeRefreshLayout.OnRefreshListener,
         SwipeRefreshListLayout.OnLoadMoreListener,
-        BaseDemoActivity.ActionBarImpl {
+        ActionBar.Default {
 
     private SwipeRefreshListLayout mSwipeRefreshLayout;
     private ListView mListView;
