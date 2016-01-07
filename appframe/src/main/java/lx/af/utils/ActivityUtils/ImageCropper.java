@@ -28,7 +28,7 @@ public class ImageCropper extends ActivityLauncherBase<Uri> {
     private int mRequestCode;
     private ActivityResultCallback<Uri> mCallback;
 
-    private int mFrom = FROM_URI;
+    private int mFrom = FROM_IMAGE_SELECTOR;
     private int mAspectX = 1;
     private int mAspectY = 1;
     private int mMaxX = 0;
