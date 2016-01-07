@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import java.util.LinkedList;
 
+import lx.af.R;
 import lx.af.dialog.LoadingDialog;
 import lx.af.utils.AlertUtils;
 import lx.af.utils.ViewInject.ViewInjectUtils;
@@ -27,12 +29,16 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  */
 public abstract class AbsBaseActivity extends FragmentActivity {
 
+    public static final int FEATURE_DOUBLE_BACK_EXIT = 0x01 << 1;
+
     public String TAG;
 
     private LoadingDialog mLoadingDialog;
     private View mCContentView;  // custom content view
     private View mCActionBar;  // custom action bar
 
+    private int mFeatures = 0x00;
+    private long mDoubleBackTime = 0;
     private boolean mIsForeground = false;
 
     private final LinkedList<LifeCycleListener> mLifeCycleListeners = new LinkedList<>();
@@ -119,8 +125,22 @@ public abstract class AbsBaseActivity extends FragmentActivity {
         }
     }
 
-    public void startActivity(Class cls) {
-        startActivity(new Intent(AbsBaseActivity.this, cls));
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (isFeatureEnabled(FEATURE_DOUBLE_BACK_EXIT)) {
+                long current = System.currentTimeMillis();
+                long interval = current - mDoubleBackTime;
+                if (interval > 2000) {
+                    toastShort(R.string.toast_double_click_exit);
+                    mDoubleBackTime = current;
+                } else {
+                    finish();
+                }
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -152,12 +172,38 @@ public abstract class AbsBaseActivity extends FragmentActivity {
     }
 
     /**
+     * enable a feature
+     * @param feature one or a combine of below features:
+     *                {@link #FEATURE_DOUBLE_BACK_EXIT}
+     */
+    public void enableFeature(int feature) {
+        mFeatures |= feature;
+    }
+
+    /**
+     * disable a feature
+     * @param feature one or a combine of below features:
+     *                {@link #FEATURE_DOUBLE_BACK_EXIT}
+     */
+    public void disableFeature(int feature) {
+        mFeatures &= ~feature;
+    }
+
+    /**
      * check if the activity is running in foreground.
      * AKA, if the activity is in life cycle between onResume() and onPause().
      * @return true if running in foreground.
      */
     public boolean isForeground() {
         return mIsForeground;
+    }
+
+    /**
+     * start activity with default intent option
+     * @param cls activity class
+     */
+    public void startActivity(Class cls) {
+        startActivity(new Intent(AbsBaseActivity.this, cls));
     }
 
     /**
@@ -185,27 +231,27 @@ public abstract class AbsBaseActivity extends FragmentActivity {
     // ======================================
     // about loading dialog and toast
 
-    public void toastLong(String msg){
+    public void toastLong(String msg) {
         AlertUtils.toastLong(msg);
     }
 
-    public void toastLong(int resId){
+    public void toastLong(int resId) {
         AlertUtils.toastLong(resId);
     }
 
-    public void toastShort(String msg){
+    public void toastShort(String msg) {
         AlertUtils.toastShort(msg);
     }
 
-    public void toastShort(int resId){
+    public void toastShort(int resId) {
         AlertUtils.toastShort(resId);
     }
 
-    public void showLoadingDialog(int id){
+    public void showLoadingDialog(int id) {
         showLoadingDialog(getString(id));
     }
 
-    public void showLoadingDialog(){
+    public void showLoadingDialog() {
         showLoadingDialog(null);
     }
 
@@ -282,6 +328,10 @@ public abstract class AbsBaseActivity extends FragmentActivity {
         }
 
         ViewInjectUtils.inject(this);
+    }
+
+    private boolean isFeatureEnabled(int feature) {
+        return (mFeatures & feature) != 0;
     }
 
     // ======================================

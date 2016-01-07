@@ -28,5 +28,6 @@
     <string name="toast_path_sdcard_not_mounted">存储卡不可用</string>
     <string name="toast_path_sdcard_full">存储卡已满</string>
     <string name="toast_path_create_dir_fail">创建文件夹失败</string>
+    <string name="toast_double_click_exit">再按一次退出</string>
 
 </resources>
