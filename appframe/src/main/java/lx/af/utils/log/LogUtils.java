@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import lx.af.utils.FileUtils;
 
@@ -23,7 +24,7 @@ import lx.af.utils.FileUtils;
 public class LogUtils {
 
     public static boolean LOG_ENABLED = true;
-    public static boolean LOG2FILE = LOG_ENABLED && true;
+    public static boolean LOG2FILE = LOG_ENABLED && false;
     public static boolean LOG2CONSOLE = LOG_ENABLED && true;
 
     public static String LOG_PREFIX = "MyApp";
@@ -62,12 +63,12 @@ public class LogUtils {
             return null;
         }
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        String saveName = new StringBuilder()
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+        StringBuilder sb = new StringBuilder()
                 .append(prefix).append("-")
-                .append(df.format(new Date())).append(".zip").toString();
+                .append(df.format(new Date())).append(".zip");
 
-        File savePathFile = new File(logPackDirFile, saveName);
+        File savePathFile = new File(logPackDirFile, sb.toString());
         if (!logPackDirFile.isDirectory()) {
             if (!logPackDirFile.delete()) {
                 Log.e(TAG, "save log to sdcard failed, remove dir fail");
@@ -98,9 +99,8 @@ public class LogUtils {
         return saveLogToSdcard("LogPack");
     }
 
-    // TODO: save log to server
     public static void saveLogToServer() {
-
+        // TODO: save log to server
     }
 
     // where log is instantly write to.
