@@ -88,5 +88,19 @@ public class KV {
     public static void put(String key, String value) {
         sPreference.edit().putString(key, value).apply();
     }
-    
+
+    /**
+     * remove key-value
+     */
+    public static void remove(String key) {
+        sPreference.edit().remove(key).apply();
+    }
+
+    /**
+     * check exists for key-value
+     */
+    public static boolean contains(String key) {
+        return sPreference.contains(key);
+    }
+
 }
