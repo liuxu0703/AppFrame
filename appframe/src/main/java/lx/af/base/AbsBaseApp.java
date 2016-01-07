@@ -1,4 +1,4 @@
-package lx.af.app;
+package lx.af.base;
 
 import android.app.Application;
 import android.content.Context;
