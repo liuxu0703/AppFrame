@@ -70,9 +70,9 @@ public class AbsBaseApp extends Application{
         int cpu_count = Runtime.getRuntime().availableProcessors();
 
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.img_gallery_default)
-                .showImageForEmptyUri(R.drawable.img_gallery_default)
-                .showImageOnFail(R.drawable.img_gallery_default)
+                .showImageOnLoading(R.drawable.img_default)
+                .showImageForEmptyUri(R.drawable.img_default)
+                .showImageOnFail(R.drawable.img_default)
                 .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
