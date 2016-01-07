@@ -25,7 +25,11 @@ import lx.af.utils.StringUtils;
 import lx.af.utils.SystemUtils;
 import lx.af.utils.log.LogUtils;
 
-public class BaseApp extends Application{
+/**
+ * author: lx
+ * date: 15-12-01
+ */
+public class AbsBaseApp extends Application{
 
     private static Application sInstance;
 
