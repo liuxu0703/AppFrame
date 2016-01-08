@@ -2,27 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
 
-    signingConfigs {
-
-        debug {
-            storeFile file(DEBUG_SIGN_KEY_PATH)
-        }
-
-        config {
-            keyAlias FORMAL_SING_KEY_ALINS
-            keyPassword FORMAL_SIGN_KEY_PWD
-            storeFile file(FORMAL_SIGN_KEY_PATH)
-            storePassword FORMAL_SIGN_KEY_PWD
-        }
-    }
-
-    compileSdkVersion 22
-    buildToolsVersion BUILD_VERSION
+    compileSdkVersion COMPILE_SDK_VERSION
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId "lx.af.demo"
         minSdkVersion 14
-        targetSdkVersion SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
     }
