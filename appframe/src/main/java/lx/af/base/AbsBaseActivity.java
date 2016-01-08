@@ -291,6 +291,10 @@ public abstract class AbsBaseActivity extends FragmentActivity {
         return null;
     }
 
+    protected View getActionBarView() {
+        return mCActionBar;
+    }
+
     private void setContentViewInner(View view, ViewGroup.LayoutParams params) {
         mCContentView = view;
         if (params == null) {
@@ -319,8 +323,8 @@ public abstract class AbsBaseActivity extends FragmentActivity {
                     RelativeLayout.LayoutParams ap = new RelativeLayout.LayoutParams(
                             MATCH_PARENT, WRAP_CONTENT);
                     ap.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    contentView.addView(mCActionBar, ap);
                     contentView.addView(mCContentView, params);
+                    contentView.addView(mCActionBar, ap);
                     super.setContentView(contentView);
                     break;
                 }
