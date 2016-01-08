@@ -2,18 +2,19 @@ package lx.af.view.SwipeRefresh;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import lx.af.view.RatioWidthViewPager;
 
 /**
  * author: lx
  * date: 15-12-9
  */
-public class NestedViewPager extends ViewPager {
+public class NestedViewPager extends RatioWidthViewPager {
 
     private static final int THRESHOLD_X = 10;
-    private static final int THRESHOLD_Y = 20;
+    private static final int THRESHOLD_Y = 30;
 
     private float mDownX;
     private float mDownY;
@@ -48,7 +49,8 @@ public class NestedViewPager extends ViewPager {
             //       ", deltaX="+Math.abs(mMoveY - mDownY) +
             //        ", deltaY="+Math.abs(mMoveX - mDownX));
 
-            if (Math.abs(mMoveY - mDownY) < THRESHOLD_Y && Math.abs(mMoveX - mDownX) > THRESHOLD_X) {
+            if (Math.abs(mMoveY - mDownY) < THRESHOLD_Y &&
+                    Math.abs(mMoveX - mDownX) > THRESHOLD_X) {
                 mHandleScrollSelf = true;
             } else {
                 return false;

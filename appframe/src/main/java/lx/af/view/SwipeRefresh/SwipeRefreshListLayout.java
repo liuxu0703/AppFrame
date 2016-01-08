@@ -16,51 +16,28 @@ import lx.af.R;
  * author: lx
  * date: 15-12-15
  */
-public class SwipeRefreshListLayout extends SwipeRefreshLayout implements AbsListView.OnScrollListener {
+public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
+        AbsListView.OnScrollListener {
 
-    private int mTouchSlop;
-    /**
-     * listview实例
-     */
     private ListView mListView;
-
-    /**
-     * 上拉监听器, 到了最底部的上拉加载操作
-     */
-    private OnLoadMoreListener mOnLoadMoreListener;
-
-    /**
-     * ListView的加载中footer
-     */
     private View mListViewFooter;
+    private OnLoadMoreListener mOnLoadMoreListener;
+    private AbsListView.OnScrollListener mOnScrollListener;
 
-    /**
-     * 按下时的y坐标
-     */
     private int mYDown;
-    /**
-     * 抬起时的y坐标, 与mYDown一起用于滑动到底部时判断是上拉还是下拉
-     */
     private int mLastY;
-    /**
-     * 是否在加载中 ( 上拉加载更多 )
-     */
-    private boolean isLoading = false;
+    private int mTouchSlop;
+    private boolean mIsLoading = false;
 
-    /**
-     * @param context
-     */
     public SwipeRefreshListLayout(Context context) {
         this(context, null);
     }
 
     public SwipeRefreshListLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-
-        mListViewFooter = LayoutInflater.from(context).inflate(R.layout.swipe_refresh_footer, null,
-                false);
+        mListViewFooter = LayoutInflater.from(context).inflate(
+                R.layout.swipe_refresh_footer, mListView, false);
     }
 
     @Override
@@ -71,54 +48,43 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements AbsLis
         }
     }
 
-    /**
-     * 获取ListView对象
-     */
     private void getListView() {
         int count = getChildCount();
         if (count > 0) {
             View childView = getChildAt(0);
             if (childView instanceof ListView) {
                 mListView = (ListView) childView;
-                // 设置滚动监听器给ListView, 使得滚动的情况下也可以自动加载
-                //mListView.setOnScrollListener(this);
+                mListView.setOnScrollListener(this);
             }
         }
     }
-//
-//    @Override
-//    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
-//        final int action = event.getAction();
-//        switch (action) {
-//            case MotionEvent.ACTION_DOWN:
-//                mYDown = (int) event.getRawY();
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                mLastY = (int) event.getRawY();
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                if (canLoad()) {
-//                    loadMore();
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-//
-//        return super.dispatchTouchEvent(event);
-//    }
 
-    /**
-     * 是否可以加载更多, 条件是到了最底部, listview不在加载中, 且为上拉操作.
-     * @return
-     */
-    private boolean canLoad() {
-        return isBottom() && !isLoading && isPullUp();
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
+        final int action = event.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mYDown = (int) event.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mLastY = (int) event.getRawY();
+                break;
+            case MotionEvent.ACTION_UP:
+                if (canLoad()) {
+                    loadMore();
+                }
+                break;
+            default:
+                break;
+        }
+
+        return super.dispatchTouchEvent(event);
     }
 
-    /**
-     * 判断是否到了最底部
-     */
+    private boolean canLoad() {
+        return isBottom() && !mIsLoading && isPullUp();
+    }
+
     private boolean isBottom() {
         if (mListView != null && mListView.getAdapter() != null) {
             return mListView.getLastVisiblePosition() == (mListView.getAdapter().getCount() - 1);
@@ -126,10 +92,6 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements AbsLis
         return false;
     }
 
-    /**
-     * 是否是上拉操作
-     * @return
-     */
     private boolean isPullUp() {
         return (mYDown - mLastY) >= mTouchSlop;
     }
@@ -141,12 +103,9 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements AbsLis
         }
     }
 
-    /**
-     * @param loading
-     */
     public void setLoading(boolean loading) {
-        isLoading = loading;
-        if (isLoading) {
+        mIsLoading = loading;
+        if (mIsLoading) {
             mListView.addFooterView(mListViewFooter);
         } else {
             mListView.removeFooterView(mListViewFooter);
@@ -155,35 +114,34 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements AbsLis
         }
     }
 
-    /**
-     * @param loadListener
-     */
     public void setOnLoadMoreListener(OnLoadMoreListener loadListener) {
         mOnLoadMoreListener = loadListener;
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+    public void setOnScrollListener(AbsListView.OnScrollListener listener) {
+        mOnScrollListener = listener;
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                         int totalItemCount) {
-        // 滚动时到了最底部也可以加载更多
-        if (canLoad()) {
-            loadMore();
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (mOnScrollListener != null) {
+            mOnScrollListener.onScrollStateChanged(view, scrollState);
         }
     }
 
-    public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (canLoad()) {
+            loadMore();
+        }
+        if (mOnScrollListener != null) {
+            mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+        }
     }
 
+
     /**
-     * 加载更多的监听器
-     *
-     * @author mrsimple
+     * callback when scrolled to the bottom and load more data is required
      */
     public interface OnLoadMoreListener {
         void onLoadMore();
