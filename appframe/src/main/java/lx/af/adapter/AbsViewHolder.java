@@ -2,9 +2,14 @@ package lx.af.adapter;
 
 import android.view.View;
 
+import lx.af.utils.ViewInject.ViewInject;
+import lx.af.utils.ViewInject.ViewInjectUtils;
+
 /**
  * author: lx
  * date: 16-1-6
+ *
+ * view holder base, support view inject {@link ViewInject}
  */
 public abstract class AbsViewHolder<T> {
 
@@ -12,6 +17,7 @@ public abstract class AbsViewHolder<T> {
 
     public AbsViewHolder(View root) {
         mRoot = root;
+        ViewInjectUtils.inject(this, mRoot);
     }
 
     public abstract void setData(T data);
