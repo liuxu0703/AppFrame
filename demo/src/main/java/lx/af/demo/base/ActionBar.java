@@ -23,6 +23,8 @@ public interface ActionBar {
      */
     interface Default {
 
+        interface Overlay extends Default, OverlayInner {}
+
         interface MenuCreator extends Default {
 
             /**
@@ -30,6 +32,8 @@ public interface ActionBar {
              * @return the menu view, or null if menu is not needed.
              */
             View createActionBarMenu();
+
+            interface Overlay extends MenuCreator, OverlayInner {}
         }
 
         interface BackClickCallback extends Default {
@@ -41,6 +45,8 @@ public interface ActionBar {
              * @return true if click event is handled, false otherwise
              */
             boolean onActionBarBackClicked(View back);
+
+            interface Overlay extends BackClickCallback, OverlayInner {}
         }
 
         interface OnCreateCallback extends Default {
@@ -53,11 +59,15 @@ public interface ActionBar {
              * @param menu the menu, can be null
              */
             void onActionBarCreated(View actionBar, ImageView back, TextView title, @Nullable View menu);
+
+            interface Overlay extends OnCreateCallback, OverlayInner {}
         }
 
         interface Callbacks extends MenuCreator, OnCreateCallback, BackClickCallback {
         }
 
     }
+
+    interface OverlayInner {}
 
 }

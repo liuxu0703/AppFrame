@@ -32,7 +32,7 @@ final class ActionBarFactory {
 
         @Override
         public Type getActionBarType() {
-            return Type.NORMAL;
+            return mActivity instanceof ActionBar.OverlayInner ? Type.OVERLAY : Type.NORMAL;
         }
 
         @Override

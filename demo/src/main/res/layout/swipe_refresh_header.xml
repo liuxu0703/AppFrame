@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
-    <lx.af.view.SwipeRefresh.NestedViewPager
-        android:id="@+id/swipe_refresh_header_pager"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp" />
+        android:layout_height="wrap_content" >
 
-</RelativeLayout>
+        <lx.af.view.SwipeRefresh.NestedViewPager
+            android:id="@+id/swipe_refresh_header_pager"
+            android:layout_width="match_parent"
+            android:layout_height="240dp" />
+
+        <ImageView
+            android:id="@+id/swipe_refresh_header_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:background="#80f1f1f1"
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:background="@color/light_green"
+        android:gravity="center"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        android:text="Head Pictures" />
+</LinearLayout>

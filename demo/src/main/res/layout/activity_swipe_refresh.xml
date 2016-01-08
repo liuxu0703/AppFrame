@@ -15,9 +15,9 @@
             android:id="@+id/activity_swipe_refresh_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
             android:divider="@color/grey"
-            android:dividerHeight="1px" >
-        </ListView>
+            android:dividerHeight="1px" />
     </lx.af.view.SwipeRefresh.SwipeRefreshListLayout>
 
 </RelativeLayout>
