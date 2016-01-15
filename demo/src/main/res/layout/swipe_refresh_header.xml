@@ -14,6 +14,13 @@
             android:layout_width="match_parent"
             android:layout_height="240dp" />
 
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/swipe_refresh_header_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="6dp" />
+
         <ImageView
             android:id="@+id/swipe_refresh_header_icon"
             android:layout_width="wrap_content"

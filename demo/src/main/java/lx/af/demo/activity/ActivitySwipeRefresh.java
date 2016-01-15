@@ -26,8 +26,10 @@ import lx.af.demo.consts.TestRes;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ViewInject.ViewInject;
 import lx.af.utils.ViewUtils.ActionBarScrollFadeHelper;
+import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
 import lx.af.view.SwipeRefresh.SwipeRefreshLayout;
 import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
+import com.viewpagerindicator.PageIndicator;
 
 /**
  * author: lx
@@ -42,8 +44,9 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
     private SwipeRefreshListLayout mSwipeRefreshLayout;
     @ViewInject(id = R.id.activity_swipe_refresh_listview)
     private ListView mListView;
-    private ViewPager mHeaderViewPager;
     private View mHeaderIcon;
+    private ViewPager mHeaderViewPager;
+    private PageIndicator mHeaderPagerIndicator;
     private TextView mTitle;
 
     private ListAdapter mListAdapter;
@@ -58,12 +61,16 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
         View header = View.inflate(this, R.layout.swipe_refresh_header, null);
         mHeaderViewPager = (ViewPager) header.findViewById(R.id.swipe_refresh_header_pager);
         mHeaderIcon = header.findViewById(R.id.swipe_refresh_header_icon);
+        mHeaderPagerIndicator = (PageIndicator)
+                header.findViewById(R.id.swipe_refresh_header_pager_indicator);
         mListView.addHeaderView(header);
 
         mListAdapter = new ListAdapter(this, generateList(0, 15));
         mListView.setAdapter(mListAdapter);
 
         mHeaderViewPager.setAdapter(new ImagePagerAdapter(generateImage()));
+        mHeaderPagerIndicator.setViewPager(mHeaderViewPager);
+        ViewPagerAutoFlipper.newInstance(mHeaderViewPager).setInterval(4000).start();
 
         ActionBarScrollFadeHelper
                 .with(getActionBarView())
