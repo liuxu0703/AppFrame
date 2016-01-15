@@ -1,4 +1,4 @@
-package lx.af.net.request;
+package lx.af.net.HttpRequest;
 
 import com.google.gson.Gson;
 

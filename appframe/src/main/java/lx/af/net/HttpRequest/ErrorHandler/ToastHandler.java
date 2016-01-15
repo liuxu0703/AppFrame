@@ -1,9 +1,9 @@
-package lx.af.net.request.ErrorHandler;
+package lx.af.net.HttpRequest.ErrorHandler;
 
 import android.util.Log;
 
-import lx.af.net.request.DataHull;
-import lx.af.net.request.IRequest;
+import lx.af.net.HttpRequest.DataHull;
+import lx.af.net.HttpRequest.IRequest;
 import lx.af.utils.AlertUtils;
 
 /**

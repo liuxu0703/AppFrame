@@ -1,9 +1,12 @@
-package lx.af.net.request;
+package lx.af.net.HttpRequest;
 
 import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.NetworkOnMainThreadException;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -19,6 +22,7 @@ public class VolleyManager {
 
     private static Application sApp;
     private static RequestQueue mRequestQueue;
+    private static Handler mUiThreadHandler;
 
     private VolleyManager() {}
 
@@ -29,6 +33,7 @@ public class VolleyManager {
     public static void init(Application app) {
         sApp = app;
         mRequestQueue = Volley.newRequestQueue(sApp);
+        mUiThreadHandler = new Handler(sApp.getMainLooper());
     }
 
     public static RequestQueue getRequestQueue() {
@@ -70,6 +75,28 @@ public class VolleyManager {
      */
     public static void cancelPendingRequests() {
         mRequestQueue.cancelAll(TAG);
+    }
+
+    public static void runOnUiThread(Runnable runnable) {
+        mUiThreadHandler.post(runnable);
+    }
+
+    /**
+     * if current calling thread is main thread, throw exception.
+     * prevent network request on the main thread.
+     */
+    public static void throwIfRequestInMainThread() {
+        if (isInMainThread()) {
+            throw new NetworkOnMainThreadException();
+        }
+    }
+
+    /**
+     * check if the current calling thread is running in main thread.
+     * @return true if current thread is main thread
+     */
+    public static boolean isInMainThread() {
+        return Looper.myLooper() == Looper.getMainLooper();
     }
 
     public static boolean isNetworkAvailable() {

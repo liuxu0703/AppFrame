@@ -1,6 +1,6 @@
-package lx.af.net.request;
+package lx.af.net.HttpRequest;
 
-import lx.af.net.request.ErrorHandler.ErrorHandler;
+import lx.af.net.HttpRequest.ErrorHandler.ErrorHandler;
 
 /**
  * author: lx

@@ -1,4 +1,4 @@
-package lx.af.net.request.ErrorHandler;
+package lx.af.net.HttpRequest.ErrorHandler;
 
 /**
  * author: lx

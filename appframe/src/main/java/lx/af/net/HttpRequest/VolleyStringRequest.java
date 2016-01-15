@@ -1,25 +1,20 @@
-package lx.af.net.request;
+package lx.af.net.HttpRequest;
 
 import android.os.NetworkOnMainThreadException;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.RequestFuture;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import lx.af.manager.GlobalThreadManager;
+import lx.af.net.HttpRequest.volley.request.PostParamsRequest;
+import lx.af.net.HttpRequest.volley.request.StringRequestListener;
 
 /**
  * author: lx
@@ -35,9 +30,9 @@ public abstract class VolleyStringRequest<T> implements IRequest {
     private Map<String, String> mParams;
     private RequestCallback mCallback;
 
-    private PostStringRequest mRequest;
+    private PostParamsRequest mRequest;
 
-    private PostStringListener mListener = new PostStringListener() {
+    private StringRequestListener mListener = new StringRequestListener() {
 
         @Override
         public void onResponse(String response) {
@@ -67,9 +62,7 @@ public abstract class VolleyStringRequest<T> implements IRequest {
 
     @Override
     public DataHull request() {
-        if (GlobalThreadManager.isInMainThread()) {
-            throw new NetworkOnMainThreadException();
-        }
+        VolleyManager.throwIfRequestInMainThread();
 
         int code = initCheck();
         if (code != DataHull.ERR_NONE) {
@@ -77,7 +70,7 @@ public abstract class VolleyStringRequest<T> implements IRequest {
         }
 
         RequestFuture<String> future = RequestFuture.newFuture();
-        mRequest = new PostStringRequest(mUrl, mParams, future, future);
+        mRequest = new PostParamsRequest(mUrl, mParams, future, future);
         mRequest.setShouldCache(false);
         VolleyManager.addRequest(mRequest);
 
@@ -110,7 +103,7 @@ public abstract class VolleyStringRequest<T> implements IRequest {
             return;
         }
 
-        mRequest = new PostStringRequest(mUrl, mParams, mListener, mListener);
+        mRequest = new PostParamsRequest(mUrl, mParams, mListener, mListener);
         mRequest.setShouldCache(false);
         VolleyManager.addRequest(mRequest);
     }
@@ -119,7 +112,7 @@ public abstract class VolleyStringRequest<T> implements IRequest {
 
     protected boolean verifyParams(Map<String, String> params) {
         if (params == null || params.size() == 0) {
-            return false;
+            return true;
         }
         for (Map.Entry<String, String> entry : params.entrySet()) {
             //Log.d(TAG, "verifyParams, key=" + entry.getKey() + ", value=" + entry.getValue());
@@ -194,7 +187,7 @@ public abstract class VolleyStringRequest<T> implements IRequest {
 
     private void informCallback(final DataHull datahull) {
         if (mCallback != null) {
-            GlobalThreadManager.runInUiThread(new Runnable() {
+            VolleyManager.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mCallback.onRequestComplete(datahull);
@@ -209,63 +202,6 @@ public abstract class VolleyStringRequest<T> implements IRequest {
         datahull.mUrl = mUrl;
         datahull.mStatus = err;
         return datahull;
-    }
-
-
-    /**
-     * post request using volley, with return data parsed as raw string.
-     */
-    private static class PostStringRequest extends Request<String> {
-
-        private Map<String, String> mParams;
-        private Response.Listener<String> mListener;
-        private VolleyError mError;
-
-        public PostStringRequest(String url, Map<String, String> params,
-                                 Response.Listener<String> listener,
-                                 Response.ErrorListener errListener) {
-            super(Method.POST, url, errListener);
-            mParams = params;
-            mListener = listener;
-        }
-
-        @Override
-        protected void deliverResponse(String response) {
-            mListener.onResponse(response);
-        }
-
-        @Override
-        public void deliverError(VolleyError error) {
-            mError = error;
-            super.deliverError(error);
-        }
-
-        @Override
-        protected Response<String> parseNetworkResponse(NetworkResponse response) {
-            String parsed;
-            try {
-                parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            } catch (UnsupportedEncodingException e) {
-                parsed = new String(response.data);
-            }
-            return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
-        }
-
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            return mParams;
-        }
-
-        int getHttpStatusCode() {
-            if (mError != null && mError.networkResponse != null) {
-                return mError.networkResponse.statusCode;
-            } else {
-                return 200;
-            }
-        }
-    }
-
-    private abstract static class PostStringListener implements Response.Listener<String>, Response.ErrorListener {
     }
 
 }
