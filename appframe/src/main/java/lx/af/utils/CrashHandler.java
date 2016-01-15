@@ -28,7 +28,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        Log.e(TAG, "shit happens ...", ex);
+        //Log.e(TAG, "shit happens ...", ex);
         LogUtils.saveLogToSdcard("CrashLogPack");
         // we only want the log, let the default handler handle it
         mDefaultHandler.uncaughtException(thread, ex);

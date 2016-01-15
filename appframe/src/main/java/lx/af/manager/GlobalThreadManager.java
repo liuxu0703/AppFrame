@@ -129,7 +129,6 @@ public final class GlobalThreadManager {
         handler.postDelayed(runnable, bufferTime);
     }
 
-
     /**
      * check if the current calling thread is running in main thread.
      * @return true if current thread is main thread
