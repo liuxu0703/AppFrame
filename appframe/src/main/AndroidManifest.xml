@@ -24,7 +24,7 @@
         </activity>
         <activity
             android:name=".activity.ImageSelector.ImageSelectBrowser"
-            android:label="Image Selector Browser"
+            android:label="@string/mis_title"
             android:screenOrientation="portrait" >
         </activity>
         <activity
