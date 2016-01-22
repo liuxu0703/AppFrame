@@ -331,7 +331,7 @@ public abstract class AbsBaseActivity extends FragmentActivity {
             }
         }
 
-        ViewInjectUtils.inject(this);
+        ViewInjectUtils.inject(AbsBaseActivity.class, this);
     }
 
     private boolean isFeatureEnabled(int feature) {

@@ -35,7 +35,7 @@ public abstract class AbsBaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ViewInjectUtils.inject(this, view);
+        ViewInjectUtils.inject(AbsBaseFragment.class, this, view);
     }
 
     @Override

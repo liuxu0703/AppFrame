@@ -1,12 +1,15 @@
 package lx.af.utils.ViewInject;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * author: lx
@@ -14,64 +17,89 @@ import java.lang.reflect.Method;
  */
 public final class ViewInjectUtils {
 
+    public static final String TAG = "ViewInject";
+
     private ViewInjectUtils() {}
 
     /**
      * user {@link ViewInject} annotation to assign View fields
+     * @param base base class for {@link ViewInject} to apply.
+     *             will only find fields for inject on subclass of this class
      * @param target must has a "findViewById" method, or exception will throw
      */
-    public static void inject(Object target) {
-        injectInner(target, target);
+    public static void inject(Class<?> base, Object target) {
+        injectInner(base, target, target);
     }
 
     /**
      * user {@link ViewInject} annotation to assign View fields in param view
+     * @param base base class for {@link ViewInject} to apply.
+     *             will only find fields for inject on subclass of this class
      * @param target owner of the view fields
      * @param view where the views are from
      */
-    public static void inject(Object target, View view) {
-        injectInner(target, view);
+    public static void inject(Class<?> base, Object target, View view) {
+        injectInner(base, target, view);
     }
 
-    private static void injectInner(Object injectTarget, Object viewSource) {
-        Field[] fields = injectTarget.getClass().getDeclaredFields();
-        if (fields != null && fields.length > 0) {
-            for (Field field : fields) {
-                ViewInject viewInject = field.getAnnotation(ViewInject.class);
-                if (viewInject != null) {
-                    int viewId = viewInject.id();
-                    try {
-                        field.setAccessible(true);
-                        field.set(injectTarget, findViewById(viewSource, viewId));
-                    } catch (NoSuchMethodException nme) {
-                        throw new RuntimeException(nme);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+    private static void injectInner(Class<?> base, Object injectTarget, Object viewSource) {
+        List<FieldInfo> list = getFieldInfoList(base, injectTarget);
 
-                    String clickMethod = viewInject.click();
-                    if (!TextUtils.isEmpty(clickMethod))
-                        setViewClickListener(injectTarget, field, clickMethod);
+        for (FieldInfo info : list) {
+            Field field = info.field;
+            ViewInject inject = info.inject;
 
-                    String longClickMethod = viewInject.longClick();
-                    if (!TextUtils.isEmpty(longClickMethod))
-                        setViewLongClickListener(injectTarget, field, longClickMethod);
-
-                    String itemClickMethod = viewInject.itemClick();
-                    if (!TextUtils.isEmpty(itemClickMethod))
-                        setItemClickListener(injectTarget, field, itemClickMethod);
-
-                    String itemLongClickMethod = viewInject.itemLongClick();
-                    if (!TextUtils.isEmpty(itemLongClickMethod))
-                        setItemLongClickListener(injectTarget, field, itemLongClickMethod);
-
-                    Select select = viewInject.select();
-                    if (!TextUtils.isEmpty(select.selected()))
-                        setViewSelectListener(
-                                injectTarget, field, select.selected(), select.noSelected());
+            if (inject != null) {
+                int viewId = inject.id();
+                try {
+                    field.setAccessible(true);
+                    field.set(injectTarget, findViewById(viewSource, viewId));
+                } catch (NoSuchMethodException nme) {
+                    throw new RuntimeException(nme);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+                String clickMethod = inject.click();
+                if (!TextUtils.isEmpty(clickMethod))
+                    setViewClickListener(base, injectTarget, field, clickMethod);
+
+                String longClickMethod = inject.longClick();
+                if (!TextUtils.isEmpty(longClickMethod))
+                    setViewLongClickListener(base, injectTarget, field, longClickMethod);
+
+                String itemClickMethod = inject.itemClick();
+                if (!TextUtils.isEmpty(itemClickMethod))
+                    setItemClickListener(base, injectTarget, field, itemClickMethod);
+
+                String itemLongClickMethod = inject.itemLongClick();
+                if (!TextUtils.isEmpty(itemLongClickMethod))
+                    setItemLongClickListener(base, injectTarget, field, itemLongClickMethod);
+
+                Select select = inject.select();
+                if (!TextUtils.isEmpty(select.selected()))
+                    setViewSelectListener(
+                            base, injectTarget, field, select.selected(), select.noSelected());
             }
         }
+    }
+
+    private static List<FieldInfo> getFieldInfoList(Class<?> base, Object object) {
+        LinkedList<FieldInfo> list = new LinkedList<>();
+        Class<?> clazz = object.getClass() ;
+        while (!clazz.equals(Object.class) && !clazz.equals(base)) {
+            Field[] fs = clazz.getDeclaredFields();
+            if (fs != null && fs.length != 0) {
+                for (Field field : fs) {
+                    ViewInject inject = field.getAnnotation(ViewInject.class);
+                    if (inject != null) {
+                        list.add(new FieldInfo(field, inject));
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return list;
     }
 
     private static View findViewById(Object viewSource, int id)
@@ -84,66 +112,79 @@ public final class ViewInjectUtils {
         return (View) findViewById.invoke(viewSource, args);
     }
 
-    private static void setViewClickListener(Object target, Field field, String clickMethod) {
+
+    private static void setViewClickListener(
+            Class<?> base, Object target, Field field, String method) {
         try {
             Object obj = field.get(target);
             if (obj instanceof View) {
-                ((View) obj).setOnClickListener(new EventListener(target)
-                        .click(clickMethod));
+                ((View) obj).setOnClickListener(
+                        new EventListener(base, target).click(method));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "fail to setOnClickListener", e);
         }
     }
 
-    private static void setViewLongClickListener(Object target, Field field, String clickMethod) {
+    private static void setViewLongClickListener(
+            Class<?> base, Object target, Field field, String method) {
         try {
             Object obj = field.get(target);
             if (obj instanceof View) {
-                ((View) obj).setOnLongClickListener(new EventListener(target)
-                        .longClick(clickMethod));
+                ((View) obj).setOnLongClickListener(
+                        new EventListener(base, target).longClick(method));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "fail to setOnLongClickListener", e);
         }
     }
 
-    private static void setItemClickListener(Object target, Field field, String itemClickMethod) {
+    private static void setItemClickListener(
+            Class<?> base, Object target, Field field, String method) {
         try {
             Object obj = field.get(target);
             if (obj instanceof AbsListView) {
-                ((AbsListView) obj).setOnItemClickListener(new EventListener(
-                        target).itemClick(itemClickMethod));
+                ((AbsListView) obj).setOnItemClickListener(
+                        new EventListener(base, target).itemClick(method));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "fail to setOnItemClickListener", e);
         }
     }
 
-    private static void setItemLongClickListener(Object target, Field field, String itemClickMethod) {
+    private static void setItemLongClickListener(
+            Class<?> base, Object target, Field field, String method) {
         try {
             Object obj = field.get(target);
             if (obj instanceof AbsListView) {
-                ((AbsListView) obj)
-                        .setOnItemLongClickListener(new EventListener(target)
-                                .itemLongClick(itemClickMethod));
+                ((AbsListView) obj).setOnItemLongClickListener(
+                                new EventListener(base, target).itemLongClick(method));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "fail to setOnItemLongClickListener", e);
         }
     }
 
     private static void setViewSelectListener(
-            Object target, Field field, String select, String noSelect) {
+            Class<?> base, Object target, Field field, String select, String noSelect) {
         try {
             Object obj = field.get(target);
             if (obj instanceof View) {
-                ((AbsListView) obj)
-                        .setOnItemSelectedListener(new EventListener(target)
-                                .select(select).noSelect(noSelect));
+                ((AbsListView) obj).setOnItemSelectedListener(
+                        new EventListener(base, target).select(select).noSelect(noSelect));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "fail to setOnItemSelectedListener", e);
+        }
+    }
+
+    private static class FieldInfo {
+        Field field;
+        ViewInject inject;
+
+        public FieldInfo(Field field, ViewInject inject) {
+            this.field = field;
+            this.inject = inject;
         }
     }
 

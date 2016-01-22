@@ -17,7 +17,7 @@ public abstract class AbsViewHolder<T> {
 
     public AbsViewHolder(View root) {
         mRoot = root;
-        ViewInjectUtils.inject(this, mRoot);
+        ViewInjectUtils.inject(AbsViewHolder.class, this, mRoot);
     }
 
     public abstract void setData(T data);
