@@ -1,35 +1,26 @@
 package lx.af.demo.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.activity.ImageBrowser.ImageBrowserActivity;
-import lx.af.adapter.AbsListAdapter;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.utils.Paths;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
 import lx.af.utils.ActivityUtils.ImageBrowser;
 import lx.af.utils.ActivityUtils.ImageCropper;
 import lx.af.utils.ActivityUtils.ImageSelector;
-import lx.af.utils.PathUtils;
-import lx.af.utils.ScreenUtils;
 import lx.af.utils.log.Log;
 import lx.af.view.NineGrid.NineGridLayout;
 import lx.af.view.NineGrid.NineImageUILAdapter;
@@ -88,8 +79,8 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         switch (v.getId()) {
             case R.id.apid_btn_from_camera: {
                 retrieveCropParams();
-                String targetPath = PathUtils.generateGallerySavePath("crop");
-                String cameraPath = PathUtils.generateGallerySavePath("cam");
+                String targetPath = Paths.generateCropImagePath().toString();
+                String cameraPath = Paths.generateCameraImagePath().toString();
                 ImageCropper.of(this)
                         .fromCamera(cameraPath).output(targetPath)
                         .maxSize(mCropMaxSize, mCropMaxSize)
@@ -99,7 +90,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
             }
             case R.id.apid_btn_from_gallery: {
                 retrieveCropParams();
-                String targetPath = PathUtils.generateGallerySavePath("crop");
+                String targetPath = Paths.generateCropImagePath().toString();
                 ImageCropper.of(this)
                         .fromGallery().output(targetPath)
                         .maxSize(mCropMaxSize, mCropMaxSize)
@@ -109,7 +100,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
             }
             case R.id.apid_btn_from_multi_selector: {
                 retrieveCropParams();
-                String targetPath = PathUtils.generateGallerySavePath("crop");
+                String targetPath = Paths.generateCropImagePath().toString();
                 ImageCropper.of(this)
                         .fromImageSelector().output(targetPath)
                         .maxSize(mCropMaxSize, mCropMaxSize)
@@ -181,37 +172,6 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         intent.putExtra(ImageBrowserActivity.EXTRA_IMAGE_URI_LIST, imgUris);
         intent.putExtra(ImageBrowserActivity.EXTRA_CURRENT_IMAGE_URI, currentUri);
         startActivity(intent);
-    }
-
-    private static class ImageAdapter extends AbsListAdapter<String> {
-
-        ImageSize imageSize = new ImageSize(200, 200);
-        int size;
-
-        public ImageAdapter(Context context, List<String> list) {
-            super(context, list);
-            size = ScreenUtils.getScreenWidth() / 3 - ScreenUtils.dip2px(3);
-        }
-
-        @Override
-        public View getView(Context context, int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                ImageView img = new ImageView(context);
-                img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                convertView = img;
-            }
-
-            /** Fixed View Size */
-            GridView.LayoutParams lp = (GridView.LayoutParams) convertView.getLayoutParams();
-            if (lp == null || lp.height != size) {
-                GridView.LayoutParams p = new GridView.LayoutParams(size, size);
-                convertView.setLayoutParams(p);
-            }
-
-            String uri = getItem(position);
-            ImageLoader.getInstance().displayImage(uri, (ImageView) convertView, imageSize);
-            return convertView;
-        }
     }
 
 }
