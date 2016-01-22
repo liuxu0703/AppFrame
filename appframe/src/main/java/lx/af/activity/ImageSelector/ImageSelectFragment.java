@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -31,7 +32,6 @@ import java.util.Locale;
 
 import lx.af.R;
 import lx.af.manager.GlobalThreadManager;
-import lx.af.utils.PathUtils;
 import lx.af.view.ProgressWheel;
 
 /**
@@ -289,11 +289,15 @@ public class ImageSelectFragment extends Fragment implements
     private void startCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            String imgPath = PathUtils.generateGallerySavePath();
-            if (!PathUtils.ensurePathExistsWithErrorToast(imgPath, false)) {
+            File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            if (!dcim.exists() && !dcim.mkdir()) {
+                Toast.makeText(getActivity(),
+                        R.string.toast_path_create_dir_fail, Toast.LENGTH_SHORT).show();
                 return;
             }
-            mCameraFile = new File(imgPath);
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+            mCameraFile = new File(dcim, df.format(new Date()) + ".jpg");
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mCameraFile));
             startActivityForResult(cameraIntent, AC_REQUEST_CAMERA);
         } else {
