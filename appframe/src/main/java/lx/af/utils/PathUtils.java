@@ -5,8 +5,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import lx.af.R;
 
@@ -26,7 +24,7 @@ public class PathUtils {
 
     public static void init(Application app) {
         sApp = app;
-        sSdRoot = Environment.getExternalStorageDirectory().getPath() + "/lx_default_dir/";
+        sSdRoot = Environment.getExternalStorageDirectory().getPath() + "/lx_default_dir";
     }
 
     /**
@@ -34,7 +32,7 @@ public class PathUtils {
      * @param name the name (not the path!)
      */
     public static void setSdRoot(String name) {
-        sSdRoot = Environment.getExternalStorageDirectory().getPath() + "/" + name + "/";
+        sSdRoot = Environment.getExternalStorageDirectory().getPath() + "/" + name;
     }
 
     public static String getSdRootDir() {
@@ -42,18 +40,65 @@ public class PathUtils {
     }
 
     /**
-     * where image files are saved by request of gallery or camera.
+     * get a dir full path under main dir of the app on sdcard root path.
+     * the sdcard is  not always available (for one case, sdcard not mounted).
+     * @return external cache dir full path, or null if not available.
      */
-    public static String generateGallerySavePath() {
-        return generateGallerySavePath("");
+    public static String getSdDir(String subdir) {
+        String dir = sSdRoot + "/" + subdir;
+        ensureDirExists(dir);
+        return dir;
     }
 
     /**
-     * where image files are saved by request of gallery or camera.
+     * get cache dir full path of the app.
+     * the cache dir is in /data partition and is not visible to users.
+     * @return cache dir full path
      */
-    public static String generateGallerySavePath(String prefix) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        return sSdRoot + "gallery/" + prefix + "_" + df.format(new Date()) + ".jpg";
+    public static String getCacheDir() {
+        return sApp.getCacheDir().getAbsolutePath();
+    }
+
+    /**
+     * get a dir full path under cache dir of the app.
+     * the cache dir is in /data partition and is not visible to users.
+     * @param subdir sub dir for cache dir
+     * @return the subdir full path
+     */
+    public static String getCacheDir(String subdir) {
+        if (TextUtils.isEmpty(subdir)) {
+            return sApp.getCacheDir().getAbsolutePath();
+        }
+        String dir = sApp.getCacheDir().getAbsolutePath() + "/" + subdir;
+        ensureDirExists(dir);
+        return dir;
+    }
+
+    /**
+     * get external cache dir of the app.
+     * the external cache dir is in sdcard partition and may not always
+     * be available (for one case, sdcard not mounted).
+     * @return external cache dir full path, or null if not available.
+     */
+    public static String getExtCacheDir() {
+        File d = sApp.getExternalCacheDir();
+        return d != null ? d.getAbsolutePath() : null;
+    }
+
+    /**
+     * get a dir full path under external cache dir of the app.
+     * the external cache dir is in sdcard partition and may not always
+     * be available (for one case, sdcard not mounted).
+     * @return dir full path, or null if not available.
+     */
+    public static String getExtCacheDir(String subdir) {
+        File d = sApp.getExternalCacheDir();
+        if (d == null) {
+            return null;
+        }
+        String dir = d.getAbsolutePath() + "/" + subdir;
+        ensureDirExists(dir);
+        return dir;
     }
 
     /**
@@ -123,30 +168,6 @@ public class PathUtils {
             }
         }
         return dirFile.mkdirs();
-    }
-
-    /**
-     * get cache dir full path of the app.
-     * the cache dir is in /data partition and is not visible to users.
-     * @return cache dir full path
-     */
-    public static String getCacheDir() {
-        return sApp.getCacheDir().getAbsolutePath() + "/";
-    }
-
-    /**
-     * get a dir full path under cache dir of the app.
-     * the cache dir is in /data partition and is not visible to users.
-     * @param subdir sub dir for cache dir
-     * @return the subdir full path
-     */
-    public static String getCacheDir(String subdir) {
-        if (TextUtils.isEmpty(subdir)) {
-            return sApp.getCacheDir().getAbsolutePath() + "/";
-        }
-        String dir = sApp.getCacheDir().getAbsolutePath() + "/" + subdir;
-        ensureDirExists(dir);
-        return dir + "/";
     }
 
 }
