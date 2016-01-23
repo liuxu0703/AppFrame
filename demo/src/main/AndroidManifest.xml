@@ -63,6 +63,11 @@
             android:screenOrientation="portrait"
             android:label="Auto Slide Pager" >
         </activity>
+        <activity
+            android:name=".activity.ActivityScanner"
+            android:screenOrientation="portrait"
+            android:label="Bar Code Scan" >
+        </activity>
 
     </application>
 

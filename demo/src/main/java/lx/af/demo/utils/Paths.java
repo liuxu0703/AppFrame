@@ -18,6 +18,8 @@ public final class Paths {
     public static final String CAMERA_PATH =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
+    public static final String QR_CODE_PATH = PathUtils.getSdDir("qr_code");
+
     public static final String CROP_PATH = PathUtils.getSdDir("crop_image");
 
     public static File generateCropImagePath() {
@@ -28,6 +30,11 @@ public final class Paths {
     public static File generateCameraImagePath() {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
         return new File(CAMERA_PATH, df.format(new Date()) + ".jpg");
+    }
+
+    public static File generateQRCodeImagePath() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+        return new File(QR_CODE_PATH, df.format(new Date()) + ".jpg");
     }
 
 }
