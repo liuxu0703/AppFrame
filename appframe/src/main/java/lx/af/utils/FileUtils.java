@@ -39,6 +39,29 @@ public class FileUtils {
 
     public static final String TAG = FileUtils.class.getSimpleName();
 
+    /**
+     * author: liuxu
+     * callback when scan is done.
+     */
+    public interface ScannerListener {
+
+        /**
+         * author: liuxu
+         * callback when scan is done.
+         * when scanning a folder, this will be invoked when all
+         * files and folders under the given folder is scanned.
+         * Note: this method will be invoked in main thread (UI thread).
+         * @param path
+         *            the file or folder being scanned
+         * @param success
+         *            whether the scan operation is success. when scanning a
+         *            folder, success will be set to true only when all files
+         *            and folders under the given folder is successfully
+         *            scanned.
+         */
+        void onScanCompleted(String path, boolean success);
+    }
+
     // ===============================================================
     // zip operations
 
@@ -105,9 +128,7 @@ public class FileUtils {
     /**
      * author: liuxu
      * get a list of all files and folders under a folder, including itself
-     * @param folder
-     *            the folder
-     * @return the list
+     * @param folder the folder
      */
     public static List<File> getSubFiles(String folder) {
         return getSubFiles(folder, null, 0, true);
@@ -116,17 +137,11 @@ public class FileUtils {
     /**
      * author: liuxu
      * get a list of files and folders under a folder.
-     * @param folder
-     *            the folder
-     * @param filter
-     *            a FileFilter to filter files
-     * @param depth
-     *            only search files at the depth limit. 0 and negative
-     *            value will be considered as no limit for depth.
-     * @param includeSelf
-     *            whether the folder itself should be added
-     *            into the list
-     * @return the list
+     * @param folder the folder
+     * @param filter a FileFilter to filter files
+     * @param depth only search files at the depth limit. 0 and negative
+     *              value will be considered as no limit for depth.
+     * @param includeSelf whether the folder itself should be added into the list
      */
     public static List<File> getSubFiles(String folder, FileFilter filter,
                                          int depth, boolean includeSelf) {
@@ -140,97 +155,6 @@ public class FileUtils {
         }
         return handler.getSubFiles();
     }
-
-    private static class SubFileHandler {
-        private int mDepthTotal;
-        private boolean mIncludeSelf;
-        private File mFolder;
-        private FileFilter mFilter;
-
-        // use this class to mark depth for each file
-        private class FileWrapper {
-            int depth;
-            File file;
-
-            FileWrapper(File file, int depth) {
-                this.file = file;
-                this.depth = depth;
-            }
-
-            List<FileWrapper> listFileWrapper() {
-                if (this.file.isDirectory()) {
-                    List<FileWrapper> list = new ArrayList<FileWrapper>();
-                    File[] files = this.file.listFiles(mFilter);
-                    for (File f : files) {
-                        list.add(new FileWrapper(f, this.depth + 1));
-                    }
-                    return list;
-                } else {
-                    return null;
-                }
-            }
-
-            boolean isDirectory() {
-                return this.file.isDirectory();
-            }
-        }
-
-        public SubFileHandler(File folder, FileFilter filter,
-                              int depth, boolean includeSelf) throws IllegalArgumentException {
-            mFolder = folder;
-            mFilter = filter;
-            mIncludeSelf = includeSelf;
-
-            if (!mFolder.exists()) {
-                // should be a folder to go on
-                throw new IllegalArgumentException(
-                        "not a valid folder: " + folder);
-            }
-
-            if (depth <= 0) {
-                // consider 0 and negative number as no limit.
-                mDepthTotal = Integer.MAX_VALUE;
-            } else {
-                mDepthTotal = depth;
-            }
-        }
-
-        public List<File> getSubFiles() {
-            List<FileWrapper> list = new ArrayList<FileWrapper>();
-            FileWrapper root = new FileWrapper(mFolder, 0);
-            doGetSubFiles(root, list);
-            if (!mIncludeSelf) {
-                // the folder being searched is always the first
-                // element in the list
-                list.remove(0);
-            }
-            List<File> retList = new ArrayList<File>();
-            for (FileWrapper f : list) {
-                retList.add(f.file);
-            }
-            return retList;
-        }
-
-        // recursively add sub files into the list
-        private void doGetSubFiles(
-                FileWrapper wrapper, List<FileWrapper> list) {
-            if (wrapper.isDirectory()) {
-                list.add(wrapper);
-            }
-            if (wrapper.depth >= mDepthTotal) {
-                // folder depth reaches the limit, stop recursion
-                return;
-            }
-            List<FileWrapper> wrapperList = wrapper.listFileWrapper();
-            if (wrapperList != null) {
-                list.addAll(wrapperList);
-                for (FileWrapper f : wrapperList) {
-                    doGetSubFiles(f, list);
-                }
-            }
-        }
-    }
-
 
     // ===============================================================
     // about media store
@@ -256,33 +180,8 @@ public class FileUtils {
 
     /**
      * author: liuxu
-     * callback when scan is done.
-     */
-    public interface ScannerListener {
-
-        /**
-         * author: liuxu
-         * callback when scan is done.
-         * when scanning a folder, this will be invoked when all
-         * files and folders under the given folder is scanned.
-         * Note: this method will be invoked in main thread (UI thread).
-         * @param path
-         *            the file or folder being scanned
-         * @param success
-         *            whether the scan operation is success. when scanning a
-         *            folder, success will be set to true only when all files
-         *            and folders under the given folder is successfully
-         *            scanned.
-         */
-        public void onScanCompleted(String path, boolean success);
-    }
-
-    /**
-     * author: liuxu
      * scan a file or folder
-     * @param context
-     * @param file
-     *            path the file or folder to be scanned
+     * @param file path the file or folder to be scanned
      */
     public static void scanFile(Context context, String file) {
         scanFile(context, file, null);
@@ -293,111 +192,13 @@ public class FileUtils {
      * scan a file or folder. ScannerListener.onScanCompleted() will
      * be invoked in main thread (UI thread) when scan is done.
      * see ScannerListener for details.
-     * @param context
-     * @param file
-     *            path the file or folder to be scanned
-     * @param listener
-     *            callback when scan is done
+     * @param file path the file or folder to be scanned
+     * @param listener callback when scan is done, can be null
      */
-    public static void scanFile(
-            Context context, String file, ScannerListener listener) {
+    public static void scanFile(Context context, String file, ScannerListener listener) {
         MediaScannerTool mst = new MediaScannerTool(context, file, listener);
         mst.scan();
     }
-
-    private static class MediaScannerTool {
-
-        private int mScanCount = 0;
-        private boolean mSuccess = true;
-        private Context mContext;
-        private File mScanPath;
-        private ArrayList<File> mScanList;
-        private MediaScannerConnection mConnection;
-        private ScannerListener mListener;
-
-        private MediaScannerConnection.MediaScannerConnectionClient mClient =
-                new MediaScannerConnection.MediaScannerConnectionClient() {
-
-                    @Override
-                    public void onMediaScannerConnected() {
-                        doScan();
-                    }
-
-                    @Override
-                    public void onScanCompleted(String path, Uri uri) {
-                        mSuccess = mSuccess && (uri != null);
-                        mScanCount++;
-                        if (mScanCount == mScanList.size()) {
-                            // all files has been scanned.
-                            // Note:
-                            // MediaScannerConnectionClient.onScanCompleted()
-                            // will be invoked in media thread by default. so
-                            // here we callback to the UI thread.
-                            callbackToUiThreadOnComplete();
-                            mContext.unbindService(mConnection);
-                        }
-                    }
-                };
-
-        MediaScannerTool(Context context, String path, ScannerListener listener) {
-            mContext = context;
-            mScanPath = new File(path);
-            mListener = listener;
-        }
-
-        public void scan() {
-            if (!mScanPath.exists()) {
-                if (mListener != null) {
-                    mListener.onScanCompleted(mScanPath.getAbsolutePath(), false);
-                }
-                return;
-            }
-            prepare();
-            mConnection = new MediaScannerConnection(mContext, mClient);
-            mConnection.connect();
-        }
-
-        private void prepare() {
-            mScanCount = 0;
-            mScanList = new ArrayList<File>();
-            prepareScanList(mScanPath);
-        }
-
-        // put all files and folders that need to be scanned into a list.
-        // we do this before scan really happens so that the file count
-        // is known beforehand, thus we can know whether all files has
-        // been scanned in MediaScannerConnectionClient.onScanCompleted()
-        private void prepareScanList(File path) {
-            mScanList.add(path);
-            if (path.isDirectory()) {
-                File[] subPaths = path.listFiles();
-                for (File p : subPaths) {
-                    prepareScanList(p);
-                }
-            }
-        }
-
-        private void doScan() {
-            for (File f : mScanList) {
-                mConnection.scanFile(f.getAbsolutePath(), null);
-            }
-        }
-
-        private void callbackToUiThreadOnComplete() {
-            if (mListener == null) {
-                return;
-            }
-            Handler uiHandler = new Handler(Looper.getMainLooper());
-            uiHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onScanCompleted(
-                            mScanPath.getAbsolutePath(), mSuccess);
-                }
-            });
-        }
-    }
-
 
     // ===============================================================
     // file operations, mostly from android.os.FileUtils
@@ -425,8 +226,6 @@ public class FileUtils {
     /**
      * copy a file from srcFile to destFile, return true if succeed,
      * false otherwise.
-     * @param origin
-     * @param target
      * @param createParent
      *            if set to true, the parent dir of target file will
      *            be created if not exists.
@@ -447,7 +246,9 @@ public class FileUtils {
                 (destParent == null || !destParent.exists());
         if (!targetParentExist) {
             if (createParent) {
-                destParent.mkdirs();
+                if (!destParent.mkdirs()) {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -458,8 +259,6 @@ public class FileUtils {
     /**
      * copy a file from srcFile to destFile, return true if succeed,
      * false otherwise.
-     * @param srcFile
-     * @param destFile
      * @return true if succeed, false otherwise.
      */
     public static boolean copyFile(File srcFile, File destFile) {
@@ -484,7 +283,9 @@ public class FileUtils {
     public static boolean copyToFile(InputStream inputStream, File destFile) {
         try {
             if (destFile.exists()) {
-                destFile.delete();
+                if (!destFile.delete()) {
+                    return false;
+                }
             }
             FileOutputStream out = new FileOutputStream(destFile);
             try {
@@ -497,7 +298,7 @@ public class FileUtils {
                 out.flush();
                 try {
                     out.getFD().sync();
-                } catch (IOException e) {
+                } catch (IOException ignore) {
                 }
                 out.close();
             }
@@ -528,12 +329,9 @@ public class FileUtils {
      */
     public static String readTextFile(File file, int max, String ellipsis) throws IOException {
         InputStream input = new FileInputStream(file);
-        // wrapping a BufferedInputStream around it because when reading /proc
-        // with unbuffered
-        // input stream, bytes read not equal to buffer size is not necessarily
-        // the correct
-        // indication for EOF; but it is true for BufferedInputStream due to its
-        // implementation.
+        // wrapping a BufferedInputStream around it because when reading /proc with unbuffered
+        // input stream, bytes read not equal to buffer size is not necessarily the correct
+        // indication for EOF; but it is true for BufferedInputStream due to its implementation.
         BufferedInputStream bis = new BufferedInputStream(input);
         try {
             long size = file.length();
@@ -589,8 +387,7 @@ public class FileUtils {
                 }
                 return ellipsis + new String(last);
             } else {
-                // "cat" mode: size unknown, read it all in streaming
-                // fashion
+                // "cat" mode: size unknown, read it all in streaming fashion
                 ByteArrayOutputStream contents = new ByteArrayOutputStream();
                 int len;
                 byte[] data = new byte[1024];
@@ -610,8 +407,6 @@ public class FileUtils {
 
     /**
      * Writes string to file. Basically same as "echo -n $string > $filename"
-     * @param filename
-     * @param string
      * @throws java.io.IOException
      */
     public static void stringToFile(String filename, String string) throws IOException {
@@ -686,4 +481,192 @@ public class FileUtils {
         BigInteger bigInt = new BigInteger(1, digest.digest());
         return bigInt.toString(16);
     }
+
+    // ===============================================================
+    // inner class
+
+    private static class SubFileHandler {
+        private int mDepthTotal;
+        private boolean mIncludeSelf;
+        private File mFolder;
+        private FileFilter mFilter;
+
+        // use this class to mark depth for each file
+        private class FileWrapper {
+            int depth;
+            File file;
+
+            FileWrapper(File file, int depth) {
+                this.file = file;
+                this.depth = depth;
+            }
+
+            List<FileWrapper> listFileWrapper() {
+                if (this.file.isDirectory()) {
+                    List<FileWrapper> list = new ArrayList<>();
+                    File[] files = this.file.listFiles(mFilter);
+                    for (File f : files) {
+                        list.add(new FileWrapper(f, this.depth + 1));
+                    }
+                    return list;
+                } else {
+                    return null;
+                }
+            }
+
+            boolean isDirectory() {
+                return this.file.isDirectory();
+            }
+        }
+
+        public SubFileHandler(File folder, FileFilter filter,
+                              int depth, boolean includeSelf) throws IllegalArgumentException {
+            mFolder = folder;
+            mFilter = filter;
+            mIncludeSelf = includeSelf;
+
+            if (!mFolder.exists()) {
+                // should be a folder to go on
+                throw new IllegalArgumentException(
+                        "not a valid folder: " + folder);
+            }
+
+            if (depth <= 0) {
+                // consider 0 and negative number as no limit.
+                mDepthTotal = Integer.MAX_VALUE;
+            } else {
+                mDepthTotal = depth;
+            }
+        }
+
+        public List<File> getSubFiles() {
+            List<FileWrapper> list = new ArrayList<>();
+            FileWrapper root = new FileWrapper(mFolder, 0);
+            doGetSubFiles(root, list);
+            if (!mIncludeSelf) {
+                // the folder being searched is always the first
+                // element in the list
+                list.remove(0);
+            }
+            List<File> retList = new ArrayList<>();
+            for (FileWrapper f : list) {
+                retList.add(f.file);
+            }
+            return retList;
+        }
+
+        // recursively add sub files into the list
+        private void doGetSubFiles(
+                FileWrapper wrapper, List<FileWrapper> list) {
+            if (wrapper.isDirectory()) {
+                list.add(wrapper);
+            }
+            if (wrapper.depth >= mDepthTotal) {
+                // folder depth reaches the limit, stop recursion
+                return;
+            }
+            List<FileWrapper> wrapperList = wrapper.listFileWrapper();
+            if (wrapperList != null) {
+                list.addAll(wrapperList);
+                for (FileWrapper f : wrapperList) {
+                    doGetSubFiles(f, list);
+                }
+            }
+        }
+    }
+
+
+    private static class MediaScannerTool {
+
+        private int mScanCount = 0;
+        private boolean mSuccess = true;
+        private Context mContext;
+        private File mScanPath;
+        private ArrayList<File> mScanList;
+        private MediaScannerConnection mConnection;
+        private ScannerListener mListener;
+
+        private MediaScannerConnection.MediaScannerConnectionClient mClient =
+                new MediaScannerConnection.MediaScannerConnectionClient() {
+
+                    @Override
+                    public void onMediaScannerConnected() {
+                        doScan();
+                    }
+
+                    @Override
+                    public void onScanCompleted(String path, Uri uri) {
+                        mSuccess = mSuccess && (uri != null);
+                        mScanCount++;
+                        if (mScanCount == mScanList.size()) {
+                            // all files has been scanned.
+                            // Note:
+                            // MediaScannerConnectionClient.onScanCompleted()
+                            // will be invoked in media thread by default. so
+                            // here we callback to the UI thread.
+                            callbackToUiThreadOnComplete();
+                            mContext.unbindService(mConnection);
+                        }
+                    }
+                };
+
+        MediaScannerTool(Context context, String path, ScannerListener listener) {
+            mContext = context;
+            mScanPath = new File(path);
+            mListener = listener;
+        }
+
+        public void scan() {
+            if (!mScanPath.exists()) {
+                if (mListener != null) {
+                    mListener.onScanCompleted(mScanPath.getAbsolutePath(), false);
+                }
+                return;
+            }
+            prepare();
+            mConnection = new MediaScannerConnection(mContext, mClient);
+            mConnection.connect();
+        }
+
+        private void prepare() {
+            mScanCount = 0;
+            mScanList = new ArrayList<>();
+            prepareScanList(mScanPath);
+        }
+
+        // put all files and folders that need to be scanned into a list.
+        // we do this before scan really happens so that the file count
+        // is known beforehand, thus we can know whether all files has
+        // been scanned in MediaScannerConnectionClient.onScanCompleted()
+        private void prepareScanList(File path) {
+            mScanList.add(path);
+            if (path.isDirectory()) {
+                File[] subPaths = path.listFiles();
+                for (File p : subPaths) {
+                    prepareScanList(p);
+                }
+            }
+        }
+
+        private void doScan() {
+            for (File f : mScanList) {
+                mConnection.scanFile(f.getAbsolutePath(), null);
+            }
+        }
+
+        private void callbackToUiThreadOnComplete() {
+            if (mListener == null) {
+                return;
+            }
+            Handler uiHandler = new Handler(Looper.getMainLooper());
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mListener.onScanCompleted(
+                            mScanPath.getAbsolutePath(), mSuccess);
+                }
+            });
+        }
+    }
+
 }

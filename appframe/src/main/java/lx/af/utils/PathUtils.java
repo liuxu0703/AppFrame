@@ -31,11 +31,11 @@ public class PathUtils {
      * set a name for dir in sdcard root
      * @param name the name (not the path!)
      */
-    public static void setSdRoot(String name) {
+    public static void setSdDir(String name) {
         sSdRoot = Environment.getExternalStorageDirectory().getPath() + "/" + name;
     }
 
-    public static String getSdRootDir() {
+    public static String getSdDir() {
         return sSdRoot;
     }
 

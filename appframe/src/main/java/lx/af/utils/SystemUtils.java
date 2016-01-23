@@ -1,9 +1,7 @@
 package lx.af.utils;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.IBinder;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import java.io.File;
 import java.util.List;
@@ -259,10 +253,9 @@ public final class SystemUtils {
     }
 
     /**
-     * get package version code
-     * @return version code
+     * get app version code
      */
-    public static int getVersionCode() {
+    public static int getAppVersionCode() {
         int versionCode = 0;
         PackageManager pm = sApp.getPackageManager();
         try {
@@ -277,10 +270,9 @@ public final class SystemUtils {
     }
 
     /**
-     * get package version name
-     * @return version name
+     * get app version name
      */
-    public static String getVersionName() {
+    public static String getAppVersionName() {
         String versionName = "1.0.0";
         PackageManager pm = sApp.getPackageManager();
         try {
@@ -310,25 +302,6 @@ public final class SystemUtils {
 
     // =======================================================
     // system runtime operations
-
-    /**
-     * see if we are running in foreground.
-     */
-    public static boolean isRunningForeground() {
-        try {
-            ActivityManager am = (ActivityManager) sApp.getSystemService(Context.ACTIVITY_SERVICE);
-            ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-            String currentPackageName = cn.getPackageName();
-            if (!TextUtils.isEmpty(currentPackageName)
-                    && currentPackageName.equals(sApp.getPackageName())) {
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     /**
      * clear background services and processes.
@@ -377,7 +350,7 @@ public final class SystemUtils {
     /**
      * back to home screen.
      */
-    public static void backToHome() {
+    public static void back2home() {
         Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
         mHomeIntent.addCategory(Intent.CATEGORY_HOME);
         mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -410,29 +383,5 @@ public final class SystemUtils {
 
     // =======================================================
     // other
-
-    /**
-     * hide input method keyboard.
-     * warning: call this only when the keyboard is visible.
-     */
-    public static void hideKeyBoard(Activity activity) {
-        View v = activity.getCurrentFocus();
-        if (v == null) {
-            return;
-        }
-        IBinder windowToken = v.getWindowToken();
-        InputMethodManager im = ((InputMethodManager)
-                activity.getSystemService(Context.INPUT_METHOD_SERVICE));
-        im.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-    /**
-     * check if current thread is main thread. throw exception if not.
-     */
-    private static void throwIfNotOnMainThread() {
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            throw new IllegalStateException("must be invoked from main thread");
-        }
-    }
 
 }

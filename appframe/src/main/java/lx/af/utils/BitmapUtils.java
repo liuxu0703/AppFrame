@@ -1,7 +1,7 @@
 package lx.af.utils;
 
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -16,12 +16,31 @@ import java.io.IOException;
 
 /**
  * created by liuxu. many methods here are collected from various site.
- *
  * operations about bitmap.
  */
 public final class BitmapUtils {
 
+    private static Application sApp;
+
     private BitmapUtils() {
+    }
+
+    public static void init(Application app) {
+        sApp = app;
+    }
+
+    /**
+     * decode bitmap from resource id.
+     */
+    public static Bitmap res2bitmap(int resId) {
+        return BitmapFactory.decodeResource(sApp.getResources(), resId, null);
+    }
+
+    /**
+     * decode bitmap from resource id
+     */
+    public static Bitmap res2bitmap(int resId, BitmapFactory.Options opt) {
+        return BitmapFactory.decodeResource(sApp.getResources(), resId, opt);
     }
 
     /**
@@ -31,8 +50,8 @@ public final class BitmapUtils {
      * @param path full path for the picture
      * @return bitmap
      */
-    public static Bitmap decodeBitmap(String path) {
-        return decodeBitmapForSize(path, 0, 0);
+    public static Bitmap file2bitmap(String path) {
+        return file2bitmap(path, 0, 0);
     }
 
     /**
@@ -44,8 +63,8 @@ public final class BitmapUtils {
      * @param imageView the ImageView used to determine bitmap width and height
      * @return bitmap
      */
-    public static Bitmap decodeBitmapImageView(String path, ImageView imageView) {
-        return decodeBitmapForSize(path, imageView.getWidth(), imageView.getHeight());
+    public static Bitmap file2bitmapImageView(String path, ImageView imageView) {
+        return file2bitmap(path, imageView.getWidth(), imageView.getHeight());
     }
 
     /**
@@ -58,7 +77,7 @@ public final class BitmapUtils {
      * @param height the required height
      * @return bitmap
      */
-    public static Bitmap decodeBitmapForSize(String path, int width, int height) {
+    public static Bitmap file2bitmap(String path, int width, int height) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
 
         if (width != 0 && height != 0) {
@@ -183,8 +202,7 @@ public final class BitmapUtils {
      * @return the byte[]
      */
     public static byte[] bitmap2bytes(Bitmap bitmap, int quality) {
-        if (null == bitmap)
-            return new byte[] {};
+        if (null == bitmap) return new byte[] {};
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         byte[] result = baos.toByteArray();
@@ -194,6 +212,39 @@ public final class BitmapUtils {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * calculate hashcode for a bitmap.
+     * only calculate part of the first row for performance purpose.
+     * if you want to involve every pixels, use {@link #bitmap2hashFull(Bitmap)}.
+     * @return hash code
+     */
+    public static long bitmap2hash(Bitmap bitmap) {
+        if (bitmap == null) return 0;
+        long hash = 31;
+        int end = bitmap.getWidth() / 5;
+        for (int x = 0; x < end; x ++) {
+            hash *= (bitmap.getPixel(x, 0) + 31);
+        }
+        return hash;
+    }
+
+    /**
+     * calculate hashcode for a bitmap.
+     * all pixels in the bitmap is considered for the hashcode, and if you want
+     * a better performance for the calculation, use {@link #bitmap2hash(Bitmap)}.
+     * @return hash code
+     */
+    public static long bitmap2hashFull(Bitmap bitmap) {
+        if (bitmap == null) return 0;
+        long hash = 31;
+        for (int x = 0; x < bitmap.getWidth(); x ++) {
+            for (int y = 0; y < bitmap.getHeight(); y ++) {
+                hash *= (bitmap.getPixel(x,y) + 31);
+            }
+        }
+        return hash;
     }
 
     /**
