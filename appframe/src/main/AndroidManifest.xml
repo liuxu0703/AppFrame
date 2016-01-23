@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
@@ -30,6 +31,11 @@
         <activity
             android:name=".activity.ImageBrowser.ImageBrowserActivity"
             android:label="Image Browser"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.CodeScanner.MipcaActivity"
+            android:label="Bar Code Scanner"
             android:screenOrientation="portrait" >
         </activity>
     </application>

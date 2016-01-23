@@ -3,10 +3,6 @@
 
     <color name="translucent">#00000000</color>
     <color name="transparent">#00000000</color>
-
-    <color name="activity_bkg_1">#f1f1f1</color>
-    <color name="activity_bkg_2">#e9ecf1</color>
-
     <color name="black">#000</color>
     <color name="white">#fff</color>
     <color name="grey">#696969</color>
@@ -17,5 +13,9 @@
     <color name="orange">#ffb957</color>
     <color name="green">#24ae60</color>
     <color name="red">#c2312f</color>
+
+    <color name="mipca_result_view">#b0000000</color>
+    <color name="mipca_viewfinder_mask">#60000000</color>
+    <color name="mipca_possible_result_points">#c0ffff00</color>
 
 </resources>
