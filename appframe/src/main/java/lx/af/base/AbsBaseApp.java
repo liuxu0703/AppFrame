@@ -15,6 +15,7 @@ import lx.af.R;
 import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.net.HttpRequest.VolleyManager;
+import lx.af.utils.BitmapUtils;
 import lx.af.utils.KV;
 import lx.af.utils.AlertUtils;
 import lx.af.utils.CrashHandler;
@@ -44,6 +45,7 @@ public class AbsBaseApp extends Application{
         PathUtils.init(this);
         LogUtils.init(this);
         StringUtils.init(this);
+        BitmapUtils.init(this);
 
         KV.init(this);
         CrashHandler.init();
