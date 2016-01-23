@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="activity_bkg_1">#f1f1f1</color>
+    <color name="activity_bkg_2">#e9ecf1</color>
+
+    <color name="color_primary">#ee9c18</color>
+    <color name="color_primary_pressed">#80ee9c18</color>
+    <color name="color_primary_not_pressed">#666</color>
+
+    <color name="text_color">#313131</color>
+    <color name="text_color_sub">#b6b6b6</color>
+    <color name="text_color_hint">#AAAAAA</color>
+
+    <color name="divider_color">#d1d1d1</color>
+
+</resources>
