@@ -48,7 +48,7 @@ class EventListener implements
 		this.longClickMethod = method;
 		return this;
 	}
-	
+
 	public EventListener itemLongClick(String method) {
 		this.itemLongClickMethod = method;
 		return this;
@@ -68,32 +68,37 @@ class EventListener implements
 		this.nothingSelectedMethod = method;
 		return this;
 	}
-	
+
+    @Override
 	public boolean onLongClick(View v) {
 		return invokeLongClickMethod(base, handler, longClickMethod, v);
 	}
-	
+
+    @Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		return invokeItemLongClickMethod(base, handler, itemLongClickMethod, arg0, arg1, arg2, arg3);
 	}
-	
+
+    @Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		invokeItemSelectMethod(base, handler, itemSelectMethod, arg0, arg1, arg2, arg3);
 	}
-	
+
+    @Override
 	public void onNothingSelected(AdapterView<?> arg0) {
 		invokeNoSelectMethod(base, handler, nothingSelectedMethod, arg0);
 	}
-	
+
+    @Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		invokeItemClickMethod(base, handler, itemClickMethod, arg0, arg1, arg2, arg3);
 	}
-	
+
+    @Override
 	public void onClick(View v) {
 		invokeClickMethod(base, handler, clickMethod, v);
 	}
-	
-	
+
 	private static Object invokeClickMethod(
             Class<?> base, Object handler, String methodName, Object... params) {
 		if (handler == null) return null;
@@ -108,8 +113,7 @@ class EventListener implements
             throw new RuntimeException("no such method: " + methodName);
         }
 	}
-	
-	
+
 	private static boolean invokeLongClickMethod(
             Class<?> base, Object handler, String methodName, Object... params) {
         if (handler == null) return false;
@@ -125,9 +129,7 @@ class EventListener implements
             throw new RuntimeException("no such method: " + methodName);
         }
 	}
-	
-	
-	
+
 	private static Object invokeItemClickMethod(
             Class<?> base, Object handler, String methodName, Object...params) {
         if (handler == null) return false;
@@ -143,8 +145,7 @@ class EventListener implements
             throw new RuntimeException("no such method: " + methodName);
         }
 	}
-	
-	
+
 	private static boolean invokeItemLongClickMethod(
             Class<?> base, Object handler, String methodName, Object...params) {
         if (handler == null) return false;
@@ -161,8 +162,7 @@ class EventListener implements
             throw new RuntimeException("no such method: " + methodName);
         }
 	}
-	
-	
+
 	private static Object invokeItemSelectMethod(
             Class<?> base, Object handler, String methodName, Object...params) {
         if (handler == null) return false;
@@ -195,6 +195,7 @@ class EventListener implements
         }
 	}
 
+
     private static Method getMethod(
             Class<?> base, Object handler, String methodName, Class<?>... params) {
 
@@ -213,5 +214,4 @@ class EventListener implements
         }
         return method;
     }
-
 }

@@ -51,11 +51,18 @@ public final class ViewInjectUtils {
 
             if (inject != null) {
                 int viewId = inject.id();
+                View view = null;
                 try {
                     field.setAccessible(true);
-                    field.set(injectTarget, findViewById(viewSource, viewId));
-                } catch (NoSuchMethodException nme) {
-                    throw new RuntimeException(nme);
+                    view = findViewById(viewSource, viewId);
+                    if (view == null) {
+                        throw new RuntimeException("inject source view null for (" + field + ")");
+                    }
+                    field.set(injectTarget, view);
+                } catch (IllegalArgumentException | NoSuchMethodException e) {
+                    String viewName = view != null ? view.getClass().getName() : null;
+                    throw new RuntimeException(
+                            "inject view fail for (" + viewName + ") to (" + field + ")", e);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
