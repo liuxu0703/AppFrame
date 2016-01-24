@@ -49,7 +49,7 @@ public final class GlobalThreadManager {
         sApp = app;
     }
 
-    private static ThreadPoolExecutor getThreadPoolInstance() {
+    public static ThreadPoolExecutor getThreadPoolInstance() {
         if (mThreadPool == null) {
             synchronized (GlobalThreadManager.class) {
                 if (mThreadPool == null) {
@@ -63,7 +63,7 @@ public final class GlobalThreadManager {
         return mThreadPool;
     }
 
-    private static Handler getUiThreadHandler() {
+    public static Handler getUiThreadHandler() {
         if (mUiThreadHandler == null) {
             synchronized (GlobalThreadManager.class) {
                 if (mUiThreadHandler == null) {

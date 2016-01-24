@@ -7,55 +7,61 @@ import android.support.v4.app.Fragment;
 
 import com.mining.app.zxing.decoding.Intents;
 
-import lx.af.activity.CodeScanner.MipcaActivity;
+import lx.af.activity.CodeScanner.CodeScannerActivity;
 
 /**
  * author: lx
  * date: 16-1-22
  */
-public class BarCodeScanner extends ActivityLauncherBase<String> {
+public class CodeScanner extends ActivityLauncherBase<String> {
 
     private String mScanMode;
     private String mCharacterSet;
+    private Class<?> mScannerClazz;
 
-    public static BarCodeScanner of(Activity activity) {
-        return new BarCodeScanner(activity);
+    public static CodeScanner of(Activity activity) {
+        return new CodeScanner(activity);
     }
 
-    public static BarCodeScanner of(Fragment fragment) {
-        return new BarCodeScanner(fragment);
+    public static CodeScanner of(Fragment fragment) {
+        return new CodeScanner(fragment);
     }
 
-    protected BarCodeScanner(Activity activity) {
+    protected CodeScanner(Activity activity) {
         super(activity);
     }
 
-    protected BarCodeScanner(Fragment fragment) {
+    protected CodeScanner(Fragment fragment) {
         super(fragment);
     }
 
-    public BarCodeScanner characterSet(String characterSet) {
+    public CodeScanner scanner(Class<?> scannerClazz) {
+        this.mScannerClazz = scannerClazz;
+        return this;
+    }
+
+    public CodeScanner characterSet(String characterSet) {
         mCharacterSet = characterSet;
         return this;
     }
 
-    public BarCodeScanner modeQRCode() {
+    public CodeScanner modeQRCode() {
         return scanMode(Intents.Scan.QR_CODE_MODE);
     }
 
-    public BarCodeScanner mode1D() {
+    public CodeScanner mode1D() {
         return scanMode(Intents.Scan.ONE_D_MODE);
     }
 
-    public BarCodeScanner modeProduct() {
+    public CodeScanner modeProduct() {
         return scanMode(Intents.Scan.PRODUCT_MODE);
     }
 
-    public BarCodeScanner modeDataMatrix() {
+    public CodeScanner modeDataMatrix() {
         return scanMode(Intents.Scan.DATA_MATRIX_MODE);
     }
 
-    public BarCodeScanner scanMode(String scanMode) {
+    public CodeScanner scanMode(String scanMode) {
         mScanMode = scanMode;
         return this;
     }
@@ -88,7 +94,10 @@ public class BarCodeScanner extends ActivityLauncherBase<String> {
 
     @Override
     public Intent createIntent() {
-        Intent intent = newIntent(MipcaActivity.class);
+        if (mScannerClazz == null) {
+            mScannerClazz = CodeScannerActivity.class;
+        }
+        Intent intent = newIntent(mScannerClazz);
         if (mScanMode != null) {
             intent.putExtra(Intents.Scan.MODE, mScanMode);
         }

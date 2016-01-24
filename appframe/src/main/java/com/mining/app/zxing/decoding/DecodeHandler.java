@@ -37,6 +37,9 @@ import lx.af.R;
 
 final class DecodeHandler extends Handler {
 
+  static final int MSG_DECODE = 11;
+  static final int MSG_QUIT = 12;
+
   private static final String TAG = DecodeHandler.class.getSimpleName();
 
   private final CaptureActivityHandler handler;
@@ -50,9 +53,9 @@ final class DecodeHandler extends Handler {
 
   @Override
   public void handleMessage(Message message) {
-    if (message.what == R.id.mipca_decode) {
+    if (message.what == MSG_DECODE) {
       decode((byte[]) message.obj, message.arg1, message.arg2);
-    } else if (message.what == R.id.mipca_quit) {
+    } else if (message.what == MSG_QUIT) {
       Looper.myLooper().quit();
     }
   }
@@ -92,14 +95,14 @@ final class DecodeHandler extends Handler {
     if (rawResult != null) {
       long end = System.currentTimeMillis();
       Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
-      Message message = Message.obtain(handler, R.id.mipca_decode_succeeded, rawResult);
+      Message message = Message.obtain(handler, CaptureActivityHandler.MSG_DECODE_SUCCEED, rawResult);
       Bundle bundle = new Bundle();
       bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
       message.setData(bundle);
       //Log.d(TAG, "Sending decode succeeded message...");
       message.sendToTarget();
     } else {
-      Message message = Message.obtain(handler, R.id.mipca_decode_failed);
+      Message message = Message.obtain(handler, CaptureActivityHandler.MSG_DECODE_FAIL);
       message.sendToTarget();
     }
   }

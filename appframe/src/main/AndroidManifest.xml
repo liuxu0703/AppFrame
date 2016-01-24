@@ -34,7 +34,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.CodeScanner.MipcaActivity"
+            android:name="com.mining.app.zxing.decoding.MipcaActivity"
+            android:label="Bar Code Scanner"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.CodeScanner.CodeScannerActivity"
             android:label="Bar Code Scanner"
             android:screenOrientation="portrait" >
         </activity>

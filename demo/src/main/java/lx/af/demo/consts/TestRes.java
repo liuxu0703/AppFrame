@@ -1,7 +1,5 @@
 package lx.af.demo.consts;
 
-import java.util.ArrayList;
-
 /**
  * author: lx
  * date: 15-12-15
@@ -71,12 +69,10 @@ public final class TestRes {
             "http://www.ld12.com/upimg358/allimg/c140813/140N4GB02550-62U6.jpg",
     };
 
-    public static ArrayList<String> asArrayList(String[] res) {
-        ArrayList<String> list = new ArrayList<>(res.length);
-        for (String s : res) {
-            list.add(s);
-        }
-        return list;
-    }
+
+    public static final String M3U8_RADIO_LIVE = "http://hls.bj.qingting.fm/live/1133.m3u8";
+
+    public static final String GET_LIVE_STREAM_URL_1 = "http://api.v1.918kaiba.com:81/Program/androidLiveUrl";
+    public static final String GET_LIVE_STREAM_URL_2 = "http://api.v1.918kaiba.com:81/Program/LiveUrl";
 
 }

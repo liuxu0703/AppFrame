@@ -17,7 +17,7 @@ import lx.af.demo.base.BaseDemoActivity;
 import lx.af.demo.utils.Paths;
 import lx.af.dialog.MessageDialog;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
-import lx.af.utils.ActivityUtils.BarCodeScanner;
+import lx.af.utils.ActivityUtils.CodeScanner;
 import lx.af.utils.BitmapUtils;
 import lx.af.utils.FileUtils;
 import lx.af.utils.QRDecoder;
@@ -67,15 +67,15 @@ public class ActivityScanner extends BaseDemoActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.scanner_btn_scan_all: {
-                BarCodeScanner.of(this).start(this);
+                CodeScanner.of(this).start(this);
                 break;
             }
             case R.id.scanner_btn_scan_qr_code: {
-                BarCodeScanner.of(this).modeQRCode().start(this);
+                CodeScanner.of(this).modeQRCode().start(this);
                 break;
             }
             case R.id.scanner_btn_scan_bar_code: {
-                BarCodeScanner.of(this).mode1D().start(this);
+                CodeScanner.of(this).mode1D().start(this);
                 break;
             }
             case R.id.scanner_btn_read_pic: {

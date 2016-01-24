@@ -26,6 +26,8 @@
     <string name="mis_image_browser_select">选择</string>
 
     <string name="mipca_scan_hint">将二维码放入框内, 即可自动扫描</string>
+    <string name="mipca_toast_finish_activity">长时间未识别,请重新发起扫描</string>
+    <string name="mipca_toast_init_camera_fail">初始化扫描失败</string>
 
     <string name="toast_path_sdcard_not_mounted">存储卡不可用</string>
     <string name="toast_path_sdcard_full">存储卡已满</string>

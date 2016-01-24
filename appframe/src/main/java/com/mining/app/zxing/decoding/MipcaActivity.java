@@ -1,4 +1,4 @@
-package lx.af.activity.CodeScanner;
+package com.mining.app.zxing.decoding;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,7 +12,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.mining.app.zxing.camera.CameraManager;
 import com.mining.app.zxing.decoding.CaptureActivityHandler;
-import com.mining.app.zxing.decoding.DecodeFormatManager;
 import com.mining.app.zxing.decoding.InactivityTimer;
 import com.mining.app.zxing.decoding.Intents;
 import com.mining.app.zxing.view.ViewfinderView;

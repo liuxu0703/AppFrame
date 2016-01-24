@@ -33,7 +33,6 @@ import com.mining.app.zxing.view.ViewfinderResultPointCallback;
 import java.util.Vector;
 
 import lx.af.R;
-import lx.af.activity.CodeScanner.MipcaActivity;
 
 /**
  * This class handles all the messaging which comprises the state machine for capture.
@@ -41,6 +40,13 @@ import lx.af.activity.CodeScanner.MipcaActivity;
 public final class CaptureActivityHandler extends Handler {
 
   private static final String TAG = CaptureActivityHandler.class.getSimpleName();
+
+  static final int MSG_AUTO_FOCUS = 101;
+  static final int MSG_RESTART_PREVIEW = 102;
+  static final int MSG_DECODE_SUCCEED = 103;
+  static final int MSG_DECODE_FAIL = 104;
+  static final int MSG_RETURN_SCAN_RESULT = 105;
+  static final int MSG_LAUNCH_PRODUCT_QUERY = 106;
 
   private final MipcaActivity activity;
   private final DecodeThread decodeThread;
@@ -66,49 +72,56 @@ public final class CaptureActivityHandler extends Handler {
 
   @Override
   public void handleMessage(Message message) {
-    if (message.what == R.id.mipca_auto_focus) {
-      // When one auto focus pass finishes, start another. This is the closest thing to
-      // continuous AF. It does seem to hunt a bit, but I'm not sure what else to do.
-      if (state == State.PREVIEW) {
-          CameraManager.get().requestAutoFocus(this, R.id.mipca_auto_focus);
+    switch (message.what) {
+      case MSG_AUTO_FOCUS: {
+        // When one auto focus pass finishes, start another. This is the closest thing to
+        // continuous AF. It does seem to hunt a bit, but I'm not sure what else to do.
+        if (state == State.PREVIEW) {
+          CameraManager.get().requestAutoFocus(this, MSG_AUTO_FOCUS);
+        }
+        break;
       }
-
-    } else if (message.what == R.id.mipca_restart_preview) {
-      Log.i(TAG, "Got restart preview message");
-      restartPreviewAndDecode();
-
-    } else if (message.what == R.id.mipca_decode_succeeded) {
-      Log.d(TAG, "Got decode succeeded message");
-      state = State.SUCCESS;
-      Bundle bundle = message.getData();
-      Bitmap barcode = bundle == null ? null :
+      case MSG_RESTART_PREVIEW: {
+        Log.i(TAG, "Got restart preview message");
+        restartPreviewAndDecode();
+        break;
+      }
+      case MSG_DECODE_SUCCEED: {
+        Log.d(TAG, "Got decode succeeded message");
+        state = State.SUCCESS;
+        Bundle bundle = message.getData();
+        Bitmap barcode = bundle == null ? null :
               (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);
-      activity.handleDecode((Result) message.obj, barcode);
-
-    } else if (message.what == R.id.mipca_decode_failed) {
-      // We're decoding as fast as possible, so when one decode fails, start another.
-      state = State.PREVIEW;
-      CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.mipca_decode);
-
-    } else if (message.what == R.id.mipca_return_scan_result) {
-      Log.i(TAG, "Got return scan result message");
-      activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
-      activity.finish();
-
-    } else if (message.what == R.id.mipca_launch_product_query) {
-      Log.i(TAG, "Got product query message");
-      String url = (String) message.obj;
-      Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-      activity.startActivity(intent);
-
+        activity.handleDecode((Result) message.obj, barcode);
+        break;
+      }
+      case MSG_DECODE_FAIL: {
+        // We're decoding as fast as possible, so when one decode fails, start another.
+        state = State.PREVIEW;
+        CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), DecodeHandler.MSG_DECODE);
+        break;
+      }
+      case MSG_RETURN_SCAN_RESULT: {
+        Log.i(TAG, "Got return scan result message");
+        activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
+        activity.finish();
+        break;
+      }
+      case MSG_LAUNCH_PRODUCT_QUERY: {
+        Log.i(TAG, "Got product query message");
+        String url = (String) message.obj;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        activity.startActivity(intent);
+        break;
+      }
     }
   }
 
   public void quitSynchronously() {
     state = State.DONE;
     CameraManager.get().stopPreview();
-    Message quit = Message.obtain(decodeThread.getHandler(), R.id.mipca_quit);
+    Message quit = Message.obtain(decodeThread.getHandler(), DecodeHandler.MSG_QUIT);
     quit.sendToTarget();
     try {
       decodeThread.join();
@@ -117,15 +130,15 @@ public final class CaptureActivityHandler extends Handler {
     }
 
     // Be absolutely sure we don't send any queued up messages
-    removeMessages(R.id.mipca_decode_succeeded);
-    removeMessages(R.id.mipca_decode_failed);
+    removeMessages(MSG_DECODE_SUCCEED);
+    removeMessages(MSG_DECODE_FAIL);
   }
 
   public void restartPreviewAndDecode() {
     if (state == State.SUCCESS) {
       state = State.PREVIEW;
-      CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.mipca_decode);
-      CameraManager.get().requestAutoFocus(this, R.id.mipca_auto_focus);
+      CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), DecodeHandler.MSG_DECODE);
+      CameraManager.get().requestAutoFocus(this, MSG_AUTO_FOCUS);
       activity.getViewfinderView().drawViewfinder();
     }
   }
