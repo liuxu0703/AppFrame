@@ -12,6 +12,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import lx.af.R;
+import lx.af.iconify.Iconify;
+import lx.af.iconify.fonts.MaterialModule;
 import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.net.HttpRequest.VolleyManager;
@@ -52,6 +54,7 @@ public class AbsBaseApp extends Application{
         GlobalThreadManager.init(this);
         VolleyManager.init(this);
         initImageLoader(this);
+        Iconify.with(new MaterialModule());
 
         AlertUtils.init(this);
         SystemUtils.init(this);
