@@ -9,7 +9,7 @@ import android.widget.TextView;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
-import lx.af.view.AutoSlidePager.AutoSlidePager;
+import lx.af.widget.AutoSlidePager.AutoSlidePager;
 
 /**
  * author: lx

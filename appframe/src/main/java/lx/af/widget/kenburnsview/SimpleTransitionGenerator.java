@@ -1,4 +1,4 @@
-package lx.af.view.kenburnsview;
+package lx.af.widget.kenburnsview;
 
 import android.graphics.RectF;
 import android.view.animation.AccelerateDecelerateInterpolator;

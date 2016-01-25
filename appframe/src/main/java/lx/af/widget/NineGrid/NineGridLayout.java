@@ -1,4 +1,4 @@
-package lx.af.view.NineGrid;
+package lx.af.widget.NineGrid;
 
 import android.content.Context;
 import android.content.res.TypedArray;

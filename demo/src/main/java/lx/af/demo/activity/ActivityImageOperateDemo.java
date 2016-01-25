@@ -22,8 +22,8 @@ import lx.af.utils.ActivityUtils.ImageBrowser;
 import lx.af.utils.ActivityUtils.ImageCropper;
 import lx.af.utils.ActivityUtils.ImageSelector;
 import lx.af.utils.log.Log;
-import lx.af.view.NineGrid.NineGridLayout;
-import lx.af.view.NineGrid.NineImageUILAdapter;
+import lx.af.widget.NineGrid.NineGridLayout;
+import lx.af.widget.NineGrid.NineImageUILAdapter;
 
 /**
  * Created by liuxu on 15-2-9.

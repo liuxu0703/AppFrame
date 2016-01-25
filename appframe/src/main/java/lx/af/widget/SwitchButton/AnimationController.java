@@ -1,4 +1,4 @@
-package lx.af.view.SwitchButton;
+package lx.af.widget.SwitchButton;
 
 import android.os.Handler;
 import android.os.Message;

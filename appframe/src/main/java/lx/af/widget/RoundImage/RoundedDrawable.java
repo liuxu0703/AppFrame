@@ -1,4 +1,4 @@
-package lx.af.view.RoundImage;
+package lx.af.widget.RoundImage;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;

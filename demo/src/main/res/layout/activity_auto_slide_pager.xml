@@ -9,7 +9,7 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
-    <lx.af.view.AutoSlidePager.AutoSlidePager
+    <lx.af.widget.AutoSlidePager.AutoSlidePager
         android:id="@+id/aasp_slide_pager1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:textColor="@android:color/white"
             android:text="eeeeeee" />
 
-    </lx.af.view.AutoSlidePager.AutoSlidePager>
+    </lx.af.widget.AutoSlidePager.AutoSlidePager>
 
     <TextView
         android:id="@+id/aasp_tv_page_info1"
@@ -103,7 +103,7 @@
         android:layout_marginTop="15dp"
         android:background="#696969" />
 
-    <lx.af.view.AutoSlidePager.AutoSlidePager
+    <lx.af.widget.AutoSlidePager.AutoSlidePager
         android:id="@+id/aasp_slide_pager2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
             android:textColor="@android:color/white"
             android:text="S_333" />
 
-    </lx.af.view.AutoSlidePager.AutoSlidePager>
+    </lx.af.widget.AutoSlidePager.AutoSlidePager>
 
     <TextView
         android:id="@+id/aasp_tv_page_info2"

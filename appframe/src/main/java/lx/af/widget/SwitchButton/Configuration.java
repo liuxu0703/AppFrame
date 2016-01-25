@@ -1,4 +1,4 @@
-package lx.af.view.SwitchButton;
+package lx.af.widget.SwitchButton;
 
 import android.graphics.Color;
 import android.graphics.Rect;

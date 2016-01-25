@@ -1,4 +1,4 @@
-package lx.af.view.AutoSlidePager;
+package lx.af.widget.AutoSlidePager;
 
 import android.content.Context;
 import android.graphics.Canvas;
