@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="IconTextView">
+    <declare-styleable name="SizableIconTextView">
         <attr name="left_icon_height" format="dimension" />
         <attr name="left_icon_width" format="dimension" />
         <attr name="right_icon_height" format="dimension" />

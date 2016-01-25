@@ -1,4 +1,4 @@
-package lx.af.view;
+package lx.af.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

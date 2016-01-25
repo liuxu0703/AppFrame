@@ -43,7 +43,7 @@ import lx.af.R;
  */
 public final class ViewfinderView extends View {
 
-	private static final long ANIMATION_DELAY = 30L;
+	private static final long ANIMATION_DELAY = 10L;
 	private static final int OPAQUE = 0xFF;
 	private static final int CORNER_WIDTH = 10;
 	private static final int MIDDLE_LINE_WIDTH = 6;

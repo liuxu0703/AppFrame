@@ -21,8 +21,8 @@ import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ActivityUtils.ActivityResultCallback;
 import lx.af.utils.ActivityUtils.ContentPicker;
 import lx.af.utils.ScreenUtils;
-import lx.af.view.MediaPlayButton;
-import lx.af.view.VideoPlayView;
+import lx.af.widget.MediaPlayButton;
+import lx.af.widget.VideoPlayView;
 
 public final class ActivityPlayViewDemo extends BaseDemoActivity implements
         OnClickListener,

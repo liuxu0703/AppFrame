@@ -6,6 +6,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import lx.af.iconify.fonts.MaterialModule;
+import lx.af.iconify.fonts.SimpleLineIconsModule;
 import lx.af.iconify.internal.IconFontDescriptorWrapper;
 import lx.af.iconify.internal.ParsingUtil;
 
@@ -13,6 +15,11 @@ public class Iconify {
 
     /** List of icon font descriptors */
     private static List<IconFontDescriptorWrapper> iconFontDescriptors = new ArrayList<IconFontDescriptorWrapper>();
+
+    public static void init() {
+        Iconify.with(new MaterialModule());
+        Iconify.with(new SimpleLineIconsModule());
+    }
 
     /**
      * Add support for a new icon font.

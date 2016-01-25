@@ -46,16 +46,16 @@ public class AbsBaseApp extends Application{
         sInstance = this;
         PathUtils.init(this);
         LogUtils.init(this);
-        StringUtils.init(this);
-        BitmapUtils.init(this);
-
-        KV.init(this);
         CrashHandler.init();
+        Iconify.init();
+
         GlobalThreadManager.init(this);
         VolleyManager.init(this);
         initImageLoader(this);
-        Iconify.with(new MaterialModule());
+        KV.init(this);
 
+        StringUtils.init(this);
+        BitmapUtils.init(this);
         AlertUtils.init(this);
         SystemUtils.init(this);
         ScreenUtils.init(this);
@@ -78,11 +78,9 @@ public class AbsBaseApp extends Application{
                 .showImageOnLoading(R.drawable.img_default)
                 .showImageForEmptyUri(R.drawable.img_default)
                 .showImageOnFail(R.drawable.img_default)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
 

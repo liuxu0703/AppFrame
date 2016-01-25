@@ -6,8 +6,9 @@
     <color name="black">#000</color>
     <color name="white">#fff</color>
     <color name="grey">#696969</color>
+    <color name="l_grey">#cccccc</color>
     <color name="brick_red">#ff5757</color>
-    <color name="light_green">#9acd34</color>
+    <color name="l_green">#9acd34</color>
     <color name="cyan">#49cbc9</color>
     <color name="azure">#1e90ff</color>
     <color name="orange">#ffb957</color>

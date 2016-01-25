@@ -1,4 +1,4 @@
-package lx.af.view;
+package lx.af.widget;
 
 import android.app.AlertDialog;
 import android.content.Context;

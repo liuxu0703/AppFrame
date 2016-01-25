@@ -47,6 +47,7 @@ public final class CodeScannerHandler extends Handler implements
     private String mScanMode;
 
     private boolean mSurfaceCreated = false;
+    private boolean mFinishOnPause = true;
     private State mState;
 
     private enum State {
@@ -71,11 +72,9 @@ public final class CodeScannerHandler extends Handler implements
         public void onActivityPaused(AbsBaseActivity activity) {
             quitSynchronously();
             CameraManager.get().closeDriver();
-        }
-
-        @Override
-        public void onActivityDestroyed(AbsBaseActivity activity) {
-
+            if (mFinishOnPause) {
+                mActivity.finish();
+            }
         }
 
         @Override
@@ -183,6 +182,10 @@ public final class CodeScannerHandler extends Handler implements
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         mSurfaceCreated = false;
+    }
+
+    public void setFinishActivityOnPause(boolean finishOnPause) {
+        mFinishOnPause = finishOnPause;
     }
 
     public void quitSynchronously() {
