@@ -1,9 +1,9 @@
-package lx.af.utils.m3u.M3uAudio;
+package lx.af.demo.utils.m3u.M3uAudio;
 
 import android.media.MediaPlayer;
 import android.util.Log;
 
-import static lx.af.utils.m3u.M3uAudio.M3uAudioPlayer.TAG;
+import static lx.af.demo.utils.m3u.M3uAudio.M3uAudioPlayer.TAG;
 
 /**
  * author: lx

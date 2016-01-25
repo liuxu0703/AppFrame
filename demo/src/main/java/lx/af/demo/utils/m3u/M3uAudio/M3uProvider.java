@@ -1,4 +1,4 @@
-package lx.af.utils.m3u.M3uAudio;
+package lx.af.demo.utils.m3u.M3uAudio;
 
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import lx.af.utils.m3u.M3uParser.Element;
-import lx.af.utils.m3u.M3uParser.Playlist;
+import lx.af.demo.utils.m3u.M3uParser.Element;
+import lx.af.demo.utils.m3u.M3uParser.Playlist;
 
-import static lx.af.utils.m3u.M3uAudio.M3uAudioPlayer.TAG;
+import static lx.af.demo.utils.m3u.M3uAudio.M3uAudioPlayer.TAG;
 
 /**
  * author: lx

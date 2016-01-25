@@ -1,11 +1,11 @@
-package lx.af.utils.m3u.M3uAudio;
+package lx.af.demo.utils.m3u.M3uAudio;
 
 import java.net.URI;
 
-import lx.af.utils.m3u.M3uParser.Element;
-import lx.af.utils.m3u.M3uParser.EncryptionInfo;
-import lx.af.utils.m3u.M3uParser.Playlist;
-import lx.af.utils.m3u.M3uParser.PlaylistInfo;
+import lx.af.demo.utils.m3u.M3uParser.Element;
+import lx.af.demo.utils.m3u.M3uParser.EncryptionInfo;
+import lx.af.demo.utils.m3u.M3uParser.Playlist;
+import lx.af.demo.utils.m3u.M3uParser.PlaylistInfo;
 
 /**
  * author: lx

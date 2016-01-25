@@ -1,4 +1,4 @@
-package lx.af.utils.m3u.M3uParser;
+package lx.af.demo.utils.m3u.M3uParser;
 
 import android.util.Log;
 
@@ -12,18 +12,18 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static lx.af.utils.m3u.M3uParser.M3uConstants.COMMENT_PREFIX;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXTINF;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXTM3U;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXT_X_DISCONTINUITY;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXT_X_ENDLIST;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXT_X_KEY;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXT_X_MEDIA_SEQUENCE;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXT_X_PROGRAM_DATE_TIME;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXT_X_STREAM_INF;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EXT_X_TARGET_DURATION;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.EX_PREFIX;
-import static lx.af.utils.m3u.M3uParser.M3uConstants.Patterns;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.COMMENT_PREFIX;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXTINF;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXTM3U;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXT_X_DISCONTINUITY;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXT_X_ENDLIST;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXT_X_KEY;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXT_X_MEDIA_SEQUENCE;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXT_X_PROGRAM_DATE_TIME;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXT_X_STREAM_INF;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EXT_X_TARGET_DURATION;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.EX_PREFIX;
+import static lx.af.demo.utils.m3u.M3uParser.M3uConstants.Patterns;
 
 /**
  * Implementation based on http://tools.ietf.org/html/draft-pantos-http-live-streaming-02#section-3.1.

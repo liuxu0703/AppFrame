@@ -1,4 +1,4 @@
-package lx.af.utils.m3u.M3uAudio;
+package lx.af.demo.utils.m3u.M3uAudio;
 
 import android.util.Log;
 
@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import lx.af.utils.m3u.M3uParser.Playlist;
+import lx.af.demo.utils.m3u.M3uParser.Playlist;
 
 /**
  * author: lx

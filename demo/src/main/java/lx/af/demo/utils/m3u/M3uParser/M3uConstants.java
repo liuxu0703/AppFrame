@@ -1,4 +1,4 @@
-package lx.af.utils.m3u.M3uParser;
+package lx.af.demo.utils.m3u.M3uParser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

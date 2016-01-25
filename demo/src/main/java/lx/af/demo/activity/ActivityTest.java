@@ -17,8 +17,8 @@ import lx.af.net.HttpRequest.RequestCallback;
 import lx.af.net.HttpRequest.VolleyJsonRequest;
 import lx.af.utils.ViewInject.ViewInject;
 import lx.af.utils.log.Log;
-import lx.af.utils.m3u.M3uAudio.M3uAudioPlayer;
-import lx.af.view.kenburnsview.KenBurnsView;
+import lx.af.demo.utils.m3u.M3uAudio.M3uAudioPlayer;
+import lx.af.widget.kenburnsview.KenBurnsView;
 
 /**
  * author: lx

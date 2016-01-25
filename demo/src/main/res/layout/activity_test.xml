@@ -12,7 +12,7 @@
         android:background="#40696969"
         >
 
-        <lx.af.view.kenburnsview.KenBurnsView
+        <lx.af.widget.kenburnsview.KenBurnsView
             android:id="@+id/test_kbv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

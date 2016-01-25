@@ -1,4 +1,4 @@
-package lx.af.utils.m3u.M3uAudio;
+package lx.af.demo.utils.m3u.M3uAudio;
 
 import android.os.Handler;
 import android.os.HandlerThread;
