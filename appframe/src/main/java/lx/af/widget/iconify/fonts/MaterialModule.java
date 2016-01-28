@@ -1,7 +1,7 @@
-package lx.af.iconify.fonts;
+package lx.af.widget.iconify.fonts;
 
-import lx.af.iconify.Icon;
-import lx.af.iconify.IconFontDescriptor;
+import lx.af.widget.iconify.Icon;
+import lx.af.widget.iconify.IconFontDescriptor;
 
 public class MaterialModule implements IconFontDescriptor {
 

@@ -92,6 +92,13 @@ public final class CodeScannerHandler extends Handler implements
         return new CodeScannerHandler(activity, savedInstanceState);
     }
 
+    public static CodeScannerHandler start(
+            Activity activity, Bundle savedInstanceState, boolean finishOnPause) {
+        CodeScannerHandler handler = new CodeScannerHandler(activity, savedInstanceState);
+        handler.mFinishOnPause = finishOnPause;
+        return handler;
+    }
+
     private CodeScannerHandler(Activity activity, Bundle savedInstanceState) {
         if (!(activity instanceof AbsBaseActivity) ||
                 !(activity instanceof ICodeScanner)) {
@@ -137,8 +144,12 @@ public final class CodeScannerHandler extends Handler implements
                 Bundle bundle = message.getData();
                 Bitmap barcode = bundle == null ? null :
                         (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);
-                Intent intent = mCodeCapture.handleResult((Result) message.obj, barcode);
-                if (intent != null) {
+                Result result = (Result) message.obj;
+                boolean handled = mCodeCapture.handleResult(result, barcode);
+                if (!handled) {
+                    Intent intent = new Intent();
+                    intent.putExtra(Intents.Scan.RESULT, result.getText());
+                    intent.putExtra(Intents.Scan.RESULT_FORMAT, result.getBarcodeFormat());
                     sendMessage(obtainMessage(MSG_RETURN_SCAN_RESULT, intent));
                 }
                 break;
@@ -182,10 +193,6 @@ public final class CodeScannerHandler extends Handler implements
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         mSurfaceCreated = false;
-    }
-
-    public void setFinishActivityOnPause(boolean finishOnPause) {
-        mFinishOnPause = finishOnPause;
     }
 
     public void quitSynchronously() {

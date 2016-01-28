@@ -1,4 +1,4 @@
-package lx.af.iconify;
+package lx.af.widget.iconify;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.TypedValue;
 
-import lx.af.iconify.internal.IconFontDescriptorWrapper;
+import lx.af.widget.iconify.internal.IconFontDescriptorWrapper;
 
 import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 

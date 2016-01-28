@@ -1,11 +1,11 @@
-package lx.af.iconify.widget;
+package lx.af.widget.iconify.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 
-import lx.af.iconify.Iconify;
-import lx.af.iconify.internal.HasOnViewAttachListener;
+import lx.af.widget.iconify.Iconify;
+import lx.af.widget.iconify.internal.HasOnViewAttachListener;
 
 public class IconButton extends Button implements HasOnViewAttachListener {
 

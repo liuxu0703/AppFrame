@@ -1,4 +1,4 @@
-package lx.af.iconify;
+package lx.af.widget.iconify;
 
 /**
  * Icon represents one icon in an icon font.

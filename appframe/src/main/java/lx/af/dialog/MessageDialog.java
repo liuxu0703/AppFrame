@@ -13,6 +13,10 @@ import lx.af.R;
  */
 public class MessageDialog extends Dialog {
 
+    public static Builder builder(Context context) {
+        return new Builder(context);
+    }
+
     /**
      * create a dialog with a message and a confirm button.
      * @param context context.
@@ -76,7 +80,6 @@ public class MessageDialog extends Dialog {
             btnCancel.setOnClickListener(new DismissListener(this, cancelListener));
         } else {
             btnCancel.setVisibility(View.GONE);
-            findViewById(R.id.dlg_alert_btn_divider).setVisibility(View.GONE);
         }
 
     }

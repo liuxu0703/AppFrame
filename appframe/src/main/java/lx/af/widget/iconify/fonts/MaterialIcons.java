@@ -1,6 +1,6 @@
-package lx.af.iconify.fonts;
+package lx.af.widget.iconify.fonts;
 
-import lx.af.iconify.Icon;
+import lx.af.widget.iconify.Icon;
 
 public enum MaterialIcons implements Icon {
     md_3d_rotation('\ue84d'),

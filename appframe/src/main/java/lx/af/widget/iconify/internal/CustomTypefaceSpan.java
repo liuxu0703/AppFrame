@@ -1,4 +1,4 @@
-package lx.af.iconify.internal;
+package lx.af.widget.iconify.internal;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -6,7 +6,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.style.ReplacementSpan;
 
-import lx.af.iconify.Icon;
+import lx.af.widget.iconify.Icon;
 
 public class CustomTypefaceSpan extends ReplacementSpan {
     private static final int ROTATION_DURATION = 2000;

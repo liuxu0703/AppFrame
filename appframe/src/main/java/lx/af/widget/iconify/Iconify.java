@@ -1,4 +1,4 @@
-package lx.af.iconify;
+package lx.af.widget.iconify;
 
 import android.content.Context;
 import android.widget.TextView;
@@ -6,15 +6,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import lx.af.iconify.fonts.MaterialModule;
-import lx.af.iconify.fonts.SimpleLineIconsModule;
-import lx.af.iconify.internal.IconFontDescriptorWrapper;
-import lx.af.iconify.internal.ParsingUtil;
+import lx.af.widget.iconify.fonts.MaterialModule;
+import lx.af.widget.iconify.fonts.SimpleLineIconsModule;
+import lx.af.widget.iconify.internal.IconFontDescriptorWrapper;
+import lx.af.widget.iconify.internal.ParsingUtil;
 
+/**
+ * from https://github.com/JoanZapata/android-iconify.git
+ */
 public class Iconify {
 
     /** List of icon font descriptors */
-    private static List<IconFontDescriptorWrapper> iconFontDescriptors = new ArrayList<IconFontDescriptorWrapper>();
+    private static List<IconFontDescriptorWrapper> iconFontDescriptors = new ArrayList<>();
 
     public static void init() {
         Iconify.with(new MaterialModule());

@@ -1,4 +1,4 @@
-package lx.af.iconify;
+package lx.af.widget.iconify;
 
 /**
  * An IconFontDescriptor defines a TTF font file

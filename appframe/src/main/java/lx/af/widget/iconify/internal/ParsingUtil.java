@@ -1,4 +1,4 @@
-package lx.af.iconify.internal;
+package lx.af.widget.iconify.internal;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import lx.af.iconify.Icon;
-import lx.af.iconify.internal.HasOnViewAttachListener.OnViewAttachListener;
+import lx.af.widget.iconify.Icon;
+import lx.af.widget.iconify.internal.HasOnViewAttachListener.OnViewAttachListener;
 
 public final class ParsingUtil {
 

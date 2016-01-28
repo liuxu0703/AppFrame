@@ -1,4 +1,4 @@
-package lx.af.iconify.internal;
+package lx.af.widget.iconify.internal;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -6,8 +6,8 @@ import android.graphics.Typeface;
 import java.util.HashMap;
 import java.util.Map;
 
-import lx.af.iconify.Icon;
-import lx.af.iconify.IconFontDescriptor;
+import lx.af.widget.iconify.Icon;
+import lx.af.widget.iconify.IconFontDescriptor;
 
 public class IconFontDescriptorWrapper {
 

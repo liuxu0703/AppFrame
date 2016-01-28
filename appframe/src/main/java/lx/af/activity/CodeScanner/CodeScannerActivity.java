@@ -62,11 +62,9 @@ public class CodeScannerActivity extends AbsBaseActivity implements ICodeScanner
     }
 
     @Override
-    public Intent handleResult(Result result, Bitmap barcode) {
+    public boolean handleResult(Result result, Bitmap barcode) {
         playBeepSoundAndVibrate();
-        Intent intent = new Intent();
-        intent.putExtra(Intents.Scan.RESULT, result.getText());
-        return intent;
+        return false;
     }
 
     private void playBeepSoundAndVibrate() {

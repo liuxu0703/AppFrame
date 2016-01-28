@@ -1,6 +1,5 @@
 package lx.af.activity.CodeScanner;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.SurfaceView;
 
@@ -17,6 +16,6 @@ public interface ICodeScanner {
 
     SurfaceView getSurfaceView();
 
-    Intent handleResult(Result result, Bitmap barcode);
+    boolean handleResult(Result result, Bitmap barcode);
 
 }

@@ -1,6 +1,6 @@
-package lx.af.iconify.fonts;
+package lx.af.widget.iconify.fonts;
 
-import lx.af.iconify.Icon;
+import lx.af.widget.iconify.Icon;
 
 public enum SimpleLineIconsIcons implements Icon {
     icon_user_female('\ue000'),

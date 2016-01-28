@@ -1,5 +1,6 @@
 package lx.af.demo.activity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +37,8 @@ public class ActivityTest extends BaseDemoActivity implements
 
     @ViewInject(id = R.id.test_btn_1, click = "onClick")
     Button btn;
+    @ViewInject(id = R.id.test_btn_2, click = "onClick")
+    Button btn2;
 
     String current = L;
 
@@ -57,30 +60,36 @@ public class ActivityTest extends BaseDemoActivity implements
 
     @Override
     public void onClick(View v) {
-        //String url = "http://hls.bj.qingting.fm/live/1133.m3u8?deviceid=c3579d72a4134990a056bd99b45c498d";
-        //String url = TestRes.M3U8_RADIO_LIVE;
-
-        VolleyJsonRequest<LiveUrlModel> r = new VolleyJsonRequest<>(
-                TestRes.GET_LIVE_STREAM_URL_2, null, new TypeToken<LiveUrlModel>() {});
-        r.requestAsync(new RequestCallback() {
-            @Override
-            public void onRequestComplete(DataHull d) {
-                Log.d("liuxu", "11111 request live radio url: " + d);
-                if (d.isRequestSuccess()) {
-                    LiveUrlModel model = d.getParsedData();
-                    mM3uAudioPlayer.start(model.data);
-                } else {
-                    ErrorHandler.typeToast().handleError(d);
-                }
+        switch (v.getId()) {
+            case R.id.test_btn_1: {
+                //String url = "http://hls.bj.qingting.fm/live/1133.m3u8?deviceid=c3579d72a4134990a056bd99b45c498d";
+                //String url = TestRes.M3U8_RADIO_LIVE;
+                VolleyJsonRequest<LiveUrlModel> r = new VolleyJsonRequest<>(
+                        TestRes.GET_LIVE_STREAM_URL_2, null, new TypeToken<LiveUrlModel>() {});
+                r.requestAsync(new RequestCallback() {
+                    @Override
+                    public void onRequestComplete(DataHull d) {
+                        Log.d("liuxu", "11111 request live radio url: " + d);
+                        if (d.isRequestSuccess()) {
+                            LiveUrlModel model = d.getParsedData();
+                            mM3uAudioPlayer.start(model.data);
+                        } else {
+                            ErrorHandler.typeToast().handleError(d);
+                        }
+                    }
+                });
+                break;
             }
-        });
-
-//        current = current.equals(L) ? T : L;
-//        Log.d("liuxu", "11111 activity test, load url: " + current);
-//        ImageLoader.getInstance().displayImage(current, kbv);
-
-//        ArrayList<String> uris = TestRes.asArrayList(TestRes.TEST_IMG_SCENE);
-//        startImageBrowser(uris, uris.get(3));
+            case R.id.test_btn_2: {
+                new AlertDialog.Builder(this)
+                        .setTitle("this is title")
+                        .setMessage("laziness is a feature of programmer")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create().show();
+                break;
+            }
+        }
 
     }
 

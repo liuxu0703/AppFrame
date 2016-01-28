@@ -1,9 +1,9 @@
-package lx.af.iconify.internal;
+package lx.af.widget.iconify.internal;
 
 import android.support.v4.view.ViewCompat;
 import android.widget.TextView;
 
-import lx.af.iconify.Iconify;
+import lx.af.widget.iconify.Iconify;
 
 /**
  * Any TextView subclass that wishes to call {@link Iconify#addIcons(TextView...)} on it

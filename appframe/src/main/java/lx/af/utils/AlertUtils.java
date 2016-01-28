@@ -48,17 +48,13 @@ public final class AlertUtils {
     }
 
     public static Dialog showMessageDialog(Context context, String message) {
-        MessageDialog dialog = new MessageDialog.Builder(context)
-                .setMessage(message)
-                .create();
+        MessageDialog dialog = MessageDialog.builder(context).setMessage(message).create();
         dialog.show();
         return dialog;
     }
 
     public static Dialog showMessageDialog(Context context, int resId) {
-        MessageDialog dialog = new MessageDialog.Builder(context)
-                .setMessage(resId)
-                .create();
+        MessageDialog dialog = MessageDialog.builder(context).setMessage(resId).create();
         dialog.show();
         return dialog;
     }

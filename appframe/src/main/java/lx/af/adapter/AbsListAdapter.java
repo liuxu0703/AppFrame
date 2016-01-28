@@ -58,6 +58,19 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
     }
 
     /**
+     * Inserts the specified object at the specified index in the array.
+     * The object is inserted before the current element at the specified index.
+     * @param object The object to insert into the array.
+     * @param index The index at which the object must be inserted.
+     */
+    public void add(int index, T object) {
+        synchronized (mLock) {
+            mObjects.add(index, object);
+        }
+        if (mNotifyOnChange) notifyDataSetChanged();
+    }
+
+    /**
      * Adds the specified Collection at the end of the array.
      * @param collection The Collection to add at the end of the array.
      */
@@ -69,30 +82,20 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
     }
 
     /**
-     * Adds the specified items at the end of the array.
-     * @param items The items to add at the end of the array.
-     */
-    public void addAll(T ... items) {
-        synchronized (mLock) {
-            Collections.addAll(mObjects, items);
-        }
-        if (mNotifyOnChange) notifyDataSetChanged();
-    }
-
-    /**
-     * Inserts the specified object at the specified index in the array.
-     * @param object The object to insert into the array.
+     * Adds the specified Collection at the specified index in the array.
+     * The object is inserted before the current element at the specified index.
+     * @param collection The Collection to add at the end of the array.
      * @param index The index at which the object must be inserted.
      */
-    public void insert(T object, int index) {
+    public void addAll(int index, Collection<? extends T> collection) {
         synchronized (mLock) {
-            mObjects.add(index, object);
+            mObjects.addAll(index, collection);
         }
         if (mNotifyOnChange) notifyDataSetChanged();
     }
 
     /**
-     * reset data of the adapter to the new list
+     * replace data of the adapter to the new list
      * @param list the data list
      */
     public void reset(List<T> list) {
@@ -138,7 +141,7 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
 
     /**
      * Control whether methods that change the list ({@link #add},
-     * {@link #insert}, {@link #remove}, {@link #clear}) automatically call
+     * {@link #addAll}, {@link #remove}, {@link #clear}) automatically call
      * {@link #notifyDataSetChanged}.
      * If set to false, caller must manually call notifyDataSetChanged()
      * to have the changes reflected in the attached view.
