@@ -1,1 +1,1 @@
-include ':appframe', ':demo'
+include ':lib_frame', ':demo'
