@@ -198,12 +198,14 @@ public final class CodeScannerHandler extends Handler implements
     public void quitSynchronously() {
         mState = State.DONE;
         CameraManager.get().stopPreview();
-        Message quit = Message.obtain(mDecodeThread.getHandler(), DecodeHandler.MSG_QUIT);
-        quit.sendToTarget();
-        try {
-            mDecodeThread.join();
-        } catch (InterruptedException e) {
-            // continue
+        if (mDecodeThread != null) {
+            Message quit = Message.obtain(mDecodeThread.getHandler(), DecodeHandler.MSG_QUIT);
+            quit.sendToTarget();
+            try {
+                mDecodeThread.join();
+            } catch (InterruptedException e) {
+                // continue
+            }
         }
 
         // Be absolutely sure we don't send any queued up messages
@@ -225,7 +227,7 @@ public final class CodeScannerHandler extends Handler implements
         try {
             CameraManager.get().openDriver(surfaceHolder);
         } catch (Exception e) {
-            Log.e("mipca", "init camera fail", e);
+            Log.e(TAG, "init camera fail", e);
             mActivity.toastShort(R.string.mipca_toast_init_camera_fail);
             mActivity.finish();
             return;

@@ -2,7 +2,6 @@ package lx.af.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,7 +24,6 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * date: 2015-12-06
  *
  * activity base
- * TODO: double click finish
  */
 public abstract class AbsBaseActivity extends FragmentActivity {
 
@@ -66,7 +64,7 @@ public abstract class AbsBaseActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         for (LifeCycleListener listener : mLifeCycleListeners) {
             listener.onActivityRestoreInstanceState(this, savedInstanceState);
@@ -312,6 +310,9 @@ public abstract class AbsBaseActivity extends FragmentActivity {
                     // use LinearLayout as content view
                     LinearLayout contentView = new LinearLayout(this);
                     contentView.setOrientation(LinearLayout.VERTICAL);
+                    contentView.setDividerDrawable(
+                            getResources().getDrawable(R.drawable.shape_action_bar_divider));
+                    contentView.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
                     contentView.addView(mCActionBar, MATCH_PARENT, WRAP_CONTENT);
                     contentView.addView(mCContentView, params);
                     super.setContentView(contentView);

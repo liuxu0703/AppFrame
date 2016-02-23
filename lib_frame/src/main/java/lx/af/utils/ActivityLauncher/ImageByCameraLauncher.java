@@ -1,55 +1,56 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-import lx.af.utils.log.Log;
+import lx.af.utils.PathUtils;
 
 /**
  * author: lx
  * date: 15-12-16
  */
-public class ImageByCamera extends ActivityLauncherBase<Uri> {
+public class ImageByCameraLauncher extends ActivityLauncherBase<Uri> {
 
     private Uri mOutputUri;
 
-    protected ImageByCamera(Activity activity) {
+    protected ImageByCameraLauncher(Activity activity) {
         super(activity);
     }
 
-    protected ImageByCamera(Fragment fragment) {
+    protected ImageByCameraLauncher(Fragment fragment) {
         super(fragment);
     }
 
 
-    public static ImageByCamera of(Activity activity) {
-        return new ImageByCamera(activity);
+    public static ImageByCameraLauncher of(Activity activity) {
+        return new ImageByCameraLauncher(activity);
     }
 
-    public static ImageByCamera of(Fragment fragment) {
-        return new ImageByCamera(fragment);
+    public static ImageByCameraLauncher of(Fragment fragment) {
+        return new ImageByCameraLauncher(fragment);
     }
 
-    public ImageByCamera output(Uri uri) {
+    public ImageByCameraLauncher output(Uri uri) {
         mOutputUri = uri;
         return this;
     }
 
-    public ImageByCamera output(String path) {
+    public ImageByCameraLauncher output(String path) {
         mOutputUri = Uri.parse("file://" + path);
         return this;
     }
 
     @Override
     protected Uri extractResult(int resultCode, Intent data) {
-        Log.d("liuxu", "111 ImageByCamera, onActivityResult, result=" + resultCode + ", data=" + data+", output="+mOutputUri);
         if (resultCode == Activity.RESULT_OK) {
             return mOutputUri;
         } else {
@@ -75,13 +76,12 @@ public class ImageByCamera extends ActivityLauncherBase<Uri> {
     @Override
     public Intent createIntent() {
         if (mOutputUri == null) {
-            File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            File file = new File(dcim, getPackageName() + "_" + System.currentTimeMillis());
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+            File file = new File(PathUtils.getExtPublicDCIM(), "img_" + df.format(new Date()) + ".jpg");
             mOutputUri = Uri.fromFile(file);
         }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mOutputUri);
-        Log.d("liuxu", "111 ImageByCamera, createIntent, output=" + mOutputUri);
         return intent;
     }
 

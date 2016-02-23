@@ -7,21 +7,22 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#28000000" >
+        android:background="@android:color/black" >
 
         <ImageView
             android:id="@+id/mis_activity_btn_back"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_width="45dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:padding="12dp"
+            android:padding="5dp"
             android:src="@drawable/ic_action_bar_back_pressed"
             android:background="@drawable/bkg_clickable"
             android:contentDescription="@null" />
 
         <TextView
+            android:id="@+id/mis_activity_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

@@ -25,6 +25,8 @@
     <string name="mis_finish_btn_with_amount">完成(<xliff:g>%d</xliff:g>/<xliff:g>%d</xliff:g>)</string>
     <string name="mis_image_browser_select">选择</string>
 
+    <string name="mipca_title">扫描二维码</string>
+    <string name="mipca_select_code_image_title">选择二维码图片</string>
     <string name="mipca_scan_hint">将二维码放入框内, 即可自动扫描</string>
     <string name="mipca_toast_finish_activity">长时间未识别,请重新发起扫描</string>
     <string name="mipca_toast_init_camera_fail">初始化扫描失败</string>

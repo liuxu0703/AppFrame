@@ -28,6 +28,23 @@ public final class ActivityTaskManager implements Application.ActivityLifecycleC
         return !sForegroundStack.isEmpty();
     }
 
+    public static boolean isContainActivity(Class<?> activityClass) {
+        for (Activity activity : sActivityContainer) {
+            if (activity.getClass().equals(activityClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void finishActivities(Class<?> activityClass) {
+        for (Activity activity : sActivityContainer) {
+            if (activity.getClass().equals(activityClass)) {
+                activity.finish();
+            }
+        }
+    }
+
     public static Activity foregroundActivity() {
         if (sForegroundStack.isEmpty()) {
             return null;

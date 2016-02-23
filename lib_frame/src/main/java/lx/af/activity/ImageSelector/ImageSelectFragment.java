@@ -311,6 +311,7 @@ public class ImageSelectFragment extends Fragment implements
         intent.putExtra(ImageSelectBrowser.EXTRA_CURRENT_IMAGE_URI, currentImageUri);
         intent.putExtra(ImageSelectBrowser.EXTRA_SELECT_COUNT, mDesireImageCount);
         intent.putExtra(ImageSelectBrowser.EXTRA_SELECTED_LIST, mImageAdapter.getSelectedImageUriList());
+        getActivity().overridePendingTransition(R.anim.image_browser_show, R.anim.fade_out);
         startActivityForResult(intent, AC_IMAGE_BROWSER);
     }
 

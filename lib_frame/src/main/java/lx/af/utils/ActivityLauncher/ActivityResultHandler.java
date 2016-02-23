@@ -1,17 +1,16 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import lx.af.base.AbsBaseActivity;
 import lx.af.base.AbsBaseFragment;
-import lx.af.utils.log.Log;
 
 /**
  * author: lx
  * date: 15-12-6
  */
-abstract class ActivityResultHandler<T> implements
+public abstract class ActivityResultHandler<T> implements
     AbsBaseActivity.LifeCycleListener,
     AbsBaseFragment.LifeCycleListener {
 
@@ -52,14 +51,12 @@ abstract class ActivityResultHandler<T> implements
 
     @Override
     public void onActivityResult(AbsBaseActivity activity, int requestCode, int resultCode, Intent data) {
-        Log.d("liuxu", "111 ResultHandler, onActivityResult, request="+requestCode+", result="+resultCode+", data="+data);
         if (requestCode == mRequestCode) {
             activity.removeLifeCycleListener(this);
         } else {
             return;
         }
         T result = extractResult(resultCode, data);
-        Log.d("liuxu", "111 ResultHandler, onActivityResult, result=" + resultCode + ", ret=" + result);
         if (result != null) {
             mCallback.onActivityResult(resultCode, result);
         }

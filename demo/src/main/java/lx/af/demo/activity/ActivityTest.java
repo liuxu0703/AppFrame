@@ -44,6 +44,8 @@ public class ActivityTest extends BaseDemoActivity implements
 
     M3uAudioPlayer mM3uAudioPlayer;
 
+    static int activity_count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,16 +83,16 @@ public class ActivityTest extends BaseDemoActivity implements
                 break;
             }
             case R.id.test_btn_2: {
-                new AlertDialog.Builder(this)
-                        .setTitle("this is title")
-                        .setMessage("laziness is a feature of programmer")
-                        .setPositiveButton(android.R.string.ok, null)
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create().show();
+                activity_count ++;
+                if (activity_count >= 3) {
+                    startActivity(ActivityMain.class);
+                    activity_count = 0;
+                } else {
+                    startActivity(getClass());
+                }
                 break;
             }
         }
-
     }
 
 

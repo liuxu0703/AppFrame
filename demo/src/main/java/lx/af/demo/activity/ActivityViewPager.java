@@ -19,8 +19,8 @@ import java.util.List;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
-import lx.af.utils.ActivityUtils.ActivityResultCallback;
-import lx.af.utils.ActivityUtils.ImageSelector;
+import lx.af.utils.ActivityLauncher.ActivityResultCallback;
+import lx.af.utils.ActivityLauncher.ImageSelectorLauncher;
 import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
 
 /**
@@ -79,7 +79,7 @@ public class ActivityViewPager extends BaseDemoActivity implements
                 break;
             }
             case R.id.avp_pager_btn_activity: {
-                ImageSelector.of(this).count(9).showCamera(false).start(new ActivityResultCallback<ArrayList<String>>() {
+                ImageSelectorLauncher.of(this).count(9).showCamera(false).start(new ActivityResultCallback<ArrayList<String>>() {
                     @Override
                     public void onActivityResult(int requestCode, @NonNull ArrayList<String> result) {
                         List<String> uris = new ArrayList<>(result.size());

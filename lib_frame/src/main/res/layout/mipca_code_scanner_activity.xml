@@ -14,4 +14,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#28000000" >
+
+        <ImageView
+            android:id="@+id/code_capture_back"
+            android:layout_height="45dp"
+            android:layout_width="45dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_action_bar_back_pressed"
+            android:background="@drawable/bkg_clickable"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/code_capture_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="@string/mipca_title"
+            android:singleLine="true" />
+    </RelativeLayout>
 </FrameLayout>

@@ -1,4 +1,4 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,10 +12,13 @@ import lx.af.base.AbsBaseFragment;
  * author: lx
  * date: 15-12-17
  */
-abstract class ActivityLauncherBase<T> {
+public abstract class ActivityLauncherBase<T> {
 
     protected Activity mActivity;
     protected Fragment mFragment;
+
+    protected int mInAnimResId;
+    protected int mOutAnimResId;
 
     protected ActivityLauncherBase(Activity activity) {
         mActivity = activity;
@@ -23,6 +26,14 @@ abstract class ActivityLauncherBase<T> {
 
     protected ActivityLauncherBase(Fragment fragment) {
         mFragment = fragment;
+    }
+
+    protected Activity getActivity() {
+        if (mActivity != null) {
+            return mActivity;
+        } else {
+            return mFragment.getActivity();
+        }
     }
 
     protected abstract T extractResult(int resultCode, Intent data);
@@ -63,24 +74,17 @@ abstract class ActivityLauncherBase<T> {
                 mFragment.startActivityForResult(intent, requestCode);
             }
         }
+        if (mInAnimResId != 0 || mOutAnimResId != 0) {
+            getActivity().overridePendingTransition(mInAnimResId, mOutAnimResId);
+        }
     }
 
     protected Intent newIntent(Class<?> cls) {
-        if (mActivity != null) {
-            return new Intent(mActivity, cls);
-        } else {
-            return new Intent(mFragment.getActivity(), cls);
-        }
+        return new Intent(getActivity(), cls);
     }
 
     protected String getPackageName() {
-        Activity activity;
-        if (mActivity != null) {
-            activity = mActivity;
-        } else {
-            activity = mFragment.getActivity();
-        }
-        return activity.getApplicationContext().getPackageName();
+        return getActivity().getApplicationContext().getPackageName();
     }
 
     private class ResultHandler extends ActivityResultHandler<T> {

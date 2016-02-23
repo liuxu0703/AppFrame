@@ -1,4 +1,4 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,51 +10,51 @@ import android.support.v4.app.Fragment;
  * author: lx
  * date: 15-12-16
  */
-public class ContentPicker extends ActivityLauncherBase<Uri> {
+public class ContentPickerLauncher extends ActivityLauncherBase<Uri> {
 
     private String mMimeType;
     private boolean mIsLocalOnly = true;
     private boolean mIsOpenable = true;
 
-    protected ContentPicker(Activity activity) {
+    protected ContentPickerLauncher(Activity activity) {
         super(activity);
     }
 
-    protected ContentPicker(Fragment fragment) {
+    protected ContentPickerLauncher(Fragment fragment) {
         super(fragment);
     }
 
-    public static ContentPicker of(Activity activity) {
-        return new ContentPicker(activity);
+    public static ContentPickerLauncher of(Activity activity) {
+        return new ContentPickerLauncher(activity);
     }
 
-    public static ContentPicker of(Fragment fragment) {
-        return new ContentPicker(fragment);
+    public static ContentPickerLauncher of(Fragment fragment) {
+        return new ContentPickerLauncher(fragment);
     }
 
-    public ContentPicker mimeType(String mimeType) {
+    public ContentPickerLauncher mimeType(String mimeType) {
         mMimeType = mimeType;
         return this;
     }
 
-    public ContentPicker pickImage() {
+    public ContentPickerLauncher pickImage() {
         return mimeType("image/*");
     }
 
-    public ContentPicker pickVideo() {
+    public ContentPickerLauncher pickVideo() {
         return mimeType("video/*");
     }
 
-    public ContentPicker pickAudio() {
+    public ContentPickerLauncher pickAudio() {
         return mimeType("audio/*");
     }
 
-    public ContentPicker localOnly(boolean isLocalOnly) {
+    public ContentPickerLauncher localOnly(boolean isLocalOnly) {
         mIsLocalOnly = isLocalOnly;
         return this;
     }
 
-    public ContentPicker openable(boolean isOpenable) {
+    public ContentPickerLauncher openable(boolean isOpenable) {
         mIsOpenable = isOpenable;
         return this;
     }

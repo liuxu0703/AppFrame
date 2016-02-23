@@ -1,13 +1,14 @@
 package lx.af.activity.CodeScanner;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.zxing.Result;
-import com.mining.app.zxing.decoding.Intents;
 import com.mining.app.zxing.view.ViewfinderView;
 
 import java.util.concurrent.TimeUnit;
@@ -19,9 +20,11 @@ import lx.af.utils.SoundEffectHelper;
 
 /**
  * author: lx
- * date: 16-1-24
+ * date: 16-02-02
  */
 public class CodeScannerActivity extends AbsBaseActivity implements ICodeScanner {
+
+    public static final String EXTRA_TITLE = "activity_title";
 
     private static final long DISMISS_MAX_DELAY = TimeUnit.MINUTES.toMillis(5);
 
@@ -33,6 +36,18 @@ public class CodeScannerActivity extends AbsBaseActivity implements ICodeScanner
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mipca_code_scanner_activity);
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
+        if (!TextUtils.isEmpty(title)) {
+            TextView tvTitle = (TextView) findViewById(R.id.code_capture_title);
+            tvTitle.setText(title);
+        }
+        findViewById(R.id.code_capture_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         CodeScannerHandler.start(this, savedInstanceState);
         mSound = SoundEffectHelper.newInstance(this).addSoundFromRaw(R.raw.beep).init();
         startDelayFinish();

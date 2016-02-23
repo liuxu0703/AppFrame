@@ -17,10 +17,10 @@ import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.demo.utils.Paths;
-import lx.af.utils.ActivityUtils.ActivityResultCallback;
-import lx.af.utils.ActivityUtils.ImageBrowser;
-import lx.af.utils.ActivityUtils.ImageCropper;
-import lx.af.utils.ActivityUtils.ImageSelector;
+import lx.af.utils.ActivityLauncher.ActivityResultCallback;
+import lx.af.utils.ActivityLauncher.ImageBrowserLauncher;
+import lx.af.utils.ActivityLauncher.ImageCropperLauncher;
+import lx.af.utils.ActivityLauncher.ImageSelectorLauncher;
 import lx.af.utils.log.Log;
 import lx.af.widget.NineGrid.NineGridLayout;
 import lx.af.widget.NineGrid.NineImageUILAdapter;
@@ -64,7 +64,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         mImageGridAdapter.setOnItemClickListener(new NineImageUILAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, NineImageUILAdapter adapter, int position) {
-                ImageBrowser.of(ActivityImageOperateDemo.this)
+                ImageBrowserLauncher.of(ActivityImageOperateDemo.this)
                         .uris(adapter.getImageUris())
                         .currentUri(adapter.getData(position))
                         .currentView(view)
@@ -81,7 +81,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
                 retrieveCropParams();
                 String targetPath = Paths.generateCropImagePath().toString();
                 String cameraPath = Paths.generateCameraImagePath().toString();
-                ImageCropper.of(this)
+                ImageCropperLauncher.of(this)
                         .fromCamera(cameraPath).output(targetPath)
                         .maxSize(mCropMaxSize, mCropMaxSize)
                         .aspect(mCropAspectX, mCropAspectY)
@@ -91,7 +91,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
             case R.id.apid_btn_from_gallery: {
                 retrieveCropParams();
                 String targetPath = Paths.generateCropImagePath().toString();
-                ImageCropper.of(this)
+                ImageCropperLauncher.of(this)
                         .fromGallery().output(targetPath)
                         .maxSize(mCropMaxSize, mCropMaxSize)
                         .aspect(mCropAspectX, mCropAspectY)
@@ -101,7 +101,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
             case R.id.apid_btn_from_multi_selector: {
                 retrieveCropParams();
                 String targetPath = Paths.generateCropImagePath().toString();
-                ImageCropper.of(this)
+                ImageCropperLauncher.of(this)
                         .fromImageSelector().output(targetPath)
                         .maxSize(mCropMaxSize, mCropMaxSize)
                         .aspect(mCropAspectX, mCropAspectY)
@@ -110,7 +110,7 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
             }
             case R.id.apid_btn_multi_image: {
                 int count = getSelectCount();
-                ImageSelector.of(this).count(count).showCamera(true).start(mSelectorCallback);
+                ImageSelectorLauncher.of(this).count(count).showCamera(true).start(mSelectorCallback);
                 break;
             }
         }

@@ -1,4 +1,4 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.support.annotation.NonNull;
 

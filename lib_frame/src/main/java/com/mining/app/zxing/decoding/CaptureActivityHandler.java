@@ -32,8 +32,6 @@ import com.mining.app.zxing.view.ViewfinderResultPointCallback;
 
 import java.util.Vector;
 
-import lx.af.R;
-
 /**
  * This class handles all the messaging which comprises the state machine for capture.
  */

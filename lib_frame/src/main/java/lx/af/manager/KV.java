@@ -1,4 +1,4 @@
-package lx.af.utils;
+package lx.af.manager;
 
 import android.app.Application;
 import android.content.SharedPreferences;

@@ -8,7 +8,7 @@ import com.mining.app.zxing.view.ViewfinderView;
 
 /**
  * author: lx
- * date: 16-1-24
+ * date: 16-02-02
  */
 public interface ICodeScanner {
 

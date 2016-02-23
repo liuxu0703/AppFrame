@@ -1,4 +1,4 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,41 +11,41 @@ import android.support.v4.app.Fragment;
  * author: lx
  * date: 15-12-16
  */
-public class MediaPicker extends ActivityLauncherBase<Uri> {
+public class MediaPickerLauncher extends ActivityLauncherBase<Uri> {
 
     private String mMimeType;
 
-    protected MediaPicker(Activity activity) {
+    protected MediaPickerLauncher(Activity activity) {
         super(activity);
     }
 
-    protected MediaPicker(Fragment fragment) {
+    protected MediaPickerLauncher(Fragment fragment) {
         super(fragment);
     }
 
-    public static MediaPicker of(Activity activity) {
-        return new MediaPicker(activity);
+    public static MediaPickerLauncher of(Activity activity) {
+        return new MediaPickerLauncher(activity);
     }
 
-    public static MediaPicker of(Fragment fragment) {
-        return new MediaPicker(fragment);
+    public static MediaPickerLauncher of(Fragment fragment) {
+        return new MediaPickerLauncher(fragment);
     }
 
 
-    public MediaPicker mimeType(String mimeType) {
+    public MediaPickerLauncher mimeType(String mimeType) {
         mMimeType = mimeType;
         return this;
     }
 
-    public MediaPicker pickImage() {
+    public MediaPickerLauncher pickImage() {
         return mimeType("image/*");
     }
 
-    public MediaPicker pickVideo() {
+    public MediaPickerLauncher pickVideo() {
         return mimeType("video/*");
     }
 
-    public MediaPicker pickAudio() {
+    public MediaPickerLauncher pickAudio() {
         return mimeType("audio/*");
     }
 

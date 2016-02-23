@@ -20,6 +20,8 @@ public class ActionBarScrollFadeHelper {
     private View mActionBar;
     private View mOffsetView;
     private int mOffsetValue;
+    private View mStartOffsetView;
+    private int mStartOffset = 0;
     private boolean mAlphaIncrease = true;
     private Drawable mActionBarBackgroundDrawable;
     private LinkedList<FadeViewInfo> mFadeViewList;
@@ -48,6 +50,16 @@ public class ActionBarScrollFadeHelper {
      */
     public ActionBarScrollFadeHelper offset(int offsetValue) {
         mOffsetValue = offsetValue;
+        return this;
+    }
+
+    public ActionBarScrollFadeHelper startOffset(View offsetView) {
+        mStartOffsetView = offsetView;
+        return this;
+    }
+
+    public ActionBarScrollFadeHelper startOffset(int offsetValue) {
+        mStartOffset = offsetValue;
         return this;
     }
 
@@ -131,6 +143,13 @@ public class ActionBarScrollFadeHelper {
         return mOffsetValue;
     }
 
+    private int getStartOffset() {
+        if (mStartOffsetView != null) {
+            return mStartOffsetView.getHeight();
+        }
+        return mStartOffset;
+    }
+
     private void onNewScroll(int scroll) {
         int alpha;
         int actionBarHeight = mActionBar.getHeight();
@@ -139,6 +158,7 @@ public class ActionBarScrollFadeHelper {
             // set to init state
             alpha = mAlphaIncrease ? 0 : 255;
         } else if (scroll > delta) {
+            // set to final state
             alpha = mAlphaIncrease ? 255 : 0;
         } else {
             float ratio;

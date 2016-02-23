@@ -3,13 +3,13 @@ package lx.af.manager;
 import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * author: liuxu
  * date: 2014-11-25
  *
- * to easy access thread pool.
+ * to easy access thread pool and UI thread.
  */
 public final class GlobalThreadManager {
 
@@ -26,20 +26,17 @@ public final class GlobalThreadManager {
     private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
     private static final int KEEP_ALIVE = 2;
 
-    private static final BlockingQueue<Runnable> sPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(128);
+    private static final BlockingQueue<Runnable> sPoolWorkQueue = new LinkedBlockingQueue<>(64);
 
     private static final ThreadFactory sThreadFactory = new ThreadFactory() {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
-        public Thread newThread(Runnable r) {
+        public Thread newThread(@NonNull Runnable r) {
             return new Thread(r, "GlobalThreadManager#" + mCount.getAndIncrement());
         }
     };
 
     private static Application sApp;
-    private static ExecutorService mThreadPoolSingleThread =
-            Executors.newSingleThreadExecutor();
     private static ThreadPoolExecutor mThreadPool;
     private static Handler mUiThreadHandler;
 
@@ -49,6 +46,9 @@ public final class GlobalThreadManager {
         sApp = app;
     }
 
+    /**
+     * get global thread pool instance.
+     */
     public static ThreadPoolExecutor getThreadPoolInstance() {
         if (mThreadPool == null) {
             synchronized (GlobalThreadManager.class) {
@@ -57,12 +57,16 @@ public final class GlobalThreadManager {
                             CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
                             KEEP_ALIVE, TimeUnit.SECONDS,
                             sPoolWorkQueue, sThreadFactory);
+                    mThreadPool.setRejectedExecutionHandler(new DiscardOldestPolicy());
                 }
             }
         }
         return mThreadPool;
     }
 
+    /**
+     * get handler looping in main (UI) thread.
+     */
     public static Handler getUiThreadHandler() {
         if (mUiThreadHandler == null) {
             synchronized (GlobalThreadManager.class) {
@@ -84,25 +88,8 @@ public final class GlobalThreadManager {
     }
 
     /**
-     * do something in a thread pool with single worker thread.
-     * Tasks are guaranteed to execute sequentially.
-     * @param runnable can be an AsyncTask
-     */
-    public static void runInSequentialThreadPool(Runnable runnable) {
-        mThreadPoolSingleThread.execute(runnable);
-    }
-
-    /**
-     * do something in a new single thread
-     * @param runnable can be an AsyncTask
-     */
-    public static void runInSingleThread(Runnable runnable) {
-        new Thread(runnable).start();
-    }
-
-    /**
      * do something in ui thread
-     * @param runnable
+     * @param runnable runnable
      */
     public static void runInUiThread(Runnable runnable) {
         getUiThreadHandler().post(runnable);
@@ -110,7 +97,7 @@ public final class GlobalThreadManager {
 
     /**
      * do something in ui thread, with delay
-     * @param runnable
+     * @param runnable runnable
      * @param delay delay time, in millisecond
      */
     public static void runInUiThreadDelayed(Runnable runnable, long delay) {
@@ -120,8 +107,8 @@ public final class GlobalThreadManager {
     /**
      * do something in ui thread. the same runnable instance will be executed
      * only once if more than one call is made in a given time (bufferTime).
-     * @param runnable
-     * @param bufferTime
+     * @param runnable runnable
+     * @param bufferTime time to wait
      */
     public static void runInUiThreadBuffered(Runnable runnable, long bufferTime) {
         Handler handler = getUiThreadHandler();
@@ -158,14 +145,13 @@ public final class GlobalThreadManager {
         }
     }
 
+    /**
+     * release.
+     */
     public static void shutdownThreadPool() {
         if (mThreadPool != null) {
             mThreadPool.shutdown();
             mThreadPool = null;
-        }
-        if (mThreadPoolSingleThread != null) {
-            mThreadPoolSingleThread.shutdown();
-            mThreadPoolSingleThread = null;
         }
     }
 }

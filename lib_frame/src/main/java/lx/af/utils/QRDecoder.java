@@ -19,10 +19,11 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
 
+import lx.af.R;
 import lx.af.activity.ImageSelector.ImageSelectActivity;
 import lx.af.base.AbsBaseActivity;
-import lx.af.utils.ActivityUtils.ActivityResultCallback;
-import lx.af.utils.ActivityUtils.ImageSelector;
+import lx.af.utils.ActivityLauncher.ActivityResultCallback;
+import lx.af.utils.ActivityLauncher.ImageSelectorLauncher;
 
 /**
  * author: lx
@@ -45,7 +46,11 @@ public class QRDecoder {
      * @param activity the caller activity
      */
     public static void decodeFromGallery(AbsBaseActivity activity, final QRDecodeCallback c) {
-        ImageSelector.of(activity).singleSelect().showCamera(false).start(
+        ImageSelectorLauncher.of(activity)
+                .title(activity.getString(R.string.mipca_select_code_image_title))
+                .singleSelect()
+                .showCamera(false)
+                .start(
                 new ActivityResultCallback<ArrayList<String>>() {
             @Override
             public void onActivityResult(int resultCode, @NonNull final ArrayList<String> result) {

@@ -1,4 +1,4 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lx.af.activity.ImageSelector.ImageSelectActivity;
 
+import static lx.af.activity.ImageSelector.ImageSelectActivity.EXTRA_ACTIVITY_TITLE;
 import static lx.af.activity.ImageSelector.ImageSelectActivity.EXTRA_DEFAULT_SELECTED_LIST;
 import static lx.af.activity.ImageSelector.ImageSelectActivity.EXTRA_RESULT;
 import static lx.af.activity.ImageSelector.ImageSelectActivity.EXTRA_SELECT_COUNT;
@@ -19,43 +21,49 @@ import static lx.af.activity.ImageSelector.ImageSelectActivity.EXTRA_SHOW_CAMERA
  * author: lx
  * date: 15-12-8
  */
-public class ImageSelector extends ActivityLauncherBase<ArrayList<String>> {
+public class ImageSelectorLauncher extends ActivityLauncherBase<ArrayList<String>> {
 
     private int mCount = 9;
     private boolean mShowCamera = true;
+    private String mTitle;
     private ArrayList<String> mPreSelect;
 
-    protected ImageSelector(Activity activity) {
+    protected ImageSelectorLauncher(Activity activity) {
         super(activity);
     }
 
-    protected ImageSelector(Fragment fragment) {
+    protected ImageSelectorLauncher(Fragment fragment) {
         super(fragment);
     }
 
-    public static ImageSelector of(Activity activity) {
-        return new ImageSelector(activity);
+    public static ImageSelectorLauncher of(Activity activity) {
+        return new ImageSelectorLauncher(activity);
     }
 
-    public static ImageSelector of(Fragment fragment) {
-        return new ImageSelector(fragment);
+    public static ImageSelectorLauncher of(Fragment fragment) {
+        return new ImageSelectorLauncher(fragment);
     }
 
-    public ImageSelector showCamera(boolean showCamera) {
+    public ImageSelectorLauncher title(String title) {
+        mTitle = title;
+        return this;
+    }
+
+    public ImageSelectorLauncher showCamera(boolean showCamera) {
         mShowCamera = showCamera;
         return this;
     }
 
-    public ImageSelector singleSelect() {
+    public ImageSelectorLauncher singleSelect() {
         return count(1);
     }
 
-    public ImageSelector count(int count) {
+    public ImageSelectorLauncher count(int count) {
         mCount = count;
         return this;
     }
 
-    public ImageSelector preSelect(String path) {
+    public ImageSelectorLauncher preSelect(String path) {
         if (!TextUtils.isEmpty(path)) {
             if (mPreSelect == null) {
                 mPreSelect = new ArrayList<>(1);
@@ -65,8 +73,13 @@ public class ImageSelector extends ActivityLauncherBase<ArrayList<String>> {
         return this;
     }
 
-    public ImageSelector preSelect(ArrayList<String> paths) {
-        mPreSelect = paths;
+    public ImageSelectorLauncher preSelect(List<String> paths) {
+        if (paths instanceof ArrayList) {
+            mPreSelect = (ArrayList<String>) paths;
+        } else {
+            mPreSelect = new ArrayList<>(paths.size());
+            mPreSelect.addAll(paths);
+        }
         return this;
     }
 
@@ -102,6 +115,9 @@ public class ImageSelector extends ActivityLauncherBase<ArrayList<String>> {
         intent.putExtra(EXTRA_SELECT_COUNT, mCount);
         if (mPreSelect != null) {
             intent.putExtra(EXTRA_DEFAULT_SELECTED_LIST, mPreSelect);
+        }
+        if (mTitle != null) {
+            intent.putExtra(EXTRA_ACTIVITY_TITLE, mTitle);
         }
         return intent;
     }

@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class QRGenerator {
 
-    private static final String CACHE_DIR = PathUtils.getExtCacheDir("qr_img_cache");
+    private static final File CACHE_DIR = PathUtils.getExtCacheDir("qr_img_cache");
     private static final float LOGO_BKG_PADDING = 3f;
     private static final float LOGO_BKG_CORNER = 6f;
 
@@ -35,6 +35,8 @@ public class QRGenerator {
     private int size;
     private boolean cache;
     private boolean logoBkg;
+
+    private String cacheFilePath;
 
     /**
      * @param text the content to be encoded
@@ -117,6 +119,10 @@ public class QRGenerator {
         return bitmap;
     }
 
+    public String getCacheFilePath() {
+        return cacheFilePath;
+    }
+
     /**
      * save QRCode image bitmap to file.
      */
@@ -133,15 +139,22 @@ public class QRGenerator {
 
     private boolean toCache(Bitmap bitmap) {
         File file = getCacheFile();
-        return BitmapUtils.saveBitmap(bitmap, file.getAbsolutePath(), 75);
+        if (BitmapUtils.saveBitmap(bitmap, file.getAbsolutePath(), 50)) {
+            cacheFilePath = file.getAbsolutePath();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private Bitmap fromCache() {
         File file = getCacheFile();
         if (!file.exists()) {
             return null;
+        } else {
+            cacheFilePath = file.getAbsolutePath();
+            return BitmapUtils.file2bitmap(file.getAbsolutePath());
         }
-        return BitmapUtils.file2bitmap(file.getAbsolutePath());
     }
 
     private File getCacheFile() {

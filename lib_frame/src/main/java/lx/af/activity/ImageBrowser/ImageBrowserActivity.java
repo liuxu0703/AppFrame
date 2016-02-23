@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,10 +90,15 @@ public class ImageBrowserActivity extends AbsBaseActivity {
         mIsAutoHideFunctionBar = bundle.getBoolean(EXTRA_AUTO_HIDE_FUNCTION_BAR, !mIsTapExit);
 
         if (mImgUris == null || mImgUris.size() == 0) {
-            //throw new IllegalStateException("image uri list null !");
-            Toast.makeText(this, R.string.image_Browser_toast_list_null, Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+            if (mCurrentImgUri != null) {
+                mImgUris = new ArrayList<>(1);
+                mImgUris.add(mCurrentImgUri);
+            } else {
+                //throw new IllegalStateException("image uri list null !");
+                Toast.makeText(this, R.string.image_Browser_toast_list_null, Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
         }
 
         mImgInfoMap = new HashMap<>(mImgUris.size());
@@ -315,7 +321,7 @@ public class ImageBrowserActivity extends AbsBaseActivity {
     /**
      * called when click on an image
      */
-    public void onImageClicked(String imageUri, View view) {
+    protected void onImageClicked(String imageUri, View view) {
         if (isTapExit()) {
             finish();
             return;
@@ -329,7 +335,7 @@ public class ImageBrowserActivity extends AbsBaseActivity {
      * called when long click on an image.
      * @return true if the event is handled
      */
-    public boolean onImageLongClicked(String imageUri, View view) {
+    protected boolean onImageLongClicked(String imageUri, View view) {
         return false;
     }
 

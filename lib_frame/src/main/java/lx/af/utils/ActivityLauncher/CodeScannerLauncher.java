@@ -1,4 +1,4 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,55 +13,61 @@ import lx.af.activity.CodeScanner.CodeScannerActivity;
  * author: lx
  * date: 16-1-22
  */
-public class CodeScanner extends ActivityLauncherBase<String> {
+public class CodeScannerLauncher extends ActivityLauncherBase<String> {
 
     private String mScanMode;
     private String mCharacterSet;
-    private Class<?> mScannerClazz;
+    private String mTitle;
+    private Class<?> mScannerClass;
 
-    public static CodeScanner of(Activity activity) {
-        return new CodeScanner(activity);
+    public static CodeScannerLauncher of(Activity activity) {
+        return new CodeScannerLauncher(activity);
     }
 
-    public static CodeScanner of(Fragment fragment) {
-        return new CodeScanner(fragment);
+    public static CodeScannerLauncher of(Fragment fragment) {
+        return new CodeScannerLauncher(fragment);
     }
 
-    protected CodeScanner(Activity activity) {
+    protected CodeScannerLauncher(Activity activity) {
         super(activity);
     }
 
-    protected CodeScanner(Fragment fragment) {
+    protected CodeScannerLauncher(Fragment fragment) {
         super(fragment);
     }
 
-    public CodeScanner scanner(Class<?> scannerClazz) {
-        this.mScannerClazz = scannerClazz;
+    public CodeScannerLauncher scanner(Class<?> scannerClazz) {
+        this.mScannerClass = scannerClazz;
         return this;
     }
 
-    public CodeScanner characterSet(String characterSet) {
+    public CodeScannerLauncher title(String title) {
+        mTitle = title;
+        return this;
+    }
+
+    public CodeScannerLauncher characterSet(String characterSet) {
         mCharacterSet = characterSet;
         return this;
     }
 
-    public CodeScanner modeQRCode() {
+    public CodeScannerLauncher modeQRCode() {
         return scanMode(Intents.Scan.QR_CODE_MODE);
     }
 
-    public CodeScanner mode1D() {
+    public CodeScannerLauncher mode1D() {
         return scanMode(Intents.Scan.ONE_D_MODE);
     }
 
-    public CodeScanner modeProduct() {
+    public CodeScannerLauncher modeProduct() {
         return scanMode(Intents.Scan.PRODUCT_MODE);
     }
 
-    public CodeScanner modeDataMatrix() {
+    public CodeScannerLauncher modeDataMatrix() {
         return scanMode(Intents.Scan.DATA_MATRIX_MODE);
     }
 
-    public CodeScanner scanMode(String scanMode) {
+    public CodeScannerLauncher scanMode(String scanMode) {
         mScanMode = scanMode;
         return this;
     }
@@ -94,15 +100,18 @@ public class CodeScanner extends ActivityLauncherBase<String> {
 
     @Override
     public Intent createIntent() {
-        if (mScannerClazz == null) {
-            mScannerClazz = CodeScannerActivity.class;
+        if (mScannerClass == null) {
+            mScannerClass = CodeScannerActivity.class;
         }
-        Intent intent = newIntent(mScannerClazz);
+        Intent intent = newIntent(mScannerClass);
         if (mScanMode != null) {
             intent.putExtra(Intents.Scan.MODE, mScanMode);
         }
         if (mCharacterSet != null) {
             intent.putExtra(Intents.Scan.CHARACTER_SET, mCharacterSet);
+        }
+        if (mTitle != null) {
+            intent.putExtra(CodeScannerActivity.EXTRA_TITLE, mTitle);
         }
         return intent;
     }

@@ -118,6 +118,17 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
     }
 
     /**
+     * Removes object from the array by position.
+     * @param position The position to remove.
+     */
+    public void remove(int position) {
+        synchronized (mLock) {
+            mObjects.remove(position);
+        }
+        if (mNotifyOnChange) notifyDataSetChanged();
+    }
+
+    /**
      * Remove all elements from the list.
      */
     public void clear() {
@@ -165,6 +176,15 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
     }
 
     /**
+     * get a copy of the data list.
+     */
+    public ArrayList<T> getListCopy() {
+        ArrayList<T> list = new ArrayList<>(mObjects.size());
+        list.addAll(mObjects);
+        return list;
+    }
+
+    /**
      * @return The Context associated with this adapter.
      */
     public Context getContext() {
@@ -178,6 +198,10 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
      */
     public int getPosition(T item) {
         return mObjects.indexOf(item);
+    }
+
+    public T getLastItem() {
+        return mObjects.size() == 0 ? null : mObjects.get(mObjects.size() - 1);
     }
 
     @Override

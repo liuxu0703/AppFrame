@@ -3,10 +3,16 @@ package lx.af.utils;
 import android.app.Application;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 
 import lx.af.R;
+import lx.af.manager.GlobalThreadManager;
 
 /**
  * Created by liuxu on 15-4-15.
@@ -17,14 +23,20 @@ public class PathUtils {
     private static final long SPACE_THRESHOLD = 1024 * 1024 * 5;
 
     private static Application sApp;
-    private static String sSdRoot;
+    private static File sSdRoot;
 
     private PathUtils() {
     }
 
     public static void init(Application app) {
         sApp = app;
-        sSdRoot = Environment.getExternalStorageDirectory().getPath() + "/lx_default_dir";
+        sSdRoot = new File(Environment.getExternalStorageDirectory(), "kaiba");
+        GlobalThreadManager.runInThreadPool(new Runnable() {
+            @Override
+            public void run() {
+                clearDir(getTmpDir());
+            }
+        });
     }
 
     /**
@@ -32,10 +44,10 @@ public class PathUtils {
      * @param name the name (not the path!)
      */
     public static void setSdDir(String name) {
-        sSdRoot = Environment.getExternalStorageDirectory().getPath() + "/" + name;
+        sSdRoot = new File(Environment.getExternalStorageDirectory(), name);
     }
 
-    public static String getSdDir() {
+    public static File getSdDir() {
         return sSdRoot;
     }
 
@@ -44,10 +56,37 @@ public class PathUtils {
      * the sdcard is  not always available (for one case, sdcard not mounted).
      * @return external cache dir full path, or null if not available.
      */
-    public static String getSdDir(String subdir) {
-        String dir = sSdRoot + "/" + subdir;
+    public static File getSdDir(String subdir) {
+        File dir = new File(sSdRoot, subdir);
         ensureDirExists(dir);
         return dir;
+    }
+
+    /**
+     * get temp file dir.
+     * all files under temp dir will be cleaned on app restart.
+     */
+    public static File getTmpDir() {
+        return getExtCacheDir("tmp");
+    }
+
+    /**
+     * get a temp file path.
+     * all files under temp dir will be cleaned on app restart.
+     */
+    public static File generateTmpPath() {
+        return generateTmpPath(null);
+    }
+
+    /**
+     * get a temp file path with suffix.
+     * all files under temp dir will be cleaned on app restart.
+     */
+    public static File generateTmpPath(String suffix) {
+        Random random = new Random();
+        String prefix = "" + random.nextInt(1000);
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+        return new File(getTmpDir(), prefix + "_" + df.format(new Date()) + suffix);
     }
 
     /**
@@ -55,8 +94,8 @@ public class PathUtils {
      * the cache dir is in /data partition and is not visible to users.
      * @return cache dir full path
      */
-    public static String getCacheDir() {
-        return sApp.getCacheDir().getAbsolutePath();
+    public static File getCacheDir() {
+        return sApp.getCacheDir();
     }
 
     /**
@@ -65,11 +104,11 @@ public class PathUtils {
      * @param subdir sub dir for cache dir
      * @return the subdir full path
      */
-    public static String getCacheDir(String subdir) {
+    public static File getCacheDir(String subdir) {
         if (TextUtils.isEmpty(subdir)) {
-            return sApp.getCacheDir().getAbsolutePath();
+            return sApp.getCacheDir();
         }
-        String dir = sApp.getCacheDir().getAbsolutePath() + "/" + subdir;
+        File dir = new File(sApp.getCacheDir().getAbsolutePath(), subdir);
         ensureDirExists(dir);
         return dir;
     }
@@ -80,9 +119,8 @@ public class PathUtils {
      * be available (for one case, sdcard not mounted).
      * @return external cache dir full path, or null if not available.
      */
-    public static String getExtCacheDir() {
-        File d = sApp.getExternalCacheDir();
-        return d != null ? d.getAbsolutePath() : null;
+    public static File getExtCacheDir() {
+        return sApp.getExternalCacheDir();
     }
 
     /**
@@ -91,14 +129,79 @@ public class PathUtils {
      * be available (for one case, sdcard not mounted).
      * @return dir full path, or null if not available.
      */
-    public static String getExtCacheDir(String subdir) {
+    public static File getExtCacheDir(String subdir) {
         File d = sApp.getExternalCacheDir();
         if (d == null) {
             return null;
         }
-        String dir = d.getAbsolutePath() + "/" + subdir;
+        File dir = new File(d, subdir);
         ensureDirExists(dir);
         return dir;
+    }
+
+    public static File getExtPublicDCIM() {
+        File d = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        ensureDirExists(d);
+        return d;
+    }
+
+    public static File getExtPublicPictures() {
+        File d = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        ensureDirExists(d);
+        return d;
+    }
+
+    public static String getPathSizeReadable(File path) {
+        long size = getPathSize(path);
+        return Formatter.formatShortFileSize(sApp, size);
+    }
+
+    public static long getPathSize(File file) {
+        if (!file.exists()) {
+            return 0;
+        }
+        long length = 0;
+        if (file.isFile()) {
+            length = file.length();
+        } else if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (int i = 0; files != null && i < files.length; i++) {
+                length = length + getPathSize(files[i]);
+            }
+        }
+        return length;
+    }
+
+    public static boolean clearDir(File dir) {
+        if (dir == null || !dir.exists()) {
+            return true;
+        }
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) {
+            return true;
+        }
+        boolean failed = false;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                failed = !deleteDir(f);
+            } else {
+                failed = !f.delete();
+            }
+        }
+        return failed;
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i ++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 
     /**
@@ -108,7 +211,7 @@ public class PathUtils {
      * @param isDir whether the given path is a dir or a file
      * @return true on success ; false on fail
      */
-    public static boolean ensurePathExistsWithErrorToast(String path, boolean isDir) {
+    public static boolean ensurePathExistsWithErrorToast(File path, boolean isDir) {
         if (!isSdcardMounted()) {
             AlertUtils.toastShort(R.string.toast_path_sdcard_not_mounted);
             return false;
@@ -132,7 +235,7 @@ public class PathUtils {
      * @param isDir whether the given path is a dir or a file
      * @return true on success ; false on fail
      */
-    public static boolean ensurePathExists(String path, boolean isDir) {
+    public static boolean ensurePathExists(File path, boolean isDir) {
         if (!isSdcardMounted()) {
             return false;
         }
@@ -151,13 +254,11 @@ public class PathUtils {
         return avail < SPACE_THRESHOLD;
     }
 
-    public static boolean ensureParentExists(String fileName) {
-        File file = new File(fileName);
-        return ensureDirExists(file.getParent());
+    public static boolean ensureParentExists(File file) {
+        return ensureDirExists(file.getParentFile());
     }
 
-    public static boolean ensureDirExists(String dir) {
-        File dirFile = new File(dir);
+    public static boolean ensureDirExists(File dirFile) {
         if (dirFile.exists()) {
             if (dirFile.isDirectory()) {
                 return true;
@@ -169,5 +270,9 @@ public class PathUtils {
         }
         return dirFile.mkdirs();
     }
+
+
+    // ========================================
+
 
 }

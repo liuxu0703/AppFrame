@@ -11,21 +11,21 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import lx.af.R;
-import lx.af.utils.ResourceUtils;
-import lx.af.widget.iconify.Iconify;
 import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.net.HttpRequest.VolleyManager;
-import lx.af.utils.BitmapUtils;
-import lx.af.utils.KV;
 import lx.af.utils.AlertUtils;
+import lx.af.utils.BitmapUtils;
 import lx.af.utils.CrashHandler;
+import lx.af.manager.KV;
 import lx.af.utils.NetStateUtils;
 import lx.af.utils.PathUtils;
+import lx.af.utils.ResourceUtils;
 import lx.af.utils.ScreenUtils;
 import lx.af.utils.StringUtils;
 import lx.af.utils.SystemUtils;
 import lx.af.utils.log.LogUtils;
+import lx.af.widget.iconify.Iconify;
 
 /**
  * author: lx
@@ -43,12 +43,12 @@ public class AbsBaseApp extends Application{
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+
+        GlobalThreadManager.init(this);
         PathUtils.init(this);
         LogUtils.init(this);
         CrashHandler.init();
         Iconify.init();
-
-        GlobalThreadManager.init(this);
         VolleyManager.init(this);
         initImageLoader(this);
         KV.init(this);
@@ -72,8 +72,11 @@ public class AbsBaseApp extends Application{
 
     // init UniversalImageLoader
     private static void initImageLoader(Context context) {
-        int cpu_count = Runtime.getRuntime().availableProcessors();
+        if (ImageLoader.getInstance().isInited()) {
+            return;
+        }
 
+        int cpu_count = Runtime.getRuntime().availableProcessors();
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.img_default)
                 .showImageForEmptyUri(R.drawable.img_default)

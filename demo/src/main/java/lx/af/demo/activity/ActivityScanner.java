@@ -16,8 +16,8 @@ import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.demo.utils.Paths;
 import lx.af.dialog.MessageDialog;
-import lx.af.utils.ActivityUtils.ActivityResultCallback;
-import lx.af.utils.ActivityUtils.CodeScanner;
+import lx.af.utils.ActivityLauncher.ActivityResultCallback;
+import lx.af.utils.ActivityLauncher.CodeScannerLauncher;
 import lx.af.utils.BitmapUtils;
 import lx.af.utils.FileUtils;
 import lx.af.utils.QRDecoder;
@@ -67,15 +67,15 @@ public class ActivityScanner extends BaseDemoActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.scanner_btn_scan_all: {
-                CodeScanner.of(this).start(this);
+                CodeScannerLauncher.of(this).start(this);
                 break;
             }
             case R.id.scanner_btn_scan_qr_code: {
-                CodeScanner.of(this).modeQRCode().start(this);
+                CodeScannerLauncher.of(this).modeQRCode().start(this);
                 break;
             }
             case R.id.scanner_btn_scan_bar_code: {
-                CodeScanner.of(this).mode1D().start(this);
+                CodeScannerLauncher.of(this).mode1D().start(this);
                 break;
             }
             case R.id.scanner_btn_read_pic: {
@@ -101,7 +101,7 @@ public class ActivityScanner extends BaseDemoActivity implements
                             public void onClick(View v) {
                                 String path = Paths.generateCropImagePath().toString();
                                 if (BitmapUtils.saveBitmap(qrcodeBitmap, path)) {
-                                    FileUtils.scanFile(ActivityScanner.this, path);
+                                    FileUtils.scanFile(path);
                                     toastLong("save to path " + Paths.QR_CODE_PATH + "/");
                                 } else {
                                     toastShort("save fail");

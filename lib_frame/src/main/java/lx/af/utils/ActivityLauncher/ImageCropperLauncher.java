@@ -1,24 +1,23 @@
-package lx.af.utils.ActivityUtils;
+package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import lx.af.activity.ImageCropper.ImageCropActivity;
 import lx.af.activity.ImageCropper.ImageCropActivity.Extra;
+import lx.af.utils.PathUtils;
 
 /**
  * Builder for crop Intents and utils for handling result
  */
-public class ImageCropper extends ActivityLauncherBase<Uri> {
+public class ImageCropperLauncher extends ActivityLauncherBase<Uri> {
 
     private static final int FROM_URI = 0;
     private static final int FROM_CAMERA = 1;
@@ -37,85 +36,85 @@ public class ImageCropper extends ActivityLauncherBase<Uri> {
     private Uri mOutputUri;
     private Uri mCameraUri;
 
-    protected ImageCropper(Activity activity) {
+    protected ImageCropperLauncher(Activity activity) {
         super(activity);
     }
 
-    protected ImageCropper(Fragment fragment) {
+    protected ImageCropperLauncher(Fragment fragment) {
         super(fragment);
     }
 
-    public static ImageCropper of(Activity activity) {
-        return new ImageCropper(activity);
+    public static ImageCropperLauncher of(Activity activity) {
+        return new ImageCropperLauncher(activity);
     }
 
-    public static ImageCropper of(Fragment fragment) {
-        return new ImageCropper(fragment);
+    public static ImageCropperLauncher of(Fragment fragment) {
+        return new ImageCropperLauncher(fragment);
     }
 
-    public ImageCropper output(Uri uri) {
+    public ImageCropperLauncher output(Uri uri) {
         mOutputUri = uri;
         return this;
     }
 
-    public ImageCropper output(String path) {
+    public ImageCropperLauncher output(String path) {
         mOutputUri = Uri.parse("file://" + path);
         return this;
     }
 
-    public ImageCropper from(Uri source) {
+    public ImageCropperLauncher from(Uri source) {
         mFrom = FROM_URI;
         mOriginUri = source;
         return this;
     }
 
-    public ImageCropper from(String path) {
+    public ImageCropperLauncher from(String path) {
         mFrom = FROM_URI;
         mOriginUri = Uri.parse("file://" + path);
         return this;
     }
 
-    public ImageCropper fromCamera(Uri cameraOutput) {
+    public ImageCropperLauncher fromCamera(Uri cameraOutput) {
         mFrom = FROM_CAMERA;
         mCameraUri = cameraOutput;
         return this;
     }
 
-    public ImageCropper fromCamera(String cameraOutput) {
+    public ImageCropperLauncher fromCamera(String cameraOutput) {
         mFrom = FROM_CAMERA;
         mCameraUri = Uri.parse("file://" + cameraOutput);
         return this;
     }
 
-    public ImageCropper fromCamera() {
+    public ImageCropperLauncher fromCamera() {
         // use camera default path as output
         mFrom = FROM_CAMERA;
         return this;
     }
 
-    public ImageCropper fromGallery() {
+    public ImageCropperLauncher fromGallery() {
         mFrom = FROM_GALLERY;
         return this;
     }
 
-    public ImageCropper fromImageSelector() {
+    public ImageCropperLauncher fromImageSelector() {
         mFrom = FROM_IMAGE_SELECTOR;
         return this;
     }
 
-    public ImageCropper aspect(int aspectX, int aspectY) {
+    public ImageCropperLauncher aspect(int aspectX, int aspectY) {
         mAspectX = aspectX;
         mAspectY = aspectY;
         return this;
     }
 
-    public ImageCropper asSquare() {
+    public ImageCropperLauncher asSquare() {
         mAspectX = 1;
         mAspectY = 1;
         return this;
     }
 
-    public ImageCropper maxSize(int maxX, int maxY) {
+    public ImageCropperLauncher maxSize(int maxX, int maxY) {
         mMaxX = maxX;
         mMaxY = maxY;
         return this;
@@ -170,9 +169,7 @@ public class ImageCropper extends ActivityLauncherBase<Uri> {
             throw new IllegalStateException("crop source not set");
         }
         if (mOutputUri == null) {
-            File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            File file = new File(dcim, getPackageName() + "_crop_" + System.currentTimeMillis());
-            mOutputUri = Uri.fromFile(file);
+            mOutputUri = Uri.fromFile(PathUtils.generateTmpPath(".jpg"));
         }
         Intent cropIntent = newIntent(ImageCropActivity.class);
         cropIntent.setData(mOriginUri);
@@ -196,25 +193,25 @@ public class ImageCropper extends ActivityLauncherBase<Uri> {
             }
             case FROM_CAMERA: {
                 if (mActivity != null) {
-                    ImageByCamera.of(mActivity).output(mCameraUri).start(mUriResultCallback);
+                    ImageByCameraLauncher.of(mActivity).output(mCameraUri).start(mUriResultCallback);
                 } else {
-                    ImageByCamera.of(mFragment).output(mCameraUri).start(mUriResultCallback);
+                    ImageByCameraLauncher.of(mFragment).output(mCameraUri).start(mUriResultCallback);
                 }
                 break;
             }
             case FROM_GALLERY: {
                 if (mActivity != null) {
-                    MediaPicker.of(mActivity).pickImage().start(mUriResultCallback);
+                    MediaPickerLauncher.of(mActivity).pickImage().start(mUriResultCallback);
                 } else {
-                    MediaPicker.of(mFragment).pickImage().start(mUriResultCallback);
+                    MediaPickerLauncher.of(mFragment).pickImage().start(mUriResultCallback);
                 }
                 break;
             }
             case FROM_IMAGE_SELECTOR: {
                 if (mActivity != null) {
-                    ImageSelector.of(mActivity).singleSelect().start(mSelectorCallback);
+                    ImageSelectorLauncher.of(mActivity).singleSelect().start(mSelectorCallback);
                 } else {
-                    ImageSelector.of(mFragment).singleSelect().start(mSelectorCallback);
+                    ImageSelectorLauncher.of(mFragment).singleSelect().start(mSelectorCallback);
                 }
                 break;
             }

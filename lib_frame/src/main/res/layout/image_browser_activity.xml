@@ -21,12 +21,12 @@
 
         <ImageView
             android:id="@+id/activity_image_browser_action_bar_back"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_width="45dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:padding="9dp"
+            android:padding="5dp"
             android:src="@drawable/ic_action_bar_back_pressed"
             android:background="@drawable/bkg_clickable"
             android:contentDescription="@null" />
@@ -56,7 +56,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#28000000"
         android:visibility="gone" />
 
 </RelativeLayout>

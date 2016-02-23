@@ -15,12 +15,12 @@ import lx.af.utils.PathUtils;
  */
 public final class Paths {
 
-    public static final String CAMERA_PATH =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+    public static final File CAMERA_PATH =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
-    public static final String QR_CODE_PATH = PathUtils.getSdDir("qr_code");
+    public static final File QR_CODE_PATH = PathUtils.getSdDir("qr_code");
 
-    public static final String CROP_PATH = PathUtils.getSdDir("crop_image");
+    public static final File CROP_PATH = PathUtils.getSdDir("crop_image");
 
     public static File generateCropImagePath() {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);

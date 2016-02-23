@@ -3,8 +3,10 @@ package lx.af.activity.ImageSelector;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,14 +25,16 @@ public class ImageSelectActivity extends AbsBaseActivity implements
         View.OnClickListener,
         ImageSelectFragment.Callback {
 
-    /** 最大图片选择次数，int类型，默认9 */
+    /** max select count, default 9 */
     public static final String EXTRA_SELECT_COUNT = "max_select_count";
-    /** 是否显示相机，默认显示 */
+    /** whether to show camera button as the first grid, default true */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
-    /** 默认选择集 */
+    /** pre-selected images */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_list";
+    /** image selector activity title */
+    public static final String EXTRA_ACTIVITY_TITLE = "activity_title";
 
-    /** 选择结果，返回为图片路径集合  */
+    /** select result, as an ArrayList of file path  */
     public static final String EXTRA_RESULT = "select_result";
 
     private ArrayList<String> mResultList = new ArrayList<>();
@@ -56,6 +60,12 @@ public class ImageSelectActivity extends AbsBaseActivity implements
             mSubmitButton.setVisibility(View.INVISIBLE);
         }
         refreshSubmitButton();
+
+        String title = intent.getStringExtra(EXTRA_ACTIVITY_TITLE);
+        if (!TextUtils.isEmpty(title)) {
+            TextView tvTitle = obtainView(R.id.mis_activity_title);
+            tvTitle.setText(title);
+        }
 
         Bundle bundle = new Bundle();
         bundle.putInt(ImageSelectFragment.EXTRA_SELECT_COUNT, mDefaultCount);

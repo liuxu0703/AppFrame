@@ -91,7 +91,7 @@ public class LogUtils {
         }
 
         // scan file into database so that we can view it through USB MTP
-        FileUtils.scanFile(sApp, savePath);
+        FileUtils.scanFile(savePath);
         return savePath;
     }
 
@@ -136,7 +136,7 @@ public class LogUtils {
             }, LOG_PACK_MAX_COUNT);
 
             // scan log package dir
-            FileUtils.scanFile(sApp, logPackDirFile.getAbsolutePath());
+            FileUtils.scanFile(logPackDirFile.getAbsolutePath());
         }
     }
 
