@@ -103,6 +103,7 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
         }
     }
 
+
     public void setLoading(boolean loading) {
         mIsLoading = loading;
         if (mIsLoading) {

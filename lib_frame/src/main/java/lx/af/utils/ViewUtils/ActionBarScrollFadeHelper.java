@@ -18,10 +18,10 @@ import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
 public class ActionBarScrollFadeHelper {
 
     private View mActionBar;
-    private View mOffsetView;
-    private int mOffsetValue;
+    private View mEndOffsetView;
     private View mStartOffsetView;
-    private int mStartOffset = 0;
+    private int mEndOffsetValue;
+    private int mStartOffsetValue = 0;
     private boolean mAlphaIncrease = true;
     private Drawable mActionBarBackgroundDrawable;
     private LinkedList<FadeViewInfo> mFadeViewList;
@@ -36,20 +36,20 @@ public class ActionBarScrollFadeHelper {
     /**
      * set offset view. fade effect will be played according to offset view:
      * fade effect ends when scroll to the bottom of the offset view.
-     * @see #offset(int)
+     * @see #endOffset(int)
      */
-    public ActionBarScrollFadeHelper offset(View offsetView) {
-        mOffsetView = offsetView;
+    public ActionBarScrollFadeHelper endOffset(View offsetView) {
+        mEndOffsetView = offsetView;
         return this;
     }
 
     /**
      * set offset value. fade effect will be played according to offset value:
      * fade effect ends when offsetValue has be scrolled
-     * @see #offset(View)
+     * @see #endOffset(View)
      */
-    public ActionBarScrollFadeHelper offset(int offsetValue) {
-        mOffsetValue = offsetValue;
+    public ActionBarScrollFadeHelper endOffset(int offsetValue) {
+        mEndOffsetValue = offsetValue;
         return this;
     }
 
@@ -59,7 +59,7 @@ public class ActionBarScrollFadeHelper {
     }
 
     public ActionBarScrollFadeHelper startOffset(int offsetValue) {
-        mStartOffset = offsetValue;
+        mStartOffsetValue = offsetValue;
         return this;
     }
 
@@ -103,7 +103,7 @@ public class ActionBarScrollFadeHelper {
 
     /**
      * start to show fade effect.
-     * {@link #offset(View)} must be called before calling to this method.
+     * {@link #endOffset(View)} must be called before calling to this method.
      * @param list fade effect will be set accordingly when the list is scrolled
      */
     public void start(ListView list) {
@@ -113,7 +113,7 @@ public class ActionBarScrollFadeHelper {
 
     /**
      * start to show fade effect.
-     * {@link #offset(View)} must be called before calling to this method.
+     * {@link #endOffset(View)} must be called before calling to this method.
      * @param list fade effect will be set accordingly when the list is scrolled
      */
     public void start(SwipeRefreshListLayout list) {
@@ -127,45 +127,47 @@ public class ActionBarScrollFadeHelper {
     }
 
     private void init(boolean acceptOffsetViewOnly) {
-        if (acceptOffsetViewOnly && mOffsetView == null) {
+        if (acceptOffsetViewOnly && mEndOffsetView == null) {
             throw new IllegalStateException("no offset view has be set");
         }
-        if (mOffsetView == null && mOffsetValue == 0) {
+        if (mEndOffsetView == null && mEndOffsetValue == 0) {
             throw new IllegalStateException("no offset has be set");
         }
         onNewScroll(0);
     }
 
-    private int getOffset() {
-        if (mOffsetView != null) {
-            return mOffsetView.getHeight();
+    private int getEndOffset() {
+        if (mEndOffsetView != null) {
+            return mEndOffsetView.getHeight();
         }
-        return mOffsetValue;
+        return mEndOffsetValue;
     }
 
     private int getStartOffset() {
         if (mStartOffsetView != null) {
             return mStartOffsetView.getHeight();
         }
-        return mStartOffset;
+        return mStartOffsetValue;
     }
 
     private void onNewScroll(int scroll) {
         int alpha;
-        int actionBarHeight = mActionBar.getHeight();
-        int delta = getOffset() - actionBarHeight;
-        if (delta <= 0 || scroll <= 0) {
+        int acHeight = mActionBar.getHeight();
+        int start = getStartOffset();
+        int end = getEndOffset();
+        if (scroll <= start - acHeight || scroll <= 0) {
             // set to init state
             alpha = mAlphaIncrease ? 0 : 255;
-        } else if (scroll > delta) {
+        } else if (scroll > end - acHeight) {
             // set to final state
             alpha = mAlphaIncrease ? 255 : 0;
         } else {
             float ratio;
+            int delta = Math.abs(end - start);
             if (mAlphaIncrease) {
-                ratio = (float) scroll / delta;
+                ratio = (float) Math.abs(scroll + acHeight - start) / delta;
             } else {
-                ratio = (float) (delta - scroll) / delta;
+                ratio = (float) Math.abs(end - (scroll + acHeight)) / delta;
             }
             alpha = (int) (ratio * 255);
         }
@@ -202,12 +204,12 @@ public class ActionBarScrollFadeHelper {
             View first = view.getChildAt(0);
             if (first == null) {
                 onNewScroll(0);
-            } else if (first == mOffsetView) {
-                onNewScroll(-mOffsetView.getTop());
-            } else if (isContainView(first, mOffsetView)) {
-                onNewScroll(-(first.getTop() + mOffsetView.getTop()));
+            } else if (first == mEndOffsetView) {
+                onNewScroll(-mEndOffsetView.getTop());
+            } else if (isContainView(first, mEndOffsetView)) {
+                onNewScroll(-(first.getTop() + mEndOffsetView.getTop()));
             } else {
-                onNewScroll(getOffset());
+                onNewScroll(getEndOffset());
             }
         }
 

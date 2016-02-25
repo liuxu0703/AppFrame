@@ -74,7 +74,8 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
 
         ActionBarScrollFadeHelper
                 .with(getActionBarView())
-                .offset(mHeaderViewPager)
+                .startOffset(mHeaderViewPager)
+                .endOffset(header)
                 .addFadeWithView(mTitle)
                 .addFadeReverseView(mHeaderIcon)
                 .start(mSwipeRefreshLayout);
