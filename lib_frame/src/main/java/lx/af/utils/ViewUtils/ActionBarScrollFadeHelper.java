@@ -1,6 +1,7 @@
 package lx.af.utils.ViewUtils;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -18,6 +19,7 @@ import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
 public class ActionBarScrollFadeHelper {
 
     private View mActionBar;
+    private ViewParent mViewRoot;
     private View mEndOffsetView;
     private View mStartOffsetView;
     private int mEndOffsetValue;
@@ -123,6 +125,7 @@ public class ActionBarScrollFadeHelper {
 
     private ActionBarScrollFadeHelper(View actionBar) {
         mActionBar = actionBar;
+        mViewRoot = mActionBar.getParent();
         mActionBarBackgroundDrawable = mActionBar.getBackground();
     }
 
@@ -135,7 +138,7 @@ public class ActionBarScrollFadeHelper {
         }
         onNewScroll(0);
     }
-
+    
     private int getEndOffset() {
         if (mEndOffsetView != null) {
             return mEndOffsetView.getHeight();
@@ -185,6 +188,9 @@ public class ActionBarScrollFadeHelper {
     }
 
     private boolean isContainView(View container, View view) {
+        if (container == null || view == null) {
+            return false;
+        }
         if (!(container instanceof ViewGroup)) {
             return false;
         }
@@ -196,6 +202,19 @@ public class ActionBarScrollFadeHelper {
             parent = parent.getParent();
         }
         return false;
+    }
+
+    // get distance between (0,0) and view bottom line
+    private int getViewBottom(View view) {
+        int top = 0;
+        ViewParent parent = view.getParent();
+        while (parent != mViewRoot && parent instanceof View) {
+            top += ((View) parent).getTop();
+            parent = parent.getParent();
+        }
+        int ret = view.getHeight() + top;
+        Log.d("liuxu", "111 getViewBottom " + ret);
+        return ret;
     }
 
     private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener() {

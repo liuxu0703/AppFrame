@@ -69,6 +69,11 @@
             android:screenOrientation="portrait"
             android:label="Bar Code Scan" >
         </activity>
+        <activity
+            android:name=".activity.ActivityDanmaku"
+            android:screenOrientation="portrait"
+            android:label="Danmaku" >
+        </activity>
 
     </application>
 

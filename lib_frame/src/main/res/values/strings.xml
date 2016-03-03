@@ -31,6 +31,9 @@
     <string name="mipca_toast_finish_activity">长时间未识别,请重新发起扫描</string>
     <string name="mipca_toast_init_camera_fail">初始化扫描失败</string>
 
+    <string name="swipe_refresh_default_footer_loading">正在加载&#8230;</string>
+    <string name="swipe_refresh_default_footer_done">加载完毕</string>
+
     <string name="toast_path_sdcard_not_mounted">存储卡不可用</string>
     <string name="toast_path_sdcard_full">存储卡已满</string>
     <string name="toast_path_create_dir_fail">创建文件夹失败</string>

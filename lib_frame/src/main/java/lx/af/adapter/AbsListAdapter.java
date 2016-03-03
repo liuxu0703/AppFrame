@@ -31,7 +31,7 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
      * Indicates whether or not {@link #notifyDataSetChanged()} must be called whenever
      * {@link #mObjects} is modified.
      */
-    private boolean mNotifyOnChange = true;
+    private boolean mNotifyOnChange = false;
 
     public AbsListAdapter(Context context, List<T> list) {
         mContext = context;

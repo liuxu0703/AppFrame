@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.viewpagerindicator.PageIndicator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +31,6 @@ import lx.af.utils.ViewUtils.ActionBarScrollFadeHelper;
 import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
 import lx.af.view.SwipeRefresh.SwipeRefreshLayout;
 import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
-import com.viewpagerindicator.PageIndicator;
 
 /**
  * author: lx
@@ -51,12 +52,15 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
 
     private ListAdapter mListAdapter;
 
+    private int mLoadCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setLoadMorePreCount(3);
 
         View header = View.inflate(this, R.layout.swipe_refresh_header, null);
         mHeaderViewPager = (ViewPager) header.findViewById(R.id.swipe_refresh_header_pager);
@@ -92,34 +96,28 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public void onLoadMore() {
         GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
             @Override
             public void run() {
                 mListAdapter.addAll(generateList(mListAdapter.getCount() - 1, 10));
                 mListAdapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setLoading(false);
+                mLoadCount ++;
+                if (mLoadCount > 3) {
+                    mSwipeRefreshLayout.setLoadState(SwipeRefreshListLayout.LoadState.NO_MORE);
+                } else {
+                    //mSwipeRefreshLayout.setLoading(false);
+                    mSwipeRefreshLayout.setLoadState(SwipeRefreshListLayout.LoadState.IDLE);
+                }
             }
         }, 2000);
     }
 
     @Override
     public void onRefresh() {
+        mLoadCount = 0;
+        mSwipeRefreshLayout.setLoadState(SwipeRefreshListLayout.LoadState.IDLE);
+
         GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
             @Override
             public void run() {
@@ -156,6 +154,7 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
 
         public ListAdapter(Context context, List<String> list) {
             super(context, list);
+            setNotifyOnChange(true);
         }
 
         @Override

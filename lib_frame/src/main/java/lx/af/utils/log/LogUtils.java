@@ -86,7 +86,7 @@ public class LogUtils {
         try {
             FileUtils.dir2zip(LOG_DIR, savePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.w(TAG, "fail to zip logs", e);
             return null;
         }
 

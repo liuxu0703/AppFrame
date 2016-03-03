@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <View
+        android:id="@+id/default_refresh_footer_load_more_line"
+        android:layout_width="120dp"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/default_refresh_footer_load_more_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:minHeight="32dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:gravity="center"
+        android:background="#f0f0f0"
+        android:text="@string/swipe_refresh_default_footer_done"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <lx.af.view.ProgressWheel
+        xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/default_refresh_footer_load_more_progress"
+        android:layout_toLeftOf="@id/default_refresh_footer_load_more_text"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        ProgressWheel:rimColor="#00000000"
+        ProgressWheel:rimWidth="2dp"
+        ProgressWheel:barLength="60dp"
+        ProgressWheel:barColor="@android:color/darker_gray"
+        ProgressWheel:barWidth="2dp"
+        ProgressWheel:contourColor="#00000000"
+        ProgressWheel:spinSpeed="3dp" />
+</merge>

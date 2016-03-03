@@ -41,6 +41,8 @@ public class ActivityMain extends BaseDemoActivity implements
                 ActivityHomeWatcherDemo.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Video Play",
                 ActivityPlayViewDemo.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Danmaku",
+                ActivityDanmaku.class));
     }
 
 

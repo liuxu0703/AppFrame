@@ -1,16 +1,10 @@
 package lx.af.view.SwipeRefresh;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.ListView;
-
-import lx.af.R;
 
 /**
  * author: lx
@@ -19,15 +13,26 @@ import lx.af.R;
 public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
         AbsListView.OnScrollListener {
 
+    /**
+     * callback when scrolled to the bottom and load more data is required
+     */
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
+    public enum LoadState {
+        IDLE, LOADING, NO_MORE,
+    }
+
+    // ============================================
+
     private ListView mListView;
-    private View mListViewFooter;
+    private ILoadMoreFooter mLoadMoreFooter;
     private OnLoadMoreListener mOnLoadMoreListener;
     private AbsListView.OnScrollListener mOnScrollListener;
 
-    private int mYDown;
-    private int mLastY;
-    private int mTouchSlop;
-    private boolean mIsLoading = false;
+    private LoadState mState = LoadState.IDLE;
+    private int mLoadMorePreCount = 1;
 
     public SwipeRefreshListLayout(Context context) {
         this(context, null);
@@ -35,9 +40,6 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
     public SwipeRefreshListLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        mListViewFooter = LayoutInflater.from(context).inflate(
-                R.layout.swipe_refresh_footer, mListView, false);
     }
 
     @Override
@@ -59,43 +61,6 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
         }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
-        final int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mYDown = (int) event.getRawY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                mLastY = (int) event.getRawY();
-                break;
-            case MotionEvent.ACTION_UP:
-                if (canLoad()) {
-                    loadMore();
-                }
-                break;
-            default:
-                break;
-        }
-
-        return super.dispatchTouchEvent(event);
-    }
-
-    private boolean canLoad() {
-        return isBottom() && !mIsLoading && isPullUp();
-    }
-
-    private boolean isBottom() {
-        if (mListView != null && mListView.getAdapter() != null) {
-            return mListView.getLastVisiblePosition() == (mListView.getAdapter().getCount() - 1);
-        }
-        return false;
-    }
-
-    private boolean isPullUp() {
-        return (mYDown - mLastY) >= mTouchSlop;
-    }
-
     private void loadMore() {
         if (mOnLoadMoreListener != null) {
             setLoading(true);
@@ -103,16 +68,38 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
         }
     }
 
+    // =============================================
+
+    public void setLoadState(LoadState state) {
+        mState = state;
+        if (mOnLoadMoreListener == null) {
+            return;
+        }
+        if (mLoadMoreFooter == null) {
+            mLoadMoreFooter = new DefaultLoadMoreFooter(getContext());
+            mLoadMoreFooter.init(mListView);
+        }
+        mLoadMoreFooter.refreshLoadState(mListView, state);
+    }
 
     public void setLoading(boolean loading) {
-        mIsLoading = loading;
-        if (mIsLoading) {
-            mListView.addFooterView(mListViewFooter);
-        } else {
-            mListView.removeFooterView(mListViewFooter);
-            mYDown = 0;
-            mLastY = 0;
+        setLoadState(loading ? LoadState.LOADING : LoadState.IDLE);
+    }
+
+    public void setLoadMoreEnabled(boolean enabled) {
+        setLoadState(enabled ? LoadState.IDLE : LoadState.NO_MORE);
+    }
+
+    public void setLoadMorePreCount(int count) {
+        mLoadMorePreCount = count;
+    }
+
+    public void setLoadMoreFooterView(ILoadMoreFooter footer) {
+        if (!(footer instanceof View)) {
+            throw new IllegalArgumentException("footer must be instance of view");
         }
+        mLoadMoreFooter = footer;
+        mLoadMoreFooter.init(mListView);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener loadListener) {
@@ -132,19 +119,16 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (canLoad()) {
+        if (mOnLoadMoreListener != null && mState == LoadState.IDLE &&
+                firstVisibleItem + visibleItemCount + mLoadMorePreCount >= totalItemCount &&
+                totalItemCount != 0 &&
+                totalItemCount != mListView.getHeaderViewsCount() + mListView.getFooterViewsCount()) {
             loadMore();
         }
+
         if (mOnScrollListener != null) {
             mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
     }
 
-
-    /**
-     * callback when scrolled to the bottom and load more data is required
-     */
-    public interface OnLoadMoreListener {
-        void onLoadMore();
-    }
 }

@@ -30,7 +30,7 @@ public class PathUtils {
 
     public static void init(Application app) {
         sApp = app;
-        sSdRoot = new File(Environment.getExternalStorageDirectory(), "kaiba");
+        sSdRoot = new File(Environment.getExternalStorageDirectory(), "lx");
         GlobalThreadManager.runInThreadPool(new Runnable() {
             @Override
             public void run() {

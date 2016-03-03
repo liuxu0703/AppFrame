@@ -291,7 +291,8 @@ public final class StringUtils {
             return false;
         }
         Pattern patternMobile = Pattern
-                .compile("^[1][3,4,5,7,8][0-9]{9}$");
+                .compile("^[1][1-9][0-9]{9}$");
+                //.compile("^[1][3,4,5,7,8][0-9]{9}$");
                 //.compile("^((13[0-9])|(15[^4,\\D])|(18[0,4-9]))\\d{8}$");
         Matcher m = patternMobile.matcher(mobile);
         return m.matches();
