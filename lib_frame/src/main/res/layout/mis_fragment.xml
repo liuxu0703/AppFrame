@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/black"
     android:layout_width="match_parent"
@@ -19,7 +20,8 @@
         android:id="@+id/mis_fragment_time_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10sp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:background="#cc000000"

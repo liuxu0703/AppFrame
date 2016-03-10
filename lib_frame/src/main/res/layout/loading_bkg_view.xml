@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/loading_bkg_view_icon"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null" />
+
+        <lx.af.view.ProgressWheel
+            xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/loading_bkg_view_progress"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            ProgressWheel:barLength="45dp"
+            ProgressWheel:barColor="#cccccc"
+            ProgressWheel:barWidth="4dp"
+            ProgressWheel:rimColor="#10000000"
+            ProgressWheel:rimWidth="4dp"
+            ProgressWheel:contourColor="#00000000"
+            ProgressWheel:spinSpeed="4dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/loading_bkg_view_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:minHeight="36dp"
+        android:gravity="center"
+        android:shadowColor="#888888"
+        android:shadowRadius="1"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:textColor="#cccccc"
+        android:textSize="16sp" />
+
+</merge>

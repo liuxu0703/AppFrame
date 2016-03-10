@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:background="@android:color/white"
+    android:divider="@drawable/shape_dlg_bottom_divider"
+    android:showDividers="beginning|middle"
     android:orientation="vertical" >
 
     <ListView
         android:id="@+id/dlg_bottom_selector_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_dlg_bottom_bkg"
         android:listSelector="@drawable/bkg_clickable"
-        android:divider="#eee"
-        android:dividerHeight="1px" />
+        android:divider="#ddd"
+        android:footerDividersEnabled="true"
+        android:dividerHeight="1dp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/dlg_bottom_selector_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/shape_dlg_bottom_bkg"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/dlg_bottom_selector_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:gravity="center"
-            android:background="@drawable/bkg_clickable"
-            android:text="@android:string/cancel"
-            android:textColor="#525252"
-            android:textSize="16sp"
-            android:singleLine="true" />
-    </LinearLayout>
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center"
+        android:background="@drawable/bkg_clickable"
+        android:text="@android:string/cancel"
+        android:textColor="#56aeec"
+        android:textSize="16sp"
+        android:singleLine="true" />
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,27 +17,15 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.MediaController.MediaPlayerControl;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * Author: liuxu
- * date: 2014-11-21
- *
- * used to play video, most code comes from VideoView.
- * TODO: not finished yet, add some more listeners, and attach a media controller.
- *
- * Demo: com.lx.utils.demo.ActivityPlayViewDemo
+ * author: lx
+ * date: 16-1-29
  */
 public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
 
     private static final String TAG = "PlayView";
-
-    // settable by the client
-    private Uri mUri;
-    private Map<String, String> mHeaders;
 
     // all possible internal states
     private static final int STATE_ERROR = -1;
@@ -47,6 +36,10 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
     private static final int STATE_PAUSED = 4;
     private static final int STATE_PLAYBACK_COMPLETED = 5;
 
+    // All the stuff we need for playing and showing a video
+    private SurfaceHolder mSurfaceHolder = null;
+    private MediaPlayer mMediaPlayer = null;
+
     // mCurrentState is a VideoView object's current state.
     // mTargetState is the state that a method caller intends to reach.
     // For instance, regardless the VideoView object's current state,
@@ -55,24 +48,26 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
     private int mCurrentState = STATE_IDLE;
     private int mTargetState = STATE_IDLE;
 
-    // All the stuff we need for playing and showing a video
-    private SurfaceHolder mSurfaceHolder = null;
-    private MediaPlayer mMediaPlayer = null;
+    // settable by the client
+    private Uri mUri;
+    private Map<String, String> mHeaders;
+
     private int mAudioSession;
     private int mVideoWidth;
     private int mVideoHeight;
     private int mSurfaceWidth;
     private int mSurfaceHeight;
 
-    private OnCompletionListener mOnCompletionListener;
-    private MediaPlayer.OnPreparedListener mOnPreparedListener;
     private int mCurrentBufferPercentage;
-    private OnErrorListener mOnErrorListener;
-    private OnInfoListener mOnInfoListener;
     private int mSeekWhenPrepared; // recording the seek position while preparing
     private boolean mCanPause;
     private boolean mCanSeekBack;
     private boolean mCanSeekForward;
+
+    private OnCompletionListener mOnCompletionListener;
+    private OnPreparedListener mOnPreparedListener;
+    private OnErrorListener mOnErrorListener;
+    private OnInfoListener mOnInfoListener;
 
     SurfaceHolder.Callback mSHCallback = new SurfaceHolder.Callback() {
 
@@ -100,10 +95,6 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
         public void surfaceDestroyed(SurfaceHolder holder) {
             // after we return from this we can't use the surface any more
             mSurfaceHolder = null;
-            // TODO
-//            if (mMediaController != null) {
-//                mMediaController.hide();
-//            }
             release(true);
         }
     };
@@ -123,13 +114,26 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
         initVideoView();
     }
 
+    public void setOnCompleteListener(OnCompletionListener l) {
+        mOnCompletionListener = l;
+    }
+
+    public void setOnErrorListener(OnErrorListener l) {
+        mOnErrorListener = l;
+    }
+
+    public void setOnInfoListener(OnInfoListener l) {
+        mOnInfoListener = l;
+    }
+
+    public void setOnPreparedListener(OnPreparedListener l) {
+        mOnPreparedListener = l;
+    }
+
     private void initVideoView() {
         mVideoWidth = 0;
         mVideoHeight = 0;
         getHolder().addCallback(mSHCallback);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        requestFocus();
         mCurrentState = STATE_IDLE;
         mTargetState = STATE_IDLE;
     }
@@ -309,27 +313,14 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
             }
     };
 
-    MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
+    OnPreparedListener mPreparedListener = new OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mCurrentState = STATE_PREPARED;
-
-            RefMetadata data = getMetadata(mp);
-            if (data != null) {
-                mCanPause = data.mCanPause;
-                mCanSeekBack = data.mCanSeekbackward;
-                mCanSeekForward = data.mCanseekforward;
-            } else {
-                mCanPause = mCanSeekBack = mCanSeekForward = true;
-            }
-
+            mCanPause = mCanSeekBack = mCanSeekForward = true;
             if (mOnPreparedListener != null) {
                 mOnPreparedListener.onPrepared(mMediaPlayer);
             }
-            // TODO
-//            if (mMediaController != null) {
-//                mMediaController.setEnabled(true);
-//            }
             mVideoWidth = mp.getVideoWidth();
             mVideoHeight = mp.getVideoHeight();
 
@@ -352,17 +343,7 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
                     // start the video here instead of in the callback.
                     if (mTargetState == STATE_PLAYING) {
                         start();
-                        // TODO
-//                        if (mMediaController != null) {
-//                            mMediaController.show();
-//                        }
-                    } else if (!isPlaying() &&
-                               (seekToPosition != 0 || getCurrentPosition() > 0)) {
-                        // TODO
-//                       if (mMediaController != null) {
-//                           mMediaController.show(0);
-//                       }
-                   }
+                    }
                 }
             } else {
                 // We don't know the video size yet, but should start anyway.
@@ -380,10 +361,6 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
         public void onCompletion(MediaPlayer mp) {
             mCurrentState = STATE_PLAYBACK_COMPLETED;
             mTargetState = STATE_PLAYBACK_COMPLETED;
-            // TODO
-//            if (mMediaController != null) {
-//                mMediaController.hide();
-//            }
             if (mOnCompletionListener != null) {
                 mOnCompletionListener.onCompletion(mMediaPlayer);
             }
@@ -408,10 +385,6 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
             Log.d(TAG, "Error: " + framework_err + "," + impl_err);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
-            // TODO
-//            if (mMediaController != null) {
-//                mMediaController.hide();
-//            }
 
             // If an error handler has been supplied, use it and finish.
             if (mOnErrorListener != null) {
@@ -426,7 +399,7 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
              * longer have a window, don't bother showing the user an error.
              */
             if (getWindowToken() != null) {
-                String message = "";
+                String message;
                 if (framework_err == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
                     message = "invalid progressive playback";
                 } else {
@@ -506,13 +479,13 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
     }
 
     // release the media player in any state
-    private void release(boolean cleartargetstate) {
+    private void release(boolean clearTargetState) {
         if (mMediaPlayer != null) {
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
             mCurrentState = STATE_IDLE;
-            if (cleartargetstate) {
+            if (clearTargetState) {
                 mTargetState = STATE_IDLE;
             }
         }
@@ -558,103 +531,15 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
             // we don't set the target state here either, but preserve the
             // target state that was there before.
             mCurrentState = STATE_PREPARING;
-            // attachMediaController();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
-            return;
-        } catch (IllegalArgumentException ex) {
-            Log.w(TAG, "Unable to open content: " + mUri, ex);
-            mCurrentState = STATE_ERROR;
-            mTargetState = STATE_ERROR;
-            mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
-            return;
-        } finally {
         }
     }
 
     // control flow, end
-    // ===============================================================
-    // use reflection to retrieve Metadata info, begin
-
-    public static RefMetadata getMetadata(MediaPlayer mp) {
-        if (mp == null) {
-            return null;
-        }
-
-        try {
-            Class<?> cls = Class.forName(MediaPlayer.class.getName());
-            Class<?> argTypes[] = new Class[2];
-            argTypes[0] = Boolean.TYPE;
-            argTypes[1] = Boolean.TYPE;
-
-            Method meth = cls.getMethod("getMetadata", argTypes);
-            Object args[] = new Object[2];
-            args[0] = false;
-            args[1] = false;
-            Object retobj = meth.invoke(mp, args);
-            RefMetadata metadata = new RefMetadata(retobj);
-            return metadata;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static class RefMetadata {
-        public boolean mCanPause;
-        public boolean mCanSeek;
-        public boolean mCanSeekbackward;
-        public boolean mCanseekforward;
-
-        private final Class<?> class_Metadata =
-                Class.forName("android.media.metadata");
-        private final Object instance;
-
-        public RefMetadata(Object obj) throws Exception {
-            if (!class_Metadata.isInstance(obj)) {
-                throw new IllegalArgumentException(
-                        "obj not instance of Metadata");
-            }
-            instance = obj;
-
-            mCanPause = getBooleanValue("PAUSE_AVAILABLE");
-            mCanSeek = getBooleanValue("SEEK_AVAILABLE");
-            mCanSeekbackward = getBooleanValue("SEEK_BACKWARD_AVAILABLE");
-            mCanseekforward = getBooleanValue("SEEK_FORWARD_AVAILABLE");
-        }
-
-        private int getIntField(String field) throws Exception {
-            int ret = 0;
-            Field f = class_Metadata.getField(field);
-            ret = f.getInt(instance);
-            return ret;
-        }
-
-        private boolean booleanFromMethod1Arg(String methodName, int arg)
-                throws Exception {
-            boolean ret = false;
-            Class<?>[] argTypes = new Class[1];
-            argTypes[0] = Integer.class;
-            Method method = class_Metadata.getDeclaredMethod(
-                    methodName, argTypes);
-            Object[] args = new Object[1];
-            args[0] = arg;
-            Object obj = method.invoke(instance, args);
-            ret = (Boolean) obj;
-            return ret;
-        }
-
-        private boolean getBooleanValue(String field) throws Exception {
-            int finalInt = getIntField(field);
-            return booleanFromMethod1Arg("has", finalInt) ||
-                    booleanFromMethod1Arg("getBoolean", finalInt);
-        }
-    }
-
-    // use reflection to retrieve Metadata info, end
     // ===============================================================
 
 }

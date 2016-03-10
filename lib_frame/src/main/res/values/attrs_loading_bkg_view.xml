@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LoadingBkgView">
+        <attr name="loading_msg_load" format="string" />
+        <attr name="loading_msg_fail" format="string" />
+        <attr name="loading_msg_empty" format="string" />
+        <attr name="loading_text_color" format="color" />
+        <attr name="loading_progress_color" format="color" />
+        <attr name="loading_icon" format="reference" />
+        <attr name="loading_icon_fail" format="reference" />
+        <attr name="loading_icon_empty" format="reference" />
+        <attr name="loading_retry_on_empty" format="boolean" />
+    </declare-styleable>
+</resources>

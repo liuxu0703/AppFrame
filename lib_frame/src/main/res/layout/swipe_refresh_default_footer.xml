@@ -23,8 +23,7 @@
         android:background="#f0f0f0"
         android:text="@string/swipe_refresh_default_footer_done"
         android:textColor="@android:color/darker_gray"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 
     <lx.af.view.ProgressWheel
         xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"

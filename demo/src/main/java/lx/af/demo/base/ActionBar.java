@@ -1,13 +1,14 @@
 package lx.af.demo.base;
 
-import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import lx.af.widget.iconify.widget.IconTextView;
 
 /**
  * author: lx
- * date: 16-1-5
+ * date: 16-2-10
  */
 public interface ActionBar {
 
@@ -16,57 +17,70 @@ public interface ActionBar {
      * will get an ActionBar with a back button and a title uses activity
      * label as text by default.
      *
-     * to create menu button, implements {@link Default.MenuCreator}
-     * to change default behavior of back button, implements {@link Default.BackClickCallback}
-     * to change elements on ActionBar, implements {@link OnCreateCallback}
-     * if every operate above is needed, implements {@link Default.MenuCreator}
+     * to config views, implements {@link Callback}
      */
     interface Default {
 
         interface Overlay extends Default, OverlayInner {}
 
-        interface MenuCreator extends Default {
-
-            /**
-             * called to get a view for menu.
-             * @return the menu view, or null if menu is not needed.
-             */
-            View createActionBarMenu();
-
-            interface Overlay extends MenuCreator, OverlayInner {}
-        }
-
-        interface BackClickCallback extends Default {
-
-            /**
-             * called when back button is clicked.
-             * Activity.finish() will be called if false is returned from this method
-             * @param back back button
-             * @return true if click event is handled, false otherwise
-             */
-            boolean onActionBarBackClicked(View back);
-
-            interface Overlay extends BackClickCallback, OverlayInner {}
-        }
-
-        interface OnCreateCallback extends Default {
+        interface Callback extends Default {
 
             /**
              * called when the ActionBar is first inflated.
              * @param actionBar the action bar
-             * @param back back button
+             * @param left left button
              * @param title TextView for title
-             * @param menu the menu, can be null
+             * @param right right button
              */
-            void onActionBarCreated(View actionBar, ImageView back, TextView title, @Nullable View menu);
+            void onActionBarCreated(View actionBar, IconTextView left, TextView title, IconTextView right);
 
-            interface Overlay extends OnCreateCallback, OverlayInner {}
-        }
-
-        interface Callbacks extends MenuCreator, OnCreateCallback, BackClickCallback {
+            interface Overlay extends Callback, OverlayInner {}
         }
 
     }
+
+
+    interface TextMenu {
+
+        interface Overlay extends TextMenu, OverlayInner {}
+
+        interface Callback extends TextMenu {
+
+            /**
+             * called when the ActionBar is first inflated.
+             * @param actionBar the action bar
+             * @param left left button
+             * @param title TextView for title
+             * @param right right button
+             */
+            void onActionBarCreated(View actionBar, IconTextView left, TextView title, TextView right);
+
+            interface Overlay extends Callback, OverlayInner {}
+        }
+
+    }
+
+
+    interface FrameMenu {
+
+        interface Overlay extends FrameMenu, OverlayInner {}
+
+        interface Callback extends FrameMenu {
+
+            /**
+             * called when the ActionBar is first inflated.
+             * @param actionBar the action bar
+             * @param left left button
+             * @param title TextView for title
+             * @param right a frame layout as menu container
+             */
+            void onActionBarCreated(View actionBar, IconTextView left, TextView title, FrameLayout right);
+
+            interface Overlay extends Callback, OverlayInner {}
+        }
+
+    }
+
 
     interface OverlayInner {}
 

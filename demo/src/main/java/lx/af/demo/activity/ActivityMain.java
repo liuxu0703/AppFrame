@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,9 +15,10 @@ import java.util.ArrayList;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
+import lx.af.widget.iconify.widget.IconTextView;
 
 public class ActivityMain extends BaseDemoActivity implements
-        ActionBar.Default.OnCreateCallback {
+        ActionBar.Default.Callback {
 
     public final static ArrayList<DemoButtonData> BUTTON_DATA_LIST =
             new ArrayList<>();
@@ -60,8 +59,8 @@ public class ActivityMain extends BaseDemoActivity implements
     }
 
     @Override
-    public void onActionBarCreated(View actionBar, ImageView back, TextView title, @Nullable View menu) {
-        back.setVisibility(View.INVISIBLE);
+    public void onActionBarCreated(View actionBar, IconTextView left, TextView title, IconTextView right) {
+        left.setVisibility(View.GONE);
     }
 
     private static class DemoButton extends Button implements View.OnClickListener {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_base_action_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cyan" >
+
+    <lx.af.widget.iconify.widget.IconTextView
+        android:id="@+id/action_bar_btn_left"
+        android:layout_height="45dp"
+        android:layout_width="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:background="@drawable/bkg_clickable"
+        android:textColor="@android:color/white"
+        android:textSize="26sp"
+        android:text="{md-arrow-back}" />
+
+    <TextView
+        android:id="@+id/action_bar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="18sp"
+        android:textColor="@android:color/white" />
+
+    <lx.af.widget.iconify.widget.IconTextView
+        android:id="@+id/action_bar_btn_right"
+        android:layout_height="45dp"
+        android:layout_width="45dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:background="@drawable/bkg_clickable"
+        android:textColor="@android:color/white"
+        android:textSize="26sp" />
+
+</RelativeLayout>

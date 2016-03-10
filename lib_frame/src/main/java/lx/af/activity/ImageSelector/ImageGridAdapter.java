@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.R;
-import lx.af.utils.ScreenUtils;
 import lx.af.activity.ImageSelector.ImageItemView.OnItemViewClickListener;
+import lx.af.utils.ScreenUtils;
 
 /**
  * import and modified by liuxu on 2015.04.22
@@ -152,15 +152,16 @@ class ImageGridAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-
-        int type = getItemViewType(i);
+    public View getView(int position, View view, ViewGroup viewGroup) {
+        int type = getItemViewType(position);
         if (type == TYPE_CAMERA) {
-            view = mInflater.inflate(R.layout.mis_item_camera, viewGroup, false);
-            view.setTag(null);
-            view.setOnClickListener(mCameraClickListener);
+            if (view == null) {
+                view = mInflater.inflate(R.layout.mis_item_camera, viewGroup, false);
+                view.setTag(null);
+                view.setOnClickListener(mCameraClickListener);
+            }
         } else if (type == TYPE_NORMAL) {
-            if (view == null || !(view instanceof ImageItemView)) {
+            if (view == null) {
                 view = new ImageItemView(mGridView, mItemClickListener);
                 /** Fixed View Size */
                 GridView.LayoutParams lp = (GridView.LayoutParams) view.getLayoutParams();
@@ -169,7 +170,7 @@ class ImageGridAdapter extends BaseAdapter {
                 }
             }
             ImageItemView itemView = (ImageItemView) view;
-            itemView.setData(getItem(i));
+            itemView.setData(getItem(position));
         }
 
         return view;

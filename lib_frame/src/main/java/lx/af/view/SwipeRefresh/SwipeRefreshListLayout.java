@@ -33,6 +33,7 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
     private LoadState mState = LoadState.IDLE;
     private int mLoadMorePreCount = 1;
+    private boolean mIsFooterViewInit = false;
 
     public SwipeRefreshListLayout(Context context) {
         this(context, null);
@@ -52,17 +53,28 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
     private void getListView() {
         int count = getChildCount();
-        if (count > 0) {
-            View childView = getChildAt(0);
+        if (count <= 0) {
+            return;
+        }
+
+        for (int i = 0; i < count; i ++) {
+            View childView = getChildAt(i);
             if (childView instanceof ListView) {
                 mListView = (ListView) childView;
                 mListView.setOnScrollListener(this);
+                if (!mIsFooterViewInit && mLoadMoreFooter != null) {
+                    mLoadMoreFooter.init(mListView);
+                    mLoadMoreFooter.refreshLoadState(mListView, mState);
+                    mIsFooterViewInit = true;
+                }
+                break;
             }
         }
     }
 
     private void loadMore() {
         if (mOnLoadMoreListener != null) {
+            //Log.d("liuxu", "swipe refresh, load more");
             setLoading(true);
             mOnLoadMoreListener.onLoadMore();
         }
@@ -70,16 +82,33 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
     // =============================================
 
-    public void setLoadState(LoadState state) {
-        mState = state;
-        if (mOnLoadMoreListener == null) {
-            return;
-        }
-        if (mLoadMoreFooter == null) {
-            mLoadMoreFooter = new DefaultLoadMoreFooter(getContext());
-            mLoadMoreFooter.init(mListView);
-        }
-        mLoadMoreFooter.refreshLoadState(mListView, state);
+    public LoadState getLoadState() {
+        return mState;
+    }
+
+    public void setLoadState(final LoadState state) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                mState = state;
+                if (mState != LoadState.LOADING) {
+                    setRefreshing(false);
+                }
+                if (mOnLoadMoreListener == null) {
+                    return;
+                }
+                if (mLoadMoreFooter == null) {
+                    mLoadMoreFooter = new DefaultLoadMoreFooter(getContext());
+                    if (mListView != null) {
+                        mLoadMoreFooter.init(mListView);
+                        mIsFooterViewInit = true;
+                    }
+                }
+                if (mIsFooterViewInit) {
+                    mLoadMoreFooter.refreshLoadState(mListView, state);
+                }
+            }
+        });
     }
 
     public void setLoading(boolean loading) {
@@ -99,7 +128,11 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
             throw new IllegalArgumentException("footer must be instance of view");
         }
         mLoadMoreFooter = footer;
-        mLoadMoreFooter.init(mListView);
+        if (mListView != null) {
+            mLoadMoreFooter.init(mListView);
+            mLoadMoreFooter.refreshLoadState(mListView, mState);
+            mIsFooterViewInit = true;
+        }
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener loadListener) {
@@ -119,6 +152,8 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        //Log.d("liuxu", "swipe refresh, onScroll, state=" + mState + ", " +
+        //        firstVisibleItem + "|" + visibleItemCount + "|" + totalItemCount);
         if (mOnLoadMoreListener != null && mState == LoadState.IDLE &&
                 firstVisibleItem + visibleItemCount + mLoadMorePreCount >= totalItemCount &&
                 totalItemCount != 0 &&

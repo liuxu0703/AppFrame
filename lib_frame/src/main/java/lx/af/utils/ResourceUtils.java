@@ -7,6 +7,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import java.io.InputStream;
 
@@ -16,12 +18,14 @@ import java.io.InputStream;
  */
 public final class ResourceUtils {
 
+    private static Application sApp;
     private static Resources sRes;
 
     private ResourceUtils() {
     }
 
     public static void init(Application app) {
+        sApp = app;
         sRes = app.getResources();
     }
 
@@ -75,6 +79,18 @@ public final class ResourceUtils {
 
     public static InputStream openRawResource(int id, TypedValue value) throws Resources.NotFoundException {
         return sRes.openRawResource(id, value);
+    }
+
+    // ==========================================
+
+    public static Animation loadAnimation(int animId) {
+        return AnimationUtils.loadAnimation(sApp, animId);
+    }
+
+    public static Animation loadAnimation(int animId, long duration) {
+        Animation anim = AnimationUtils.loadAnimation(sApp, animId);
+        anim.setDuration(duration);
+        return anim;
     }
 
 }

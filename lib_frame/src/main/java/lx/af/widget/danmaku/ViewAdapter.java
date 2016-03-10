@@ -1,4 +1,4 @@
-package lx.af.widget.Danmaku;
+package lx.af.widget.danmaku;
 
 import android.view.View;
 import android.view.ViewGroup;

@@ -20,4 +20,23 @@
             android:dividerHeight="1px" />
     </lx.af.view.SwipeRefresh.SwipeRefreshListLayout>
 
+    <lx.af.widget.LoadingBkgView
+        android:id="@+id/activity_swipe_refresh_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/activity_bkg_1" />
+
+    <lx.af.widget.iconify.widget.IconTextView
+        android:id="@+id/activity_swipe_refresh_btn_add"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="@drawable/swipe_activity_add_bkg"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:text="{md-add}" />
 </RelativeLayout>

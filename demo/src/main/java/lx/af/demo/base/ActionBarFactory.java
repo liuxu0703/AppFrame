@@ -2,12 +2,11 @@ package lx.af.demo.base;
 
 import android.app.Activity;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import lx.af.base.ActionBarAdapter;
 import lx.af.demo.R;
+import lx.af.widget.iconify.widget.IconTextView;
 
 /**
  * author: lx
@@ -37,41 +36,24 @@ final class ActionBarFactory {
 
         @Override
         public View getActionBarView(Activity activity) {
-            View view = View.inflate(activity, R.layout.action_bar, null);
-            ImageView back = (ImageView) view.findViewById(R.id.action_bar_back);
+            View view = View.inflate(activity, R.layout.action_bar_default, null);
+            IconTextView left = (IconTextView) view.findViewById(R.id.action_bar_btn_left);
             TextView title = (TextView) view.findViewById(R.id.action_bar_title);
-            View menu = null;
+            IconTextView right = (IconTextView) view.findViewById(R.id.action_bar_btn_right);
 
             // use activity label as default action bar title
             title.setText(mActivity.getTitle());
 
-            back.setOnClickListener(new View.OnClickListener() {
+            left.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mActivity instanceof ActionBar.Default.BackClickCallback) {
-                        ActionBar.Default.BackClickCallback c =
-                                (ActionBar.Default.BackClickCallback) mActivity;
-                        if (c.onActionBarBackClicked(v)) {
-                            return;
-                        }
-                    }
                     mActivity.finish();
                 }
             });
 
-            if (mActivity instanceof ActionBar.Default.MenuCreator) {
-                ActionBar.Default.MenuCreator c = (ActionBar.Default.MenuCreator) mActivity;
-                menu = c.createActionBarMenu();
-                if (menu != null) {
-                    FrameLayout menuFrame = (FrameLayout)
-                            view.findViewById(R.id.action_bar_menu_frame);
-                    menuFrame.addView(menu);
-                }
-            }
-
-            if (mActivity instanceof ActionBar.Default.OnCreateCallback) {
-                ActionBar.Default.OnCreateCallback c = (ActionBar.Default.OnCreateCallback) mActivity;
-                c.onActionBarCreated(view, back, title, menu);
+            if (mActivity instanceof ActionBar.Default.Callback) {
+                ActionBar.Default.Callback c = (ActionBar.Default.Callback) mActivity;
+                c.onActionBarCreated(view, left, title, right);
             }
 
             return view;

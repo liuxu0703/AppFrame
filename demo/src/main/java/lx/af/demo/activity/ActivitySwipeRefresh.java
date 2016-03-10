@@ -3,12 +3,10 @@ package lx.af.demo.activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,6 +29,8 @@ import lx.af.utils.ViewUtils.ActionBarScrollFadeHelper;
 import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
 import lx.af.view.SwipeRefresh.SwipeRefreshLayout;
 import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
+import lx.af.widget.LoadingBkgView;
+import lx.af.widget.iconify.widget.IconTextView;
 
 /**
  * author: lx
@@ -39,16 +39,22 @@ import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
 public class ActivitySwipeRefresh extends BaseDemoActivity implements
         SwipeRefreshLayout.OnRefreshListener,
         SwipeRefreshListLayout.OnLoadMoreListener,
-        ActionBar.Default.OnCreateCallback.Overlay {
+        ActionBar.Default.Callback.Overlay {
 
     @ViewInject(id = R.id.activity_swipe_refresh_layout)
     private SwipeRefreshListLayout mSwipeRefreshLayout;
     @ViewInject(id = R.id.activity_swipe_refresh_listview)
     private ListView mListView;
-    private View mHeaderIcon;
+    @ViewInject(id = R.id.activity_swipe_refresh_loading_view)
+    private LoadingBkgView mLoadingView;
+    @ViewInject(id = R.id.activity_swipe_refresh_btn_add)
+    private View mBtnAdd;
+
     private ViewPager mHeaderViewPager;
     private PageIndicator mHeaderPagerIndicator;
-    private TextView mTitle;
+    private TextView mActionBarTitle;
+    private View mActionBarBack;
+    private View mActionBarMenu;
 
     private ListAdapter mListAdapter;
 
@@ -64,13 +70,9 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
 
         View header = View.inflate(this, R.layout.swipe_refresh_header, null);
         mHeaderViewPager = (ViewPager) header.findViewById(R.id.swipe_refresh_header_pager);
-        mHeaderIcon = header.findViewById(R.id.swipe_refresh_header_icon);
         mHeaderPagerIndicator = (PageIndicator)
                 header.findViewById(R.id.swipe_refresh_header_pager_indicator);
         mListView.addHeaderView(header);
-
-        mListAdapter = new ListAdapter(this, generateList(0, 15));
-        mListView.setAdapter(mListAdapter);
 
         mHeaderViewPager.setAdapter(new ImagePagerAdapter(generateImage()));
         mHeaderPagerIndicator.setViewPager(mHeaderViewPager);
@@ -80,9 +82,13 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
                 .with(getActionBarView())
                 .startOffset(mHeaderViewPager)
                 .endOffset(header)
-                .addFadeWithView(mTitle)
-                .addFadeReverseView(mHeaderIcon)
+                .addFadeWithView(mActionBarTitle)
+                .addFadeWithView(mActionBarMenu)
+                .addFadeReverseView(mBtnAdd)
+                .addFadeReverseDrawable(mActionBarBack.getBackground())
                 .start(mSwipeRefreshLayout);
+
+        initData();
     }
 
     @Override
@@ -91,8 +97,13 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
     }
 
     @Override
-    public void onActionBarCreated(View actionBar, ImageView back, TextView title, @Nullable View menu) {
-        mTitle = title;
+    public void onActionBarCreated(View actionBar, IconTextView left, TextView title, IconTextView right) {
+        mActionBarTitle = title;
+        mActionBarBack = left;
+        mActionBarBack.setBackgroundResource(R.drawable.swipe_activity_back_bkg);
+        right.setText("{md-add}");
+        right.setClickable(true);
+        mActionBarMenu = right;
     }
 
     @Override
@@ -129,6 +140,18 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
         }, 2000);
     }
 
+    private void initData() {
+        mLoadingView.loading();
+        GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadingView.done();
+                mListAdapter = new ListAdapter(ActivitySwipeRefresh.this, generateList(0, 15));
+                mListView.setAdapter(mListAdapter);
+            }
+        }, 2000);
+    }
+
     private List<String> generateList(int start, int count) {
         Random random = new Random();
         int r = random.nextInt(100);
@@ -148,7 +171,6 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
             return Arrays.asList(TestRes.TEST_IMG_FRUIT);
         }
     }
-
 
     private class ListAdapter extends AbsListAdapter<String> {
 

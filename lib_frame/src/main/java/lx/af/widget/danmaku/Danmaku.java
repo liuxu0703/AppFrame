@@ -1,4 +1,4 @@
-package lx.af.widget.Danmaku;
+package lx.af.widget.danmaku;
 
 import android.content.Context;
 import android.os.Handler;
@@ -22,6 +22,7 @@ public class Danmaku extends RelativeLayout implements Handler.Callback {
     private ViewPool mViewPool;
     private LinkedList<Object> mDataList = new LinkedList<>();
     private Handler mHandler = new Handler(this);
+    private Callback mCallback;
     private boolean mIsRunning = false;
 
     public Danmaku(Context context) {
@@ -42,9 +43,25 @@ public class Danmaku extends RelativeLayout implements Handler.Callback {
         mViewPool.setViewAdapter(adapter);
     }
 
+    public void setCallback(Callback callback) {
+        mCallback = callback;
+    }
+
     public void addData(List<Object> data) {
         synchronized (mDataLock) {
             mDataList.addAll(0, data);
+        }
+        mHandler.removeMessages(MSG_START_NEXT);
+        mHandler.sendEmptyMessageDelayed(MSG_START_NEXT, INTERVAL);
+    }
+
+    public void addData(Object ... data) {
+        synchronized (mDataLock) {
+            if (data != null && data.length != 0) {
+                for (Object d : data) {
+                    mDataList.add(0, d);
+                }
+            }
         }
         mHandler.removeMessages(MSG_START_NEXT);
         mHandler.sendEmptyMessageDelayed(MSG_START_NEXT, INTERVAL);
@@ -99,6 +116,9 @@ public class Danmaku extends RelativeLayout implements Handler.Callback {
                     } else {
                         // no more data, stop loop
                         mHandler.removeMessages(MSG_START_NEXT);
+                        if (mCallback != null) {
+                            mCallback.onDataEmpty();
+                        }
                     }
                 }
                 if (data != null) {
@@ -110,4 +130,12 @@ public class Danmaku extends RelativeLayout implements Handler.Callback {
         }
         return true;
     }
+
+
+    public interface Callback {
+
+        void onDataEmpty();
+
+    }
+
 }

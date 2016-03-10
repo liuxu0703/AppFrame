@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="default_loading_bkg_view_load_icon">@drawable/ic_launcher</drawable>
+    <drawable name="default_loading_bkg_view_fail_icon">@drawable/ic_launcher</drawable>
+    <drawable name="default_loading_bkg_view_empty_icon">@drawable/ic_launcher</drawable>
+    <color name="default_loading_bkg_view_text_color">#cccccc</color>
+    <color name="default_loading_bkg_view_progress_color">#cccccc</color>
+
+</resources>

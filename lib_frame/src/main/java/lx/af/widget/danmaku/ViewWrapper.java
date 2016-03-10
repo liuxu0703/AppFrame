@@ -1,6 +1,7 @@
-package lx.af.widget.Danmaku;
+package lx.af.widget.danmaku;
 
 import android.graphics.Point;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -18,8 +19,8 @@ import lx.af.manager.GlobalThreadManager;
  */
 class ViewWrapper implements Animation.AnimationListener {
 
-    private static final int TIME_MIN = 4; // in seconds
-    private static final int TIME_MAX = 6; // in seconds
+    private static final int TIME_MIN = 3; // in seconds
+    private static final int TIME_MAX = 5; // in seconds
 
     private static final Interpolator DEFAULT_INTERPOLATOR = new LinearInterpolator();
 
@@ -94,6 +95,7 @@ class ViewWrapper implements Animation.AnimationListener {
             anim.setDuration(second * 1000);
             view.startAnimation(anim);
             startTime = System.currentTimeMillis();
+            Log.d("liuxu", "111 danmaku view start anim, " + start);
         }
     }
 

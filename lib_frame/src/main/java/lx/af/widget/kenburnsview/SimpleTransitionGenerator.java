@@ -59,7 +59,7 @@ public class SimpleTransitionGenerator implements TransitionGenerator {
 
             if (dw < dh) {
                 // vertical
-                float delta = dw / 10;
+                float delta = dw / 20;
                 float w = dw - 2 * delta;
                 float h = w / ratio;
                 mHeadRect.set(delta, 0, dw - delta, h);
@@ -67,7 +67,7 @@ public class SimpleTransitionGenerator implements TransitionGenerator {
                 mTailRest.offset(0f, dh - h);
             } else {
                 // horizontal
-                float delta = dh / 5;
+                float delta = dh / 10;
                 float h = dh - 2 * delta;
                 float w = h * ratio;
                 mHeadRect.set(0, delta, w, dh - delta);

@@ -14,11 +14,9 @@ import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.manager.GlobalThreadManager;
-import lx.af.utils.ScreenUtils;
 import lx.af.utils.ViewInject.ViewInject;
-import lx.af.utils.log.Log;
-import lx.af.widget.Danmaku.Danmaku;
-import lx.af.widget.Danmaku.ViewAdapter;
+import lx.af.widget.danmaku.Danmaku;
+import lx.af.widget.danmaku.ViewAdapter;
 
 /**
  * author: lx

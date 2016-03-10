@@ -2,6 +2,7 @@ package lx.af.activity.ImageSelector;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -17,6 +18,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import lx.af.R;
+import lx.af.utils.ScreenUtils;
 
 /**
  * Created by liuxu on 15-5-13.
@@ -25,7 +27,8 @@ import lx.af.R;
 @SuppressLint("ViewConstructor")
 class ImageItemView extends FrameLayout implements View.OnClickListener {
 
-    private static final ImageSize IMAGE_SIZE = new ImageSize(64, 64);
+    private static final ImageSize IMAGE_SIZE =
+            new ImageSize(ScreenUtils.dip2px(64), ScreenUtils.dip2px(64));
 
     private ImageGridView mGridView;
     private ImageView mImage;
@@ -91,6 +94,7 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
     }
 
     public void toggleCheck() {
+        Log.d("liuxu", "111 toggleCheck(), " + mData);
         if (mData == null) {
             return;
         }
@@ -99,6 +103,7 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
     }
 
     private void updateChecked() {
+        Log.d("liuxu", "111 updateChecked(), " + mData);
         mCheck.setImageResource(mData.selected ?
                 R.drawable.mis_ic_selected : R.drawable.mis_ic_unselected);
         mWrapper.setVisibility(mData.selected ? View.VISIBLE : View.GONE);
@@ -106,6 +111,7 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Log.d("liuxu", "111 onClick(), " + mData + ", " + v);
         if (mData.invalid) {
             Toast.makeText(getContext(),
                     R.string.mis_toast_invalid_image, Toast.LENGTH_SHORT).show();

@@ -20,17 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:padding="6dp" />
-
-        <ImageView
-            android:id="@+id/swipe_refresh_header_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:padding="10dp"
-            android:background="#80f1f1f1"
-            android:src="@drawable/ic_launcher"
-            android:contentDescription="@null" />
     </RelativeLayout>
 
     <TextView
