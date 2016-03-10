@@ -114,7 +114,7 @@ public final class BitmapUtils {
 
         int initSize = 1;
         if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
+            if (width < height) {
                 initSize = Math.round((float) height / (float) reqHeight);
             } else {
                 initSize = Math.round((float) width / (float) reqWidth);

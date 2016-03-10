@@ -209,7 +209,7 @@
         android:layout_marginTop="15dp"
         android:textSize="15sp"
         android:textColor="#6e6e6e"
-        android:text="result" />
+        android:text="result (odd browse, even edit)" />
 
     <View
         android:layout_width="match_parent"

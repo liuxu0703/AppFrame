@@ -10,16 +10,16 @@
 
         <ImageView
             android:id="@+id/loading_bkg_view_icon"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_centerInParent="true"
             android:contentDescription="@null" />
 
         <lx.af.view.ProgressWheel
             xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
             android:id="@+id/loading_bkg_view_progress"
-            android:layout_width="92dp"
-            android:layout_height="92dp"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
             android:layout_centerInParent="true"
             android:visibility="invisible"
             ProgressWheel:barLength="45dp"
@@ -38,11 +38,7 @@
         android:layout_marginTop="10dp"
         android:minHeight="36dp"
         android:gravity="center"
-        android:shadowColor="#888888"
-        android:shadowRadius="1"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:textColor="#cccccc"
+        android:textColor="#808080"
         android:textSize="16sp" />
 
 </merge>

@@ -13,5 +13,6 @@ public final class RequestCode {
     public static final int IMAGE_FROM_IMAGE_SELECTOR = 8530;
     public static final int IMAGE_CROP = 8531;
     public static final int BAR_CODE_SCAN = 8532;
+    public static final int IMAGE_BROWSER_EDITOR = 8533;
 
 }

@@ -81,24 +81,38 @@ public class ImageBrowserActivity extends AbsBaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_browser_activity);
-
         Bundle bundle = getIntent().getExtras();
+        List<String> list = bundle.getStringArrayList(EXTRA_IMAGE_URI_LIST);
         mCurrentImgUri = bundle.getString(EXTRA_CURRENT_IMAGE_URI);
-        mImgUris = bundle.getStringArrayList(EXTRA_IMAGE_URI_LIST);
         mIsTapExit = bundle.getBoolean(EXTRA_TAP_EXIT, false);
         mIsAutoHideFunctionBar = bundle.getBoolean(EXTRA_AUTO_HIDE_FUNCTION_BAR, !mIsTapExit);
 
-        if (mImgUris == null || mImgUris.size() == 0) {
+        if (!isBrowserEnabled()) {
+            // browse is not allowed, add only one image to the list
+            mImgUris = new ArrayList<>(1);
             if (mCurrentImgUri != null) {
+                mImgUris.add(mCurrentImgUri);
+            } else if (list != null && list.size() != 0) {
+                mImgUris.add(list.get(0));
+            }
+        } else {
+            if (list != null && list.size() != 0) {
+                mImgUris = list;
+            } else if (mCurrentImgUri != null) {
                 mImgUris = new ArrayList<>(1);
                 mImgUris.add(mCurrentImgUri);
-            } else {
-                //throw new IllegalStateException("image uri list null !");
-                Toast.makeText(this, R.string.image_Browser_toast_list_null, Toast.LENGTH_SHORT).show();
-                finish();
-                return;
             }
+        }
+
+        if (mImgUris == null || mImgUris.size() == 0) {
+            //throw new IllegalStateException("image uri list null !");
+            Toast.makeText(this, R.string.image_Browser_toast_list_null, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        if (mCurrentImgUri == null) {
+            mCurrentImgUri = mImgUris.get(0);
         }
 
         mImgInfoMap = new HashMap<>(mImgUris.size());
@@ -111,6 +125,7 @@ public class ImageBrowserActivity extends AbsBaseActivity {
         mAnimActionBarHide = AnimationUtils.loadAnimation(this, R.anim.slide_top_in);
         mAnimBottomBarHide = AnimationUtils.loadAnimation(this, R.anim.slide_bottom_out);
 
+        setContentView(R.layout.image_browser_activity);
         mPager = obtainView(R.id.activity_image_browser_pager);
         mTvPageIdx = obtainView(R.id.activity_image_browser_page_idx);
         mActionBar = obtainView(R.id.activity_image_browser_action_bar);
@@ -126,15 +141,9 @@ public class ImageBrowserActivity extends AbsBaseActivity {
             }
         });
 
-        int currentIdx = 0;
-        if (mCurrentImgUri != null) {
-            currentIdx = mImgUris.indexOf(mCurrentImgUri);
-        }
+        int currentIdx = mImgUris.indexOf(mCurrentImgUri);
         currentIdx = currentIdx == -1 ? 0 : currentIdx;
         mTvPageIdx.setText((currentIdx + 1) + "/" + mImgUris.size());
-        if (mImgUris.size() == 1) {
-            mTvPageIdx.setVisibility(View.GONE);
-        }
 
         mAdapter = new ImagePagerAdapter(mImgUris);
         mAdapter.setLoadImageCallback(mLoadImageCallback);
@@ -197,6 +206,13 @@ public class ImageBrowserActivity extends AbsBaseActivity {
             mBottomBar.addView(bar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         }
 
+        if (mImgUris.size() == 1) {
+            if (menu != null) {
+                mTvPageIdx.setVisibility(View.GONE);
+            } else {
+                mActionBar.setAlpha(0);
+            }
+        }
         if (!isAutoHideFunctionBar()) {
             showFunctionBar();
         }
@@ -248,6 +264,13 @@ public class ImageBrowserActivity extends AbsBaseActivity {
     }
 
     /**
+     * @return image uri list in the browser
+     */
+    protected List<String> getImageUriList() {
+        return mImgUris;
+    }
+
+    /**
      * @return validation of current displayed image
      */
     protected ImageValidation getCurrentImageValidation() {
@@ -290,6 +313,14 @@ public class ImageBrowserActivity extends AbsBaseActivity {
      */
     protected boolean isAutoHideFunctionBar() {
         return mIsAutoHideFunctionBar;
+    }
+
+    /**
+     * @return true and user can browser through the image list;
+     *         false and only the first image will be displayed, browse is disabled.
+     */
+    protected boolean isBrowserEnabled() {
+        return true;
     }
 
     /**

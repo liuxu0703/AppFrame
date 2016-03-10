@@ -30,17 +30,22 @@
         </activity>
         <activity
             android:name=".activity.ImageBrowser.ImageBrowserActivity"
-            android:label="Image Browser"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.ImageEditor.ImageEditorActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.ImageEditor.ImageBrowserEditActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.mining.app.zxing.decoding.MipcaActivity"
-            android:label="Bar Code Scanner"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.CodeScanner.CodeScannerActivity"
-            android:label="Bar Code Scanner"
             android:screenOrientation="portrait" >
         </activity>
     </application>

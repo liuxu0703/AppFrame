@@ -13,6 +13,17 @@
     <string name="image_Browser_toast_load_image_fail">加载图片失败</string>
     <string name="image_Browser_toast_list_null">空图片列表!</string>
 
+    <string name="image_editor_title">编辑图片</string>
+    <string name="image_editor_btn_width">粗细</string>
+    <string name="image_editor_btn_color">颜色</string>
+    <string name="image_editor_btn_rect">矩形</string>
+    <string name="image_editor_btn_pen">画笔</string>
+    <string name="image_editor_btn_cancel">清除</string>
+    <string name="image_editor_btn_done">完成</string>
+    <string name="image_editor_browser_menu">编辑</string>
+    <string name="image_editor_toast_save_fail">保存图片失败</string>
+    <string name="image_editor_toast_invalid_image">无效的图片</string>
+
     <string name="mis_title">选择图片</string>
     <string name="mis_folder_all">所有照片</string>
     <string name="mis_preview">预览</string>

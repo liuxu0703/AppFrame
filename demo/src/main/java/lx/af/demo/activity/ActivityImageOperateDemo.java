@@ -18,6 +18,7 @@ import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseDemoActivity;
 import lx.af.demo.utils.Paths;
 import lx.af.utils.ActivityLauncher.ActivityResultCallback;
+import lx.af.utils.ActivityLauncher.ImageBrowserEditLauncher;
 import lx.af.utils.ActivityLauncher.ImageBrowserLauncher;
 import lx.af.utils.ActivityLauncher.ImageCropperLauncher;
 import lx.af.utils.ActivityLauncher.ImageSelectorLauncher;
@@ -64,12 +65,28 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
         mImageGridAdapter.setOnItemClickListener(new NineImageUILAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, NineImageUILAdapter adapter, int position) {
-                ImageBrowserLauncher.of(ActivityImageOperateDemo.this)
-                        .uris(adapter.getImageUris())
-                        .currentUri(adapter.getData(position))
-                        .currentView(view)
-                        .tapExit(true)
-                        .start();
+                final String current = adapter.getData(position);
+                if (position % 2 == 0) {
+                    ImageBrowserLauncher.of(ActivityImageOperateDemo.this)
+                            .uris(adapter.getImageUris())
+                            .currentUri(current)
+                            .currentView(view)
+                            .tapExit(true)
+                            .start();
+                } else {
+                    ImageBrowserEditLauncher.of(ActivityImageOperateDemo.this)
+                            .uri(current)
+                            .start(new ActivityResultCallback<String>() {
+                                @Override
+                                public void onActivityResult(int resultCode, @NonNull String result) {
+                                    List<String> list = mImageGridAdapter.getImageUris();
+                                    int idx = list.indexOf(current);
+                                    list.add(idx, "file://" + result);
+                                    list.remove(current);
+                                    mImageGridAdapter.setImageUris(list);
+                                }
+                            });
+                }
             }
         });
     }
