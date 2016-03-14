@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lx.af.view.ObservableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_scroll_view_fade_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <lx.af.view.RatioWidthRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ratioByWidth="0.6" >
+
+            <ImageView
+                android:id="@+id/activity_scroll_view_fade_head_bkg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bkg_test1"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/activity_scroll_view_fade_head_btn"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_launcher"
+                android:contentDescription="@null"/>
+        </lx.af.view.RatioWidthRelativeLayout>
+
+        <TextView
+            android:id="@+id/activity_scroll_view_fade_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey"
+            android:padding="15dp"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+</lx.af.view.ObservableScrollView>

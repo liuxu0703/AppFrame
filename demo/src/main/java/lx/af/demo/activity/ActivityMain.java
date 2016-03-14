@@ -34,6 +34,8 @@ public class ActivityMain extends BaseDemoActivity implements
                 ActivityAutoSlidePager.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Swipe Refresh List",
                 ActivitySwipeRefresh.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("ScrollView Fade",
+                ActivityScrollViewFade.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Bar Code Scanner",
                 ActivityScanner.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Home Key Watcher",

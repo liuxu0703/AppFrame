@@ -1,6 +1,7 @@
 package lx.af.utils.ViewUtils;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 
 import java.util.LinkedList;
 
+import lx.af.view.ObservableScrollView;
 import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
 
 /**
@@ -133,7 +135,7 @@ public class ActionBarScrollFadeHelper {
      */
     public void start(ListView list) {
         init(list, true);
-        list.setOnScrollListener(mOnScrollListener);
+        list.setOnScrollListener(mListViewScrollListener);
     }
 
     /**
@@ -143,7 +145,12 @@ public class ActionBarScrollFadeHelper {
      */
     public void start(SwipeRefreshListLayout list) {
         init(list, true);
-        list.setOnScrollListener(mOnScrollListener);
+        list.setOnScrollListener(mListViewScrollListener);
+    }
+
+    public void start(ObservableScrollView scrollView) {
+        init(scrollView, false);
+        scrollView.setOnScrollListener(mScrollViewScrollListener);
     }
 
     private ActionBarScrollFadeHelper(View actionBar) {
@@ -164,13 +171,20 @@ public class ActionBarScrollFadeHelper {
     }
 
     private void initOffsetValue(final View scrollableView) {
+        if (mEndOffsetValue != 0 && (mStartOffsetValue != 0 || mStartOffsetView == null)) {
+            return;
+        }
         ViewTreeObserver vto = scrollableView.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mEndOffsetValue = getViewBottom(mEndOffsetView);
-                mStartOffsetValue = getViewBottom(mStartOffsetView);
-                if (mEndOffsetValue != 0) {
+                if (mEndOffsetValue == 0) {
+                    mEndOffsetValue = getViewBottom(mEndOffsetView);
+                }
+                if (mStartOffsetValue == 0 && mStartOffsetView != null) {
+                    mStartOffsetValue = getViewBottom(mStartOffsetView);
+                }
+                if (mEndOffsetValue != 0 && (mStartOffsetValue != 0 || mStartOffsetView == null)) {
                     if (android.os.Build.VERSION.SDK_INT >= 16) {
                         scrollableView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     } else {
@@ -186,6 +200,7 @@ public class ActionBarScrollFadeHelper {
         int acHeight = mActionBar.getHeight();
         int start = mStartOffsetValue;
         int end = mEndOffsetValue;
+        Log.d("liuxu", "111 onNewScroll, start=" + start + ", end=" + end + ", scroll=" + scroll);
         if (scroll <= start - acHeight || scroll <= 0) {
             // set to init state
             alpha = mAlphaIncrease ? 0 : 255;
@@ -252,7 +267,7 @@ public class ActionBarScrollFadeHelper {
         return ret;
     }
 
-    private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener() {
+    private AbsListView.OnScrollListener mListViewScrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             View first = view.getChildAt(0);
@@ -269,6 +284,13 @@ public class ActionBarScrollFadeHelper {
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
+    };
+
+    private ObservableScrollView.OnScrollListener mScrollViewScrollListener = new ObservableScrollView.OnScrollListener() {
+        @Override
+        public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
+            onNewScroll(y);
         }
     };
 
