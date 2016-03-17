@@ -1,7 +1,6 @@
 package lx.af.utils.ViewUtils;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -200,7 +199,6 @@ public class ActionBarScrollFadeHelper {
         int acHeight = mActionBar.getHeight();
         int start = mStartOffsetValue;
         int end = mEndOffsetValue;
-        Log.d("liuxu", "111 onNewScroll, start=" + start + ", end=" + end + ", scroll=" + scroll);
         if (scroll <= start - acHeight || scroll <= 0) {
             // set to init state
             alpha = mAlphaIncrease ? 0 : 255;
