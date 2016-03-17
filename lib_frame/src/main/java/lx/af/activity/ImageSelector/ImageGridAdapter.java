@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.R;
-import lx.af.activity.ImageSelector.ImageItemView.OnItemViewClickListener;
 import lx.af.utils.ScreenUtils;
+import lx.af.activity.ImageSelector.ImageItemView.OnItemViewClickListener;
 
 /**
  * import and modified by liuxu on 2015.04.22

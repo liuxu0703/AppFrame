@@ -29,6 +29,10 @@ public final class ResourceUtils {
         sRes = app.getResources();
     }
 
+    public static Resources getRes() {
+        return sRes;
+    }
+
     public static String getString(int resId) {
         return sRes.getString(resId);
     }

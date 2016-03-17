@@ -65,6 +65,11 @@
             android:label="ScrollView Fade" >
         </activity>
         <activity
+            android:name=".activity.ActivityFlowLayout"
+            android:screenOrientation="portrait"
+            android:label="ScrollView Fade" >
+        </activity>
+        <activity
             android:name=".activity.ActivityViewPager"
             android:screenOrientation="portrait"
             android:label="Auto Slide Pager" >

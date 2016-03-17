@@ -44,6 +44,8 @@ public class ActivityMain extends BaseDemoActivity implements
                 ActivityPlayViewDemo.class));
         BUTTON_DATA_LIST.add(new DemoButtonData("Danmaku",
                 ActivityDanmaku.class));
+        BUTTON_DATA_LIST.add(new DemoButtonData("Flow Tag Item",
+                ActivityFlowLayout.class));
     }
 
 
