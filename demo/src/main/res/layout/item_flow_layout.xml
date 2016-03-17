@@ -43,7 +43,8 @@
                 android:layout_marginBottom="3dp"
                 android:animateLayoutChanges="true"
                 android:minHeight="30dp"
-                app:max_select="-1" />
+                app:max_select="-1"
+                app:max_line="1"/>
 
             <ImageView
                 android:id="@+id/item_flow_btn_expand"

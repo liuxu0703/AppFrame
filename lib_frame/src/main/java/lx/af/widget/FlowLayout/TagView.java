@@ -5,6 +5,10 @@ import android.view.View;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
 
+/**
+ * Created by zhy on 15/9/10.
+ * import from https://github.com/hongyangAndroid/FlowLayout
+ */
 public class TagView extends FrameLayout implements Checkable
 {
     private boolean isChecked;

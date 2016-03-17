@@ -17,16 +17,20 @@ import java.util.Set;
 
 import lx.af.R;
 
+/**
+ * Created by zhy on 15/9/10.
+ * import from https://github.com/hongyangAndroid/FlowLayout
+ */
 public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChangedListener
 {
-    private static final String TAG = "TagFlowLayout";
-
     private TagAdapter mTagAdapter;
-    private MotionEvent mMotionEvent;
     private boolean mAutoSelectEffect = true;
-    private int mSelectedMax = -1;
+    private int mSelectedMax = -1; // -1 为不限制数量
+    private static final String TAG = "TagFlowLayout";
+    private MotionEvent mMotionEvent;
 
-    private Set<Integer> mSelectedView = new HashSet<Integer>();
+    private Set<Integer> mSelectedView = new HashSet<>();
+
 
     public TagFlowLayout(Context context, AttributeSet attrs, int defStyle)
     {
@@ -104,6 +108,7 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
         //  return;
         mTagAdapter = adapter;
         mTagAdapter.setOnDataChangedListener(this);
+        mSelectedView.clear();
         changeAdapter();
 
     }
@@ -112,26 +117,36 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
     {
         removeAllViews();
         TagAdapter adapter = mTagAdapter;
-        TagView tagViewContainer = null;
+        TagView tagViewContainer;
         HashSet preCheckedList = mTagAdapter.getPreCheckedList();
         for (int i = 0; i < adapter.getCount(); i++)
         {
             View tagView = adapter.getView(this, i, adapter.getItem(i));
+
             tagViewContainer = new TagView(getContext());
-
-            MarginLayoutParams params = (MarginLayoutParams) tagView.getLayoutParams();
-            if (params == null) {
-                params = new MarginLayoutParams(
-                        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            }
-
             tagView.setDuplicateParentStateEnabled(true);
-            tagViewContainer.setLayoutParams(params);
+            if (tagView.getLayoutParams() != null)
+            {
+                tagViewContainer.setLayoutParams(tagView.getLayoutParams());
+            } else
+            {
+                int defaultMargin = dip2px(getContext(), 3);
+                MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                lp.setMargins(defaultMargin, defaultMargin, defaultMargin, defaultMargin);
+                tagViewContainer.setLayoutParams(lp);
+            }
             tagViewContainer.addView(tagView);
             addView(tagViewContainer);
 
+
             if (preCheckedList.contains(i))
             {
+                tagViewContainer.setChecked(true);
+            }
+
+            if (mTagAdapter.setSelected(i, adapter.getItem(i)))
+            {
+                mSelectedView.add(i);
                 tagViewContainer.setChecked(true);
             }
         }
@@ -169,7 +184,7 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
                 return mOnTagClickListener.onTagClick(child.getTagView(), pos, this);
             }
         }
-        return super.performClick();
+        return true;
     }
 
 
@@ -185,7 +200,7 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
 
     public Set<Integer> getSelectedList()
     {
-        return new HashSet<Integer>(mSelectedView);
+        return new HashSet<>(mSelectedView);
     }
 
     private void doSelect(TagView child, int position)
@@ -194,6 +209,7 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
         {
             if (!child.isChecked())
             {
+                //处理max_select=1的情况
                 if (mSelectedMax == 1 && mSelectedView.size() == 1)
                 {
                     Iterator<Integer> iterator = mSelectedView.iterator();
@@ -217,7 +233,7 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
             }
             if (mOnSelectListener != null)
             {
-                mOnSelectListener.onSelected(new HashSet<Integer>(mSelectedView));
+                mOnSelectListener.onSelected(new HashSet<>(mSelectedView));
             }
         }
     }
@@ -261,7 +277,8 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
                     mSelectedView.add(index);
 
                     TagView tagView = (TagView) getChildAt(index);
-                    tagView.setChecked(true);
+                    if (tagView != null)
+                        tagView.setChecked(true);
                 }
 
             }
@@ -302,8 +319,13 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
     @Override
     public void onChanged()
     {
+        mSelectedView.clear();
         changeAdapter();
     }
 
-
+    public static int dip2px(Context context, float dpValue)
+    {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
 }

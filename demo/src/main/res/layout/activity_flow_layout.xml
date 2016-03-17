@@ -38,12 +38,5 @@
             android:layout_height="wrap_content" />
 
         <View style="@style/divider_horizontal" />
-
-        <lx.af.demo.view.FLItemView
-            android:id="@+id/activity_flow_layout_item2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View style="@style/divider_horizontal" />
     </LinearLayout>
 </ScrollView>

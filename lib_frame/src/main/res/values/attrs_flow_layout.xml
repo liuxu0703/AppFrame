@@ -3,12 +3,11 @@
     <declare-styleable name="TagFlowLayout">
         <attr name="auto_select_effect" format="boolean"/>
         <attr name="max_select" format="integer"/>
-    </declare-styleable>
-
-    <declare-styleable name="FlowLayout">
-        <attr name="android:gravity" />
-    </declare-styleable>
-    <declare-styleable name="FlowLayout_Layout">
-        <attr name="android:layout_gravity" />
+        <attr name="max_line" format="integer"/>
+        <attr name="gravity">
+            <enum name="left" value="-1" />
+            <enum name="center" value="0" />
+            <enum name="right" value="1" />
+        </attr>
     </declare-styleable>
 </resources>

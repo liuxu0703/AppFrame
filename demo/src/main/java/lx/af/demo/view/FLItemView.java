@@ -30,6 +30,8 @@ public class FLItemView extends LinearLayout {
     private TextView mTitleView;
     private TagFlowLayout mTagLayout;
 
+    private TextTagAdapter mAdapter;
+
     private List<String> mList;
     private boolean mIsExpand = false;
 
@@ -60,6 +62,10 @@ public class FLItemView extends LinearLayout {
         });
     }
 
+    public void setOnTagClickListener(TagFlowLayout.OnTagClickListener l) {
+        mTagLayout.setOnTagClickListener(l);
+    }
+
     public void setHeadIcon(int resId) {
         mIconView.setImageResource(resId);
     }
@@ -73,21 +79,18 @@ public class FLItemView extends LinearLayout {
     }
 
     public void setFlowTags(List<String> tags) {
+        if (tags == null) {
+            return;
+        }
         mList = tags;
         List<String> list;
-        if (mIsExpand) {
-            list = mList;
+        if (!mIsExpand && mList.size() > 5) {
+            list = mList.subList(0, 5);
         } else {
-            if (mList.size() > 3) {
-                list = new ArrayList<>(3);
-                list.add(mList.get(0));
-                list.add(mList.get(1));
-                list.add(mList.get(2));
-            } else {
-                list = mList;
-            }
+            list = mList;
         }
-        mTagLayout.setAdapter(new TextTagAdapter(getContext(), list));
+        mAdapter = new TextTagAdapter(getContext(), list);
+        mTagLayout.setAdapter(mAdapter);
     }
 
     public void setFlowTags(String[] tags) {
@@ -101,7 +104,14 @@ public class FLItemView extends LinearLayout {
             return;
         }
         mIsExpand = expand;
-        setFlowTags(mList);
+        mTagLayout.setMaxLine(expand ? -1 : 1);
+        if (mList == null) {
+            // do nothing
+        } else if (mAdapter == null || mAdapter.getCount() < mList.size()) {
+            setFlowTags(mList);
+        } else {
+            mAdapter.notifyDataChanged();
+        }
     }
 
 
@@ -116,7 +126,8 @@ public class FLItemView extends LinearLayout {
 
         @Override
         public View getView(FlowLayout parent, int position, String s) {
-            int margin = ScreenUtils.dip2px(3);
+            int marginV = ScreenUtils.dip2px(3);
+            int marginH = ScreenUtils.dip2px(2);
             TextView tv = new TextView(mContext);
             tv.setBackgroundResource(R.drawable.flow_tag_bkg);
             tv.setTextColor(Color.parseColor("#ff8106"));
@@ -124,7 +135,7 @@ public class FLItemView extends LinearLayout {
             tv.setText(s);
             MarginLayoutParams params = new MarginLayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(margin, margin, margin, margin);
+            params.setMargins(marginH, marginV, marginH, marginV);
             tv.setLayoutParams(params);
             return tv;
         }

@@ -6,24 +6,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * Created by zhy on 15/9/10.
+ * import from https://github.com/hongyangAndroid/FlowLayout
+ */
 public abstract class TagAdapter<T>
 {
-    protected List<T> mTagDataList;
+    private List<T> mTagDatas;
     private OnDataChangedListener mOnDataChangedListener;
-    private HashSet<Integer> mCheckedPosList = new HashSet<Integer>();
+    private HashSet<Integer> mCheckedPosList = new HashSet<>();
 
     public TagAdapter(List<T> datas)
     {
-        mTagDataList = datas;
+        mTagDatas = datas;
     }
 
     public TagAdapter(T[] datas)
     {
-        mTagDataList = new ArrayList<T>(Arrays.asList(datas));
+        mTagDatas = new ArrayList<>(Arrays.asList(datas));
     }
 
-    static interface OnDataChangedListener
+    interface OnDataChangedListener
     {
         void onChanged();
     }
@@ -40,6 +45,13 @@ public abstract class TagAdapter<T>
         notifyDataChanged();
     }
 
+    public void setSelectedList(Set<Integer> set)
+    {
+        mCheckedPosList.clear();
+        mCheckedPosList.addAll(set);
+        notifyDataChanged();
+    }
+
     HashSet<Integer> getPreCheckedList()
     {
         return mCheckedPosList;
@@ -48,7 +60,7 @@ public abstract class TagAdapter<T>
 
     public int getCount()
     {
-        return mTagDataList == null ? 0 : mTagDataList.size();
+        return mTagDatas == null ? 0 : mTagDatas.size();
     }
 
     public void notifyDataChanged()
@@ -58,9 +70,15 @@ public abstract class TagAdapter<T>
 
     public T getItem(int position)
     {
-        return mTagDataList.get(position);
+        return mTagDatas.get(position);
     }
 
     public abstract View getView(FlowLayout parent, int position, T t);
+
+    public boolean setSelected(int position ,T t)
+    {
+        return false;
+    }
+
 
 }

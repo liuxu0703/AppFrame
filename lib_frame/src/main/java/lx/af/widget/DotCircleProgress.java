@@ -33,7 +33,7 @@ import lx.af.R;
  * dotCount:            dot count. default is 24.
  * dotRadius:           dot radius. default radius is determined by dot count.
  * dotColor:            dot color. default is white
- * dotProgress:         initial progress. default is 0.
+ * dotProgress:         initial progress, range [0-360]. default is 0.
  * dotSpinRadius:       spinning dot radius. default is dotRadius * 2.
  * dotSpinColor:        spinning dot color. default is the same as dotColor.
  * dotSpinSpeed:        spinning speed, degree per second. default is 240.
@@ -103,16 +103,10 @@ public class DotCircleProgress extends View {
     /**
      * set progress.
      * use {@link #setProgressWithAnim(int)} to show progress with animation
-     * @param progress range [0..360]
+     * @param progress range [0-360]
      */
     public void setProgress(int progress) {
-        if (progress > 360) {
-            progress = 360;
-        }
-        if (progress < 0) {
-            progress = 0;
-        }
-        int p = mDotCount * progress / 360;
+        int p = convertProgress(progress);
         if (mProgress != p) {
             mProgress = p;
             postInvalidate();
@@ -122,16 +116,10 @@ public class DotCircleProgress extends View {
     /**
      * set progress.
      * use {@link #setProgress(int)} to show progress without animation
-     * @param progress range [0..360]
+     * @param progress range [0-360]
      */
     public void setProgressWithAnim(int progress) {
-        if (progress > 360) {
-            progress = 360;
-        }
-        if (progress < 0) {
-            progress = 0;
-        }
-        mProgress = mDotCount * progress / 360;
+        mProgress = convertProgress(progress);
         mIsSpinning = false;
         mIsAnimProgress = true;
         mAnimProgress = 0;
@@ -147,7 +135,7 @@ public class DotCircleProgress extends View {
     }
 
     /**
-     * @return current progress, range [0..360]
+     * @return current progress, range [0-360]
      */
     public int getProgress() {
         return mProgress * 360 / mDotCount;
@@ -228,7 +216,8 @@ public class DotCircleProgress extends View {
             mSpinDotRadius = a.getDimensionPixelOffset(R.styleable.DotCircle_dotSpinRadius, mDotRadius * 2);
             mSpinDotColor = a.getColor(R.styleable.DotCircle_dotSpinColor, mDotColor);
             mSpinTailCount = a.getInteger(R.styleable.DotCircle_dotSpinTailCount, mDotCount / 6);
-            mProgress = a.getInteger(R.styleable.DotCircle_dotProgress, 0);
+            int progress = a.getInteger(R.styleable.DotCircle_dotProgress, 0);
+            mProgress = convertProgress(progress);
             spinSpeed = a.getInt(R.styleable.DotCircle_dotSpinSpeed, DEFAULT_SPIN_SPEED);
             a.recycle();
         } else {
@@ -332,6 +321,23 @@ public class DotCircleProgress extends View {
             return mDotRadius;
         }
         return mSpinTailRadiusList.get(m - 1);
+    }
+
+    /**
+     * convert degree progress to dot count
+     * @param degreeProgress range [0-360].
+     *                       less than 0 will be treat as 0;
+     *                       greater than 360 will be treat as 360.
+     * @return dot count progress
+     */
+    private int convertProgress(int degreeProgress) {
+        if (degreeProgress > 360) {
+            degreeProgress = 360;
+        }
+        if (degreeProgress < 0) {
+            degreeProgress = 0;
+        }
+        return mDotCount * degreeProgress / 360;
     }
 
 }
