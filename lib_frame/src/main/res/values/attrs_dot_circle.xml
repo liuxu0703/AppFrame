@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="DotCircle">
+        <attr name="dotCount" format="integer" />
+        <attr name="dotRadius" format="dimension" />
+        <attr name="dotColor" format="color" />
+        <attr name="dotProgress" format="integer" />
+        <attr name="dotSpinRadius" format="dimension" />
+        <attr name="dotSpinColor" format="color" />
+        <attr name="dotSpinTailCount" format="integer" />
+        <attr name="dotSpinSpeed" format="integer" />
+    </declare-styleable>
+</resources>
