@@ -39,8 +39,8 @@ public class ActionBarScrollFadeHelper {
     }
 
     /**
-     * set offset view. fade effect will be played according to offset view:
-     * fade effect ends when scroll to the bottom of the offset view.
+     * set offset view to indicate when to end fade effect.
+     * @param offsetView fade effect will end when scroll reaches bottom of this view.
      * @see #endOffset(int)
      */
     public ActionBarScrollFadeHelper endOffset(View offsetView) {
@@ -49,8 +49,11 @@ public class ActionBarScrollFadeHelper {
     }
 
     /**
-     * set offset value. fade effect will be played according to offset value:
-     * fade effect ends when offsetValue has be scrolled
+     * set offset value to indicate when to end fade effect.
+     * some scrollable view ({@link ListView}, {@link SwipeRefreshListLayout})
+     * does not support setting a value as end offset.
+     * in such case, use {@link #endOffset(View)} instead.
+     * @param offsetValue fade effect will end when offsetValue has been scrolled.
      * @see #endOffset(View)
      */
     public ActionBarScrollFadeHelper endOffset(int offsetValue) {
@@ -58,11 +61,19 @@ public class ActionBarScrollFadeHelper {
         return this;
     }
 
+    /**
+     * set offset view to indicate when to start fade effect.
+     * @param offsetView fade effect will begin when scroll reaches bottom of this view.
+     */
     public ActionBarScrollFadeHelper startOffset(View offsetView) {
         mStartOffsetView = offsetView;
         return this;
     }
 
+    /**
+     * set offset value to indicate when to start fade effect.
+     * @param offsetValue fade effect will begin when offsetValue has been scrolled.
+     */
     public ActionBarScrollFadeHelper startOffset(int offsetValue) {
         mStartOffsetValue = offsetValue;
         return this;
@@ -84,6 +95,9 @@ public class ActionBarScrollFadeHelper {
         return this;
     }
 
+    /**
+     * set a callback to be informed when action bar fade changes.
+     */
     public ActionBarScrollFadeHelper setFadeListener(FadeListener l) {
         mFadeListener = l;
         return this;
@@ -147,6 +161,12 @@ public class ActionBarScrollFadeHelper {
         list.setOnScrollListener(mListViewScrollListener);
     }
 
+    /**
+     * start to show fade effect.
+     * {@link #endOffset(View)} or {@link #endOffset(int)} must be called
+     * before calling to this method.
+     * @param scrollView fade effect will be set accordingly when the ScrollView is scrolled
+     */
     public void start(ObservableScrollView scrollView) {
         init(scrollView, false);
         scrollView.setOnScrollListener(mScrollViewScrollListener);
@@ -336,6 +356,11 @@ public class ActionBarScrollFadeHelper {
 
 
     public interface FadeListener {
+
+        /**
+         * callback to be informed when action bar fade changes
+         * @param alpha action bar background alpha value
+         */
         void onFadeChanged(int alpha);
     }
 
