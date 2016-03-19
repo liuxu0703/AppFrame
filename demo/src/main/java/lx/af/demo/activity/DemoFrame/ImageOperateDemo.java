@@ -1,4 +1,4 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoFrame;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,7 +15,7 @@ import java.util.List;
 import lx.af.activity.ImageBrowser.ImageBrowserActivity;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.demo.utils.Paths;
 import lx.af.utils.ActivityLauncher.ActivityResultCallback;
 import lx.af.utils.ActivityLauncher.ImageBrowserEditLauncher;
@@ -30,7 +30,7 @@ import lx.af.widget.NineGrid.NineImageUILAdapter;
  * Created by liuxu on 15-2-9.
  *
  */
-public class ActivityImageOperateDemo extends BaseDemoActivity implements
+public class ImageOperateDemo extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
@@ -67,14 +67,14 @@ public class ActivityImageOperateDemo extends BaseDemoActivity implements
             public void onItemClicked(View view, NineImageUILAdapter adapter, int position) {
                 final String current = adapter.getData(position);
                 if (position % 2 == 0) {
-                    ImageBrowserLauncher.of(ActivityImageOperateDemo.this)
+                    ImageBrowserLauncher.of(ImageOperateDemo.this)
                             .uris(adapter.getImageUris())
                             .currentUri(current)
                             .currentView(view)
                             .tapExit(true)
                             .start();
                 } else {
-                    ImageBrowserEditLauncher.of(ActivityImageOperateDemo.this)
+                    ImageBrowserEditLauncher.of(ImageOperateDemo.this)
                             .uri(current)
                             .start(new ActivityResultCallback<String>() {
                                 @Override

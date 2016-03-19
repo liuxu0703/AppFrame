@@ -14,9 +14,9 @@ import lx.af.widget.iconify.widget.IconTextView;
  */
 class ActionBarAdapterDefault implements ActionBarAdapter {
 
-    private BaseDemoActivity mActivity;
+    private BaseActivity mActivity;
 
-    ActionBarAdapterDefault(BaseDemoActivity activity) {
+    ActionBarAdapterDefault(BaseActivity activity) {
         mActivity = activity;
     }
 

@@ -1,4 +1,4 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoWidget;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ViewInject.ViewInject;
 import lx.af.widget.danmaku.Danmaku;
@@ -22,7 +22,7 @@ import lx.af.widget.danmaku.ViewAdapter;
  * author: lx
  * date: 16-3-1
  */
-public class ActivityDanmaku extends BaseDemoActivity implements
+public class DanmakuLayoutDemo extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
@@ -92,7 +92,7 @@ public class ActivityDanmaku extends BaseDemoActivity implements
             if (view != null) {
                 tv = (TextView) view;
             } else {
-                tv = new TextView(ActivityDanmaku.this);
+                tv = new TextView(DanmakuLayoutDemo.this);
                 tv.setBackgroundColor(getResources().getColor(R.color.black));
                 tv.setTextColor(getResources().getColor(R.color.white));
             }

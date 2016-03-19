@@ -1,6 +1,5 @@
 package lx.af.demo.activity;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,8 +8,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
 import lx.af.demo.R;
+import lx.af.demo.activity.main.MainActivity;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.demo.consts.TestRes;
 import lx.af.net.HttpRequest.DataHull;
 import lx.af.net.HttpRequest.ErrorHandler.ErrorHandler;
@@ -25,7 +25,7 @@ import lx.af.widget.kenburnsview.KenBurnsView;
  * author: lx
  * date: 15-12-8
  */
-public class ActivityTest extends BaseDemoActivity implements
+public class ActivityTest extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
@@ -85,7 +85,7 @@ public class ActivityTest extends BaseDemoActivity implements
             case R.id.test_btn_2: {
                 activity_count ++;
                 if (activity_count >= 3) {
-                    startActivity(ActivityMain.class);
+                    startActivity(MainActivity.class);
                     activity_count = 0;
                 } else {
                     startActivity(getClass());

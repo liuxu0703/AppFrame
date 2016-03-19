@@ -1,9 +1,9 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoWidget;
 
 import android.os.Bundle;
 
 import lx.af.demo.R;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.demo.view.FLItemView;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ViewInject.ViewInject;
@@ -16,7 +16,7 @@ import lx.af.widget.RunningDigitView;
  *
  * 0780001
  */
-public class ActivityFlowLayout extends BaseDemoActivity {
+public class FlowLayoutDemo extends BaseActivity {
 
     @ViewInject(id = R.id.activity_flow_layout_digit)
     private RunningDigitView mDigitView;
@@ -29,7 +29,6 @@ public class ActivityFlowLayout extends BaseDemoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_layout);
-        mDigitView.setDigitalType(RunningDigitView.DIGITAL_TYPE_CURRENCY);
         mDigitView.setRollingDuration(1200);
 
         line1.setFlowTags(new String[] {

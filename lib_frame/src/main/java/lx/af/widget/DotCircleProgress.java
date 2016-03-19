@@ -88,9 +88,11 @@ public class DotCircleProgress extends View {
      * start spin
      */
     public void startSpin() {
-        mIsAnimProgress = false;
-        mIsSpinning = true;
-        scheduleDrawSpin();
+        if (!mIsSpinning) {
+            mIsAnimProgress = false;
+            mIsSpinning = true;
+            postInvalidate();
+        }
     }
 
     /**
@@ -125,7 +127,7 @@ public class DotCircleProgress extends View {
         mIsAnimProgress = true;
         mAnimProgress = 0;
         mAnimInterval = mProgress == 0 ? 0 : mAnimDuration / mProgress;
-        scheduleDrawProgress();
+        postInvalidate();
     }
 
     /**
@@ -201,8 +203,7 @@ public class DotCircleProgress extends View {
 
         if (mIsSpinning) {
             scheduleDrawSpin();
-        }
-        if (mIsAnimProgress) {
+        } else if (mIsAnimProgress) {
             scheduleDrawProgress();
         }
     }

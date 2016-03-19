@@ -1,4 +1,4 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoWidget;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,14 +8,14 @@ import android.widget.TextView;
 
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.widget.AutoSlidePager.AutoSlidePager;
 
 /**
  * author: lx
  * date: 15-10-26
  */
-public class ActivityAutoSlidePager extends BaseDemoActivity implements
+public class AutoSlidePagerDemo extends BaseActivity implements
         ActionBar.Default,
         View.OnClickListener {
 

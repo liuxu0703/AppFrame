@@ -14,7 +14,7 @@ import lx.af.widget.iconify.widget.IconTextView;
  */
 final class ActionBarFactory {
 
-    public static ActionBarAdapter getActionBarAdapter(BaseDemoActivity activity) {
+    public static ActionBarAdapter getActionBarAdapter(BaseActivity activity) {
         if (activity instanceof ActionBar.Default) {
             return new DefaultAdapter(activity);
         }
@@ -23,9 +23,9 @@ final class ActionBarFactory {
 
     private static class DefaultAdapter implements ActionBarAdapter {
 
-        BaseDemoActivity mActivity;
+        BaseActivity mActivity;
 
-        public DefaultAdapter(BaseDemoActivity activity) {
+        public DefaultAdapter(BaseActivity activity) {
             mActivity = activity;
         }
 

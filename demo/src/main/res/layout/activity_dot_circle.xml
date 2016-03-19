@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <lx.af.view.RatioWidthRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orange"
+        app:ratioByWidth="0.75" >
+
+        <lx.af.widget.DotCircleProgress
+            android:id="@+id/dot_circle_large"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            app:dotProgress="90"
+            app:dotSpinSpeed="240"
+            app:dotSpinTailCount="4" />
+
+        <lx.af.widget.DotCircleProgress
+            android:id="@+id/dot_circle_tiny"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            app:dotCount="12"
+            app:dotProgress="210"
+            app:dotColor="#d5dce4"
+            app:dotSpinSpeed="180"
+            app:dotSpinColor="#7b858e" />
+
+        <TextView
+            android:id="@+id/dot_circle_large_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@android:color/white"
+            android:textSize="36sp" />
+
+    </lx.af.view.RatioWidthRelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orange"
+        android:padding="2dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/dot_circle_btn_toggle_spin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="toggle spin" />
+
+        <Space
+            android:layout_width="2dp"
+            android:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/dot_circle_btn_anim_progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="progress" />
+
+        <Space
+            android:layout_width="2dp"
+            android:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/dot_circle_btn_set_progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="anim to" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/l_green" >
+
+        <lx.af.widget.DotCircleProgress
+            android:id="@+id/dot_circle_clock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            app:dotCount="12"
+            app:dotRadius="6dp"
+            app:dotSpinRadius="15dp"
+            app:dotSpinSpeed="30"
+            app:dotSpinTailCount="0"
+            app:dotSpinColor="@color/cyan" />
+
+    </RelativeLayout>
+
+</LinearLayout>

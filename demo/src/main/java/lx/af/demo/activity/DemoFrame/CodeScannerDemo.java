@@ -1,4 +1,4 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoFrame;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.demo.utils.Paths;
 import lx.af.dialog.MessageDialog;
 import lx.af.utils.ActivityLauncher.ActivityResultCallback;
@@ -28,7 +28,7 @@ import lx.af.utils.ViewInject.ViewInject;
  * author: lx
  * date: 15-12-8
  */
-public class ActivityScanner extends BaseDemoActivity implements
+public class CodeScannerDemo extends BaseActivity implements
         View.OnClickListener,
         ActivityResultCallback<String>,
         ActionBar.Default {

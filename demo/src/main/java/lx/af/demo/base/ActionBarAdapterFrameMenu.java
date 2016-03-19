@@ -15,9 +15,9 @@ import lx.af.widget.iconify.widget.IconTextView;
  */
 class ActionBarAdapterFrameMenu implements ActionBarAdapter {
 
-    private BaseDemoActivity mActivity;
+    private BaseActivity mActivity;
 
-    ActionBarAdapterFrameMenu(BaseDemoActivity activity) {
+    ActionBarAdapterFrameMenu(BaseActivity activity) {
         mActivity = activity;
     }
 

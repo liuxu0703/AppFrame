@@ -15,69 +15,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/orange"
-            app:ratioByWidth="0.75" >
+            app:ratioByWidth="0.8" >
 
-            <lx.af.widget.DotCircleProgress
-                android:id="@+id/activity_scroll_view_fade_circle_dot_big"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_margin="10dp"
-                android:padding="10dp"
-                app:dotSpinSpeed="240"
-                app:dotSpinTailCount="4" />
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:text="Test Scroll Fade"/>
 
-            <lx.af.widget.DotCircleProgress
-                android:id="@+id/activity_scroll_view_fade_circle_dot_tiny"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_alignParentRight="true"
+            <TextView
+                android:id="@+id/activity_scroll_view_fade_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="10dp"
-                app:dotProgress="210"
-                app:dotColor="#1e90ff"
-                app:dotSpinSpeed="180"
-                app:dotSpinTailCount="0"
-                app:dotSpinColor="#0b6ac6" />
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="@color/l_green"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:text="Test Scroll Fade Reverse" />
 
         </lx.af.view.RatioWidthRelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/activity_scroll_view_fade_btn_toggle_spin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="toggle spin" />
-
-            <Space
-                android:layout_width="2dp"
-                android:layout_height="1dp" />
-
-            <Button
-                android:id="@+id/activity_scroll_view_fade_btn_set_progress_anim"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="to" />
-
-            <Space
-                android:layout_width="2dp"
-                android:layout_height="1dp" />
-
-            <Button
-                android:id="@+id/activity_scroll_view_fade_btn_set_progress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="progress" />
-        </LinearLayout>
 
         <TextView
             android:id="@+id/activity_scroll_view_fade_text"

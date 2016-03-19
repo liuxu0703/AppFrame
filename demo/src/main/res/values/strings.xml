@@ -3,4 +3,13 @@
 
     <string name="app_name">Demo</string>
 
+    <string name="main_tab_1">Frame</string>
+    <string name="main_tab_1_icon">{md-border-clear}</string>
+    <string name="main_tab_2">Widget</string>
+    <string name="main_tab_2_icon">{md-toys}</string>
+    <string name="main_tab_3">Utils</string>
+    <string name="main_tab_3_icon">{md-view-compact}</string>
+    <string name="main_tab_4">Misc</string>
+    <string name="main_tab_4_icon">{md-help}</string>
+
 </resources>

@@ -1,18 +1,18 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoUtils;
 
 import android.os.Bundle;
 import android.widget.Toast;
 
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.utils.HomeWatcher;
 
 /**
  * Created by liuxu on 15-3-4.
  *
  */
-public class ActivityHomeWatcherDemo extends BaseDemoActivity implements
+public class HomeKeyWatcherDemo extends BaseActivity implements
         ActionBar.Default,
         HomeWatcher.OnHomePressedListener {
 

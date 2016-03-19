@@ -18,7 +18,7 @@
         android:theme="@style/BaseAppTheme" >
 
         <activity
-            android:name=".activity.ActivityMain"
+            android:name=".activity.main.MainActivity"
             android:label="AppFrameDemo"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
@@ -28,62 +28,75 @@
             </intent-filter>
         </activity>
 
+
         <activity
-            android:name=".activity.ActivityTest"
-            android:screenOrientation="portrait"
-            android:label="File Picker" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityPlayViewDemo"
-            android:label="Video"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityImageOperateDemo"
+            android:name=".activity.DemoFrame.ImageOperateDemo"
             android:label="Image Pick and Crop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" >
         </activity>
         <activity
-            android:name=".activity.ActivityHomeWatcherDemo"
-            android:screenOrientation="portrait"
-            android:label="Home Key Watcher" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityAutoSlidePager"
-            android:screenOrientation="portrait"
-            android:label="Auto Slide Pager" >
-        </activity>
-        <activity
-            android:name=".activity.ActivitySwipeRefresh"
-            android:screenOrientation="portrait"
-            android:label="Auto Slide Pager" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityScrollViewFade"
-            android:screenOrientation="portrait"
-            android:label="ScrollView Fade" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityFlowLayout"
-            android:screenOrientation="portrait"
-            android:label="ScrollView Fade" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityViewPager"
-            android:screenOrientation="portrait"
-            android:label="Auto Slide Pager" >
-        </activity>
-        <activity
-            android:name=".activity.ActivityScanner"
+            android:name=".activity.DemoFrame.CodeScannerDemo"
             android:screenOrientation="portrait"
             android:label="Bar Code Scan" >
         </activity>
         <activity
-            android:name=".activity.ActivityDanmaku"
+            android:name=".activity.DemoFrame.SwipeRefreshDemo"
+            android:screenOrientation="portrait"
+            android:label="Auto Slide Pager" >
+        </activity>
+        <activity
+            android:name=".activity.DemoFrame.ScrollViewFadeDemo"
+            android:screenOrientation="portrait"
+            android:label="ScrollView Fade" >
+        </activity>
+
+
+        <activity
+            android:name=".activity.DemoWidget.FlowLayoutDemo"
+            android:screenOrientation="portrait"
+            android:label="ScrollView Fade" >
+        </activity>
+        <activity
+            android:name=".activity.DemoWidget.VideoPlayViewDemo"
+            android:label="Video"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.DemoWidget.AutoSlidePagerDemo"
+            android:screenOrientation="portrait"
+            android:label="Auto Slide Pager" >
+        </activity>
+        <activity
+            android:name=".activity.DemoWidget.DanmakuLayoutDemo"
             android:screenOrientation="portrait"
             android:label="Danmaku" >
         </activity>
+        <activity
+            android:name=".activity.DemoWidget.DotCircleDemo"
+            android:screenOrientation="portrait"
+            android:label="Dot Circle" >
+        </activity>
+
+
+        <activity
+            android:name=".activity.DemoUtils.ViewPagerAutoFlipDemo"
+            android:screenOrientation="portrait"
+            android:label="Auto Slide Pager" >
+        </activity>
+        <activity
+            android:name=".activity.DemoUtils.HomeKeyWatcherDemo"
+            android:screenOrientation="portrait"
+            android:label="Home Key Watcher" >
+        </activity>
+
+
+        <activity
+            android:name=".activity.ActivityTest"
+            android:screenOrientation="portrait"
+            android:label="File Picker" >
+        </activity>
+
 
     </application>
 

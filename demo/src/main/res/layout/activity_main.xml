@@ -1,24 +1,27 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_horizontal"
-    android:background="@color/activity_bkg_2"
-    tools:context=".MainActivity" >
+    android:background="@color/activity_bkg_1"
+    android:orientation="vertical" >
 
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/main_tab_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View style="@style/divider_horizontal" />
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <LinearLayout
-            android:id="@+id/main_container"
+        <android.support.v4.app.FragmentTabHost
+            android:id="@android:id/tabhost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-        </LinearLayout>
-    </ScrollView>
+            android:layout_marginTop="4dp" />
+    </FrameLayout>
 
 </LinearLayout>

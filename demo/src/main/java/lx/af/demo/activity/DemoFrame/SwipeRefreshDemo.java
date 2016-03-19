@@ -1,4 +1,4 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoFrame;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -21,7 +21,7 @@ import lx.af.adapter.AbsListAdapter;
 import lx.af.demo.R;
 import lx.af.demo.adapter.ImagePagerAdapter;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.demo.consts.TestRes;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ViewInject.ViewInject;
@@ -36,7 +36,7 @@ import lx.af.widget.iconify.widget.IconTextView;
  * author: lx
  * date: 15-12-15
  */
-public class ActivitySwipeRefresh extends BaseDemoActivity implements
+public class SwipeRefreshDemo extends BaseActivity implements
         SwipeRefreshLayout.OnRefreshListener,
         SwipeRefreshListLayout.OnLoadMoreListener,
         ActionBar.Default.Callback.Overlay {
@@ -132,7 +132,7 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
         GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
             @Override
             public void run() {
-                mListAdapter = new ListAdapter(ActivitySwipeRefresh.this, generateList(0, 10));
+                mListAdapter = new ListAdapter(SwipeRefreshDemo.this, generateList(0, 10));
                 mListView.setAdapter(mListAdapter);
                 mHeaderViewPager.setAdapter(new ImagePagerAdapter(generateImage()));
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -146,7 +146,7 @@ public class ActivitySwipeRefresh extends BaseDemoActivity implements
             @Override
             public void run() {
                 mLoadingView.done();
-                mListAdapter = new ListAdapter(ActivitySwipeRefresh.this, generateList(0, 15));
+                mListAdapter = new ListAdapter(SwipeRefreshDemo.this, generateList(0, 15));
                 mListView.setAdapter(mListAdapter);
             }
         }, 2000);

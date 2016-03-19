@@ -10,7 +10,7 @@ import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
  * author: lx
  * date: 15-12-14
  */
-public abstract class BaseListActivity extends BaseDemoActivity {
+public abstract class BaseListActivity extends BaseActivity {
 
     private ListView mListView;
     private SwipeRefreshListLayout mSwipeRefreshLayout;

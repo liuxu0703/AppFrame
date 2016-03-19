@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/fragment_tab_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="1px"
+        android:divider="@color/divider_color"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="false"
+        android:listSelector="@drawable/bkg_clickable_white"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:fastScrollAlwaysVisible="false"
+        android:scrollbars="none"
+        android:scrollingCache="true"
+        android:overScrollMode="never"
+        android:smoothScrollbar="true" />
+</LinearLayout>

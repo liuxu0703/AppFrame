@@ -1,4 +1,4 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoWidget;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ActivityLauncher.ActivityResultCallback;
 import lx.af.utils.ActivityLauncher.ContentPickerLauncher;
@@ -24,7 +24,7 @@ import lx.af.utils.ScreenUtils;
 import lx.af.widget.MediaPlayButton;
 import lx.af.widget.VideoPlayView;
 
-public final class ActivityPlayViewDemo extends BaseDemoActivity implements
+public final class VideoPlayViewDemo extends BaseActivity implements
         OnClickListener,
         ActionBar.Default {
 
@@ -149,7 +149,7 @@ public final class ActivityPlayViewDemo extends BaseDemoActivity implements
             } else if (mPlayView.isPaused()) {
                 mPlayView.start();
             } else {
-                ContentPickerLauncher.of(ActivityPlayViewDemo.this).pickVideo().start(new ActivityResultCallback<Uri>() {
+                ContentPickerLauncher.of(VideoPlayViewDemo.this).pickVideo().start(new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(int resultCode, @NonNull Uri result) {
                         Toast.makeText(getContext(), "play " + result, Toast.LENGTH_LONG).show();

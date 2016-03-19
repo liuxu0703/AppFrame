@@ -1,4 +1,4 @@
-package lx.af.demo.activity;
+package lx.af.demo.activity.DemoUtils;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
-import lx.af.demo.base.BaseDemoActivity;
+import lx.af.demo.base.BaseActivity;
 import lx.af.utils.ActivityLauncher.ActivityResultCallback;
 import lx.af.utils.ActivityLauncher.ImageSelectorLauncher;
 import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
@@ -27,7 +27,7 @@ import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
  * author: lx
  * date: 15-12-16
  */
-public class ActivityViewPager extends BaseDemoActivity implements
+public class ViewPagerAutoFlipDemo extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
