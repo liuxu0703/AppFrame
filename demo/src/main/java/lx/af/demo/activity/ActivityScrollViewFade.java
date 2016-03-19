@@ -76,8 +76,8 @@ public class ActivityScrollViewFade extends BaseDemoActivity implements
                     mCircleBig.stopSpin();
                     mCircleTiny.stopSpin();
                 } else {
-                    mCircleBig.spin();
-                    mCircleTiny.spin();
+                    mCircleBig.startSpin();
+                    mCircleTiny.startSpin();
                 }
                 refreshProgressBtn();
                 break;

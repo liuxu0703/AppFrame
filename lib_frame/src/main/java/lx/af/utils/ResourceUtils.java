@@ -41,6 +41,10 @@ public final class ResourceUtils {
         return sRes.getString(resId, formatArgs);
     }
 
+    public static String[] getStrings(int resId){
+        return sRes.getStringArray(resId);
+    }
+
     public static int getColor(int resId) {
         return sRes.getColor(resId);
     }

@@ -198,10 +198,10 @@ public class ActionBarScrollFadeHelper {
             @Override
             public void onGlobalLayout() {
                 if (mEndOffsetValue == 0) {
-                    mEndOffsetValue = getViewBottom(mEndOffsetView);
+                    mEndOffsetValue = getViewBottom(mViewRoot, mEndOffsetView);
                 }
                 if (mStartOffsetValue == 0 && mStartOffsetView != null) {
-                    mStartOffsetValue = getViewBottom(mStartOffsetView);
+                    mStartOffsetValue = getViewBottom(mViewRoot, mStartOffsetView);
                 }
                 if (mEndOffsetValue != 0 && (mStartOffsetValue != 0 || mStartOffsetView == null)) {
                     if (android.os.Build.VERSION.SDK_INT >= 16) {
@@ -236,6 +236,8 @@ public class ActionBarScrollFadeHelper {
             alpha = (int) (ratio * 255);
         }
 
+        //Log.d("liuxu", "ActionBarFadeHelper, onNewScroll, start=" + start + ", end=" + end +
+        //        ", scroll=" + scroll + ", alpha=" + alpha);
         fade(alpha);
     }
 
@@ -271,18 +273,17 @@ public class ActionBarScrollFadeHelper {
     }
 
     // get distance between (0,0) and view bottom line
-    private int getViewBottom(View view) {
+    private static int getViewBottom(ViewParent root, View view) {
         if (view == null) {
             return 0;
         }
         int top = 0;
         ViewParent parent = view.getParent();
-        while (parent != mViewRoot && parent instanceof View) {
+        while (parent != root && parent instanceof View) {
             top += ((View) parent).getTop();
             parent = parent.getParent();
         }
-        int ret = view.getHeight() + top;
-        return ret;
+        return view.getHeight() + top;
     }
 
     private AbsListView.OnScrollListener mListViewScrollListener = new AbsListView.OnScrollListener() {

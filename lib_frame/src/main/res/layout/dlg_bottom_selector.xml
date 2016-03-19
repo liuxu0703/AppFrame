@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:listSelector="@drawable/bkg_clickable"
-        android:divider="#ddd"
+        android:divider="#eee"
         android:footerDividersEnabled="true"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="2px" />
 
     <TextView
         android:id="@+id/dlg_bottom_selector_cancel"

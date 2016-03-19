@@ -18,15 +18,25 @@
             app:ratioByWidth="0.75" >
 
             <lx.af.widget.DotCircleProgress
+                android:id="@+id/activity_flow_layout_progress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:layout_margin="10dp"
                 android:padding="10dp"
                 app:dotProgress="210"
+                app:dotProgressAnimDuration="1200"
                 app:dotRadius="5dp"
                 app:dotSpinSpeed="240"
                 app:dotSpinTailCount="4" />
+
+            <lx.af.widget.RunningDigitView
+                android:id="@+id/activity_flow_layout_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="36sp"
+                android:textColor="@android:color/white" />
 
         </lx.af.view.RatioWidthRelativeLayout>
 

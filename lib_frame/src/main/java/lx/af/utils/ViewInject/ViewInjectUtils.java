@@ -23,6 +23,23 @@ public final class ViewInjectUtils {
 
     /**
      * user {@link ViewInject} annotation to assign View fields
+     * @param target must has a "findViewById" method, or exception will throw
+     */
+    public static void inject(Object target) {
+        injectInner(Object.class, target, target);
+    }
+
+    /**
+     * user {@link ViewInject} annotation to assign View fields in param view
+     * @param target owner of the view fields
+     * @param view where the views are from
+     */
+    public static void inject(Object target, View view) {
+        injectInner(Object.class, target, view);
+    }
+
+    /**
+     * user {@link ViewInject} annotation to assign View fields
      * @param base base class for {@link ViewInject} to apply.
      *             will only find fields for inject on subclass of this class
      * @param target must has a "findViewById" method, or exception will throw

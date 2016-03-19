@@ -54,6 +54,14 @@ public class FlowLayout extends ViewGroup
         mMaxLine = maxLine;
     }
 
+    public int getMaxLine() {
+        return mMaxLine;
+    }
+
+    public int getLineCount() {
+        return mAllViews.size();
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {

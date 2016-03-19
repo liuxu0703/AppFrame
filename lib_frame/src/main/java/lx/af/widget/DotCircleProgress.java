@@ -37,7 +37,7 @@ import lx.af.R;
  * dotSpinRadius:       spinning dot radius. default is dotRadius * 2.
  * dotSpinColor:        spinning dot color. default is the same as dotColor.
  * dotSpinSpeed:        spinning speed, degree per second. default is 240.
- *                      for example, if set to 360, it will spend 1 second to spin a whole circle.
+ *                      for example, if set to 360, it will spend 1 second to startSpin a whole circle.
  * dotSpinTailCount:    spinning tail count. default is dotCount / 6 .
  *
  */
@@ -46,7 +46,7 @@ public class DotCircleProgress extends View {
     private static final int DEFAULT_DOT_COUNT = 24;
     private static final int DEFAULT_DOT_COLOR = Color.WHITE;
     private static final int DEFAULT_SPIN_SPEED = 240; // in degree angle
-    private static final int PROGRESS_ANIM_DURATION = 400; // in millis
+    private static final int DEFAULT_PROGRESS_ANIM_DURATION = 600; // in millis
 
     private int mSize; // view size (both width and height), since this is a square view.
 
@@ -63,6 +63,7 @@ public class DotCircleProgress extends View {
 
     private int mProgress;
     private int mAnimProgress = 0;
+    private int mAnimDuration = DEFAULT_PROGRESS_ANIM_DURATION;
     private int mAnimInterval;
     private boolean mIsAnimProgress = false;
 
@@ -86,7 +87,7 @@ public class DotCircleProgress extends View {
     /**
      * start spin
      */
-    public void spin() {
+    public void startSpin() {
         mIsAnimProgress = false;
         mIsSpinning = true;
         scheduleDrawSpin();
@@ -123,7 +124,7 @@ public class DotCircleProgress extends View {
         mIsSpinning = false;
         mIsAnimProgress = true;
         mAnimProgress = 0;
-        mAnimInterval = PROGRESS_ANIM_DURATION / mProgress;
+        mAnimInterval = mProgress == 0 ? 0 : mAnimDuration / mProgress;
         scheduleDrawProgress();
     }
 
@@ -216,6 +217,7 @@ public class DotCircleProgress extends View {
             mSpinDotRadius = a.getDimensionPixelOffset(R.styleable.DotCircle_dotSpinRadius, mDotRadius * 2);
             mSpinDotColor = a.getColor(R.styleable.DotCircle_dotSpinColor, mDotColor);
             mSpinTailCount = a.getInteger(R.styleable.DotCircle_dotSpinTailCount, mDotCount / 6);
+            mAnimDuration = a.getInteger(R.styleable.DotCircle_dotProgressAnimDuration, DEFAULT_PROGRESS_ANIM_DURATION);
             int progress = a.getInteger(R.styleable.DotCircle_dotProgress, 0);
             mProgress = convertProgress(progress);
             spinSpeed = a.getInt(R.styleable.DotCircle_dotSpinSpeed, DEFAULT_SPIN_SPEED);
