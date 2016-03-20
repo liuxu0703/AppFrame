@@ -8,17 +8,14 @@
     <ListView
         android:id="@+id/fragment_tab_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:dividerHeight="1px"
         android:divider="@color/divider_color"
-        android:footerDividersEnabled="true"
-        android:headerDividersEnabled="false"
-        android:listSelector="@drawable/bkg_clickable_white"
-        android:fadingEdge="none"
+        android:listSelector="@drawable/bkg_clickable"
         android:fastScrollEnabled="false"
         android:fastScrollAlwaysVisible="false"
         android:scrollbars="none"
-        android:scrollingCache="true"
         android:overScrollMode="never"
         android:smoothScrollbar="true" />
 </LinearLayout>
