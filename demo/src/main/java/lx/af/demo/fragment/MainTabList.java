@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import lx.af.demo.R;
 import lx.af.demo.adapter.DemoActionAdapter;
+import lx.af.demo.base.BaseActivity;
 import lx.af.demo.base.BaseFragment;
 import lx.af.demo.model.ActionModel;
 import lx.af.utils.ViewInject.ViewInject;
@@ -48,6 +49,7 @@ public abstract class MainTabList extends BaseFragment {
             ActionModel model = mAdapter.getItem(position);
             if (model.activity != null) {
                 Intent intent = new Intent(getActivity(), model.activity);
+                intent.putExtra(BaseActivity.EXTRA_ACTIVITY_TITLE, model.title);
                 getActivity().startActivity(intent);
             } else {
                 toastShort(model.title);

@@ -2,6 +2,7 @@ package lx.af.demo.consts;
 
 import android.app.Activity;
 
+import lx.af.demo.activity.DemoWidget.SelectImageViewDemo;
 import lx.af.demo.activity.DemoWidget.AutoSlidePagerDemo;
 import lx.af.demo.activity.DemoWidget.DanmakuLayoutDemo;
 import lx.af.demo.activity.DemoWidget.DotCircleDemo;
@@ -35,6 +36,7 @@ public class DemoConfig {
             demo("Video Play", VideoPlayViewDemo.class),
             demo("Danmaku", DanmakuLayoutDemo.class),
             demo("Flow Layout", FlowLayoutDemo.class),
+            demo("Select Image Widget", SelectImageViewDemo.class),
     };
 
 

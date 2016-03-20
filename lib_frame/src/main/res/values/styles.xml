@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="@android:style/Theme.NoTitleBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:screenOrientation">portrait</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>

@@ -77,6 +77,11 @@
             android:screenOrientation="portrait"
             android:label="Dot Circle" >
         </activity>
+        <activity
+            android:name=".activity.DemoWidget.SelectImageViewDemo"
+            android:screenOrientation="portrait"
+            android:label="Select Image Widget" >
+        </activity>
 
 
         <activity

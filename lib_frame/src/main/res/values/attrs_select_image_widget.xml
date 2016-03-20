@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="SelectImageWidget">
+        <attr name="selectImageMaxCount" format="integer" />
+        <attr name="selectImageItemSize" format="dimension" />
+        <attr name="selectImageItemMargin" format="dimension" />
+    </declare-styleable>
+</resources>
