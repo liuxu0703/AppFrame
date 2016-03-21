@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
 import lx.af.widget.DotCircleProgress;
+import lx.af.widget.RunningDigitView;
 
 /**
  * author: lx
@@ -22,7 +24,7 @@ public class DotCircleDemo extends BaseActivity implements
     private DotCircleProgress mProgLarge;
     private DotCircleProgress mProgTiny;
     private DotCircleProgress mProgClock;
-    private TextView mProgLargeText;
+    private RunningDigitView mRunningDigit;
     private TextView mBtnToggleSpin;
     private TextView mBtnAnimProgress;
     private TextView mBtnSetProgress;
@@ -36,7 +38,7 @@ public class DotCircleDemo extends BaseActivity implements
         mProgLarge = (DotCircleProgress) findViewById(R.id.dot_circle_large);
         mProgTiny = (DotCircleProgress) findViewById(R.id.dot_circle_tiny);
         mProgClock = (DotCircleProgress) findViewById(R.id.dot_circle_clock);
-        mProgLargeText = (TextView) findViewById(R.id.dot_circle_large_text);
+        mRunningDigit = (RunningDigitView) findViewById(R.id.dot_circle_running_text);
         mBtnToggleSpin = (TextView) findViewById(R.id.dot_circle_btn_toggle_spin);
         mBtnAnimProgress = (TextView) findViewById(R.id.dot_circle_btn_anim_progress);
         mBtnSetProgress = (TextView) findViewById(R.id.dot_circle_btn_set_progress);
@@ -45,7 +47,11 @@ public class DotCircleDemo extends BaseActivity implements
         mBtnAnimProgress.setOnClickListener(this);
         mBtnSetProgress.setOnClickListener(this);
 
-        mProgLargeText.setText(mProgLarge.getProgress() + "");
+        mRunningDigit
+                .setDecimalFormat(new DecimalFormat("00.00"))
+                .setDuration(1200)
+                .setDigit(mProgLarge.getProgress())
+                .startRunning();
         generateProgress();
     }
 
@@ -57,28 +63,26 @@ public class DotCircleDemo extends BaseActivity implements
                 if (mProgLarge.isSpinning()) {
                     mProgLarge.stopSpin();
                     mProgTiny.stopSpin();
-                    mBtnToggleSpin.setText("start spin");
-                    mProgLargeText.setVisibility(View.VISIBLE);
                     mProgLarge.setProgressWithAnim(mProgLarge.getProgress());
                 } else {
                     mProgLarge.startSpin();
                     mProgTiny.startSpin();
-                    mBtnToggleSpin.setText("stop spin");
-                    mProgLargeText.setVisibility(View.GONE);
                 }
+                mBtnToggleSpin.setText(mProgLarge.isSpinning() ? "stop spin\n" : "start spin\n");
+                mRunningDigit.setVisibility(mProgLarge.isSpinning() ? View.GONE : View.VISIBLE);
                 break;
             }
             case R.id.dot_circle_btn_anim_progress: {
-                mProgLarge.setProgress(mProgress);
-                mProgTiny.setProgress(mProgress / 2);
-                mProgLargeText.setText(mProgress + "");
+                mProgLarge.setProgressWithAnim(mProgress);
+                mProgTiny.setProgressWithAnim(mProgress / 2);
+                mRunningDigit.setDigit(mProgLarge.getProgress()).startRunning();
                 generateProgress();
                 break;
             }
             case R.id.dot_circle_btn_set_progress: {
-                mProgLarge.setProgressWithAnim(mProgress);
-                mProgTiny.setProgressWithAnim(mProgress / 2);
-                mProgLargeText.setText(mProgress + "");
+                mProgLarge.setProgress(mProgress);
+                mProgTiny.setProgress(mProgress / 2);
+                mRunningDigit.setDigit(mProgLarge.getProgress()).startRunning();
                 generateProgress();
                 break;
             }
@@ -87,8 +91,8 @@ public class DotCircleDemo extends BaseActivity implements
 
     private void generateProgress() {
         mProgress = new Random().nextInt(340) + 20;
-        mBtnAnimProgress.setText("to " + mProgress);
-        mBtnSetProgress.setText("progress " + mProgress);
+        mBtnAnimProgress.setText("anim to\n" + mProgress);
+        mBtnSetProgress.setText("progress\n" + mProgress);
     }
 
 }

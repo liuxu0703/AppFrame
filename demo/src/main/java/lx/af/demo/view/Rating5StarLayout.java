@@ -20,7 +20,7 @@ public class Rating5StarLayout extends LinearLayout {
     private TextView mScoreView;
     private RatingBar mRatingView;
 
-    private DecimalFormat mDecimalFormat = new DecimalFormat("#.0");
+    private DecimalFormat mDecimalFormat;
 
     public Rating5StarLayout(Context context) {
         super(context);
@@ -40,6 +40,9 @@ public class Rating5StarLayout extends LinearLayout {
         mRatingView.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (mDecimalFormat == null) {
+                    mDecimalFormat = new DecimalFormat("0.0");
+                }
                 mScoreView.setText(mDecimalFormat.format((int) rating));
             }
         });

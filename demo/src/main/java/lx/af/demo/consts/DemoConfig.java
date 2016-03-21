@@ -32,9 +32,10 @@ public class DemoConfig {
 
     public static final ActionModel[] WIDGET_DEMO = new ActionModel[] {
             demo("Auto Slide Pager", AutoSlidePagerDemo.class),
-            demo("Dot Circle", DotCircleDemo.class),
-            demo("Video Play", VideoPlayViewDemo.class),
-            demo("Danmaku", DanmakuLayoutDemo.class),
+            demo("Dot Circle View", DotCircleDemo.class),
+            demo("Running Digit View", DotCircleDemo.class),
+            demo("Video Play View", VideoPlayViewDemo.class),
+            demo("Danmaku Layout", DanmakuLayoutDemo.class),
             demo("Flow Layout", FlowLayoutDemo.class),
             demo("Select Image Widget", SelectImageViewDemo.class),
     };

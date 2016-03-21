@@ -1,52 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <lx.af.demo.view.FLItemView
+        android:id="@+id/activity_flow_layout_item1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" />
 
-        <lx.af.view.RatioWidthRelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/orange"
-            app:ratioByWidth="0.75" >
-
-            <lx.af.widget.DotCircleProgress
-                android:id="@+id/activity_flow_layout_progress"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_margin="10dp"
-                android:padding="10dp"
-                app:dotProgress="210"
-                app:dotProgressAnimDuration="1200"
-                app:dotRadius="5dp"
-                app:dotSpinSpeed="240"
-                app:dotSpinTailCount="4" />
-
-            <lx.af.widget.RunningDigitView
-                android:id="@+id/activity_flow_layout_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textSize="36sp"
-                android:textColor="@android:color/white" />
-
-        </lx.af.view.RatioWidthRelativeLayout>
-
-        <View style="@style/divider_horizontal" />
-
-        <lx.af.demo.view.FLItemView
-            android:id="@+id/activity_flow_layout_item1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View style="@style/divider_horizontal" />
-    </LinearLayout>
-</ScrollView>
+    <View style="@style/divider_horizontal" />
+</LinearLayout>

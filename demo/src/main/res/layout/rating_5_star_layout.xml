@@ -25,7 +25,7 @@
         android:maxHeight="30dp"
         android:progressDrawable="@drawable/star_rating_bar"
         android:numStars="5"
-        android:rating="3"
+        android:stepSize="1"
         android:isIndicator="false" />
 
     <Space

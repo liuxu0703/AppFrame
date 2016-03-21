@@ -20,6 +20,7 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             app:dotProgress="90"
+            app:dotProgressAnimDuration="1200"
             app:dotSpinSpeed="240"
             app:dotSpinTailCount="4" />
 
@@ -36,8 +37,8 @@
             app:dotSpinSpeed="180"
             app:dotSpinColor="#7b858e" />
 
-        <TextView
-            android:id="@+id/dot_circle_large_text"
+        <lx.af.widget.RunningDigitView
+            android:id="@+id/dot_circle_running_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -59,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="toggle spin" />
+            android:text="start spin\n" />
 
         <Space
             android:layout_width="2dp"
