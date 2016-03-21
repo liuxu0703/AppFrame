@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/rating_layout_title"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        android:text="Rating" />
+
+    <RatingBar
+        android:id="@+id/rating_layout_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:minHeight="30dp"
+        android:maxHeight="30dp"
+        android:progressDrawable="@drawable/star_rating_bar"
+        android:numStars="5"
+        android:rating="3"
+        android:isIndicator="false" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:id="@+id/rating_layout_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textSize="16sp"
+        android:textColor="@color/color_primary" />
+</merge>
