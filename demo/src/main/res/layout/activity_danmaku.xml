@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/activity_bkg_1" >
 
-    <lx.af.widget.danmaku.Danmaku
+    <lx.af.widget.DanmakuLayout.DanmakuLayout
         android:id="@+id/danmaku_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,12 +20,12 @@
             android:layout_marginBottom="20dp"
             android:scaleType="centerCrop"
             android:contentDescription="@null"/>
-    </lx.af.widget.danmaku.Danmaku>
+    </lx.af.widget.DanmakuLayout.DanmakuLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/azure" >
+        android:background="@color/teal" >
 
         <TextView
             android:id="@+id/danmaku_test_view"

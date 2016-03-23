@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
-            android:divider="@color/grey"
+            android:divider="@color/divider_color"
             android:dividerHeight="1px" />
     </lx.af.view.SwipeRefresh.SwipeRefreshListLayout>
 
@@ -24,19 +25,20 @@
         android:id="@+id/activity_swipe_refresh_loading_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/activity_bkg_1" />
+        android:background="@color/activity_bkg_1"
+        app:loading_retry_on_empty="true" />
 
-    <lx.af.widget.iconify.widget.IconTextView
+    <ImageView
         android:id="@+id/activity_swipe_refresh_btn_add"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
+        android:padding="10dp"
         android:gravity="center"
         android:clickable="true"
         android:background="@drawable/swipe_activity_add_bkg"
-        android:textColor="@color/white"
-        android:textSize="26sp"
-        android:text="{md-add}" />
+        android:src="@drawable/btn_danmaku_selector"
+        android:contentDescription="@null" />
 </RelativeLayout>

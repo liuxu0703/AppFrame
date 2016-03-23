@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/post_user_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <lx.af.widget.RoundImage.RoundedImageView
+        android:id="@+id/post_user_avatar"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_gravity="right"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/img_default"
+        app:corner_radius="100dp" />
+
+    <TextView
+        android:id="@+id/post_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/post_user_avatar"
+        android:layout_marginLeft="8dp"
+        android:text="---"
+        android:textColor="@color/text_color"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/post_user_gender"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="3dp"
+        android:layout_toRightOf="@id/post_user_name"
+        android:contentDescription="@null" />
+
+</merge>

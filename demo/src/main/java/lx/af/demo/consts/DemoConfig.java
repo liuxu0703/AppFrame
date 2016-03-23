@@ -13,8 +13,7 @@ import lx.af.demo.activity.DemoUtils.ViewPagerAutoFlipDemo;
 import lx.af.demo.activity.DemoFrame.CodeScannerDemo;
 import lx.af.demo.activity.DemoFrame.ImageOperateDemo;
 import lx.af.demo.activity.DemoFrame.ScrollViewFadeDemo;
-import lx.af.demo.activity.DemoFrame.SwipeRefreshDemo;
-import lx.af.demo.model.ActionModel;
+import lx.af.demo.activity.DemoFrame.PostListActivity;
 
 /**
  * author: lx
@@ -22,9 +21,10 @@ import lx.af.demo.model.ActionModel;
  */
 public class DemoConfig {
 
+
     public static final ActionModel[] FRAME_DEMO = new ActionModel[] {
             demo("Image Operate", ImageOperateDemo.class),
-            demo("Swipe Refresh Frame", SwipeRefreshDemo.class),
+            demo("Swipe Refresh Frame", PostListActivity.class),
             demo("ScrollView Fade", ScrollViewFadeDemo.class),
             demo("Bar Code Scanner", CodeScannerDemo.class),
     };
@@ -34,17 +34,19 @@ public class DemoConfig {
             demo("Auto Slide Pager", AutoSlidePagerDemo.class),
             demo("Dot Circle View", DotCircleDemo.class),
             demo("Running Digit View", DotCircleDemo.class),
+            demo("Select Image Widget", SelectImageViewDemo.class),
+            demo("Nine Grid Layout", PostListActivity.class),
+            demo("Swipe Refresh & Load More", PostListActivity.class),
+            demo("Flow Layout", FlowLayoutDemo.class),
             demo("Video Play View", VideoPlayViewDemo.class),
             demo("Danmaku Layout", DanmakuLayoutDemo.class),
-            demo("Flow Layout", FlowLayoutDemo.class),
-            demo("Select Image Widget", SelectImageViewDemo.class),
     };
 
 
     public static final ActionModel[] UTILS_DEMO = new ActionModel[] {
-            demo("ActionBar Fade - ListView", SwipeRefreshDemo.class),
+            demo("ActionBar Fade - ListView", PostListActivity.class),
             demo("ActionBar Fade - ScrollView", ScrollViewFadeDemo.class),
-            demo("ViewPager Auto Flip", ViewPagerAutoFlipDemo.class),
+            demo("ViewPager Auto Flipper", ViewPagerAutoFlipDemo.class),
             demo("Home Key Watcher", HomeKeyWatcherDemo.class),
     };
 

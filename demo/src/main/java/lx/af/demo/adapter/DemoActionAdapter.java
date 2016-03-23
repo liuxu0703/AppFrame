@@ -12,7 +12,7 @@ import java.util.List;
 import lx.af.adapter.AbsViewHolder;
 import lx.af.adapter.AbsViewHolderAdapter;
 import lx.af.demo.R;
-import lx.af.demo.model.ActionModel;
+import lx.af.demo.consts.ActionModel;
 import lx.af.utils.ViewInject.ViewInject;
 import lx.af.widget.iconify.widget.IconTextView;
 

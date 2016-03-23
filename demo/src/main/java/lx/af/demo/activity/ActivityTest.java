@@ -11,7 +11,7 @@ import lx.af.demo.R;
 import lx.af.demo.activity.main.MainActivity;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
-import lx.af.demo.consts.TestRes;
+import lx.af.demo.utils.TestData.TestRes;
 import lx.af.net.HttpRequest.DataHull;
 import lx.af.net.HttpRequest.ErrorHandler.ErrorHandler;
 import lx.af.net.HttpRequest.RequestCallback;

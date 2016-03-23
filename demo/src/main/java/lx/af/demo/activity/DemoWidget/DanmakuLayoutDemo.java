@@ -1,5 +1,6 @@
 package lx.af.demo.activity.DemoWidget;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,7 @@ public class DanmakuLayoutDemo extends BaseActivity implements
             } else {
                 tv = new TextView(DanmakuLayoutDemo.this);
                 tv.setBackgroundColor(getResources().getColor(R.color.black));
-                tv.setTextColor(getResources().getColor(R.color.white));
+                tv.setTextColor(Color.WHITE);
             }
             tv.setText(str);
             return tv;

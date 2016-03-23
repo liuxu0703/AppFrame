@@ -42,12 +42,8 @@
     <string name="mipca_toast_finish_activity">长时间未识别,请重新发起扫描</string>
     <string name="mipca_toast_init_camera_fail">初始化扫描失败</string>
 
-    <string name="swipe_refresh_default_footer_loading">正在加载&#8230;</string>
-    <string name="swipe_refresh_default_footer_done">加载完毕</string>
-
-    <string name="loading_bkg_view_message_loading">努力加载中&#8230;</string>
-    <string name="loading_bkg_view_message_fail">请求失败,请点击重试</string>
-    <string name="loading_bkg_view_message_empty">暂时没有数据</string>
+    <string name="swipe_refresh_default_footer_loading">努力加载中&#8230;</string>
+    <string name="swipe_refresh_default_footer_done">没有更多了</string>
 
     <string name="add_image_widget_menu_delete">删除图片</string>
     <string name="add_image_widget_menu_doodle">图片涂鸦</string>
@@ -56,5 +52,8 @@
     <string name="toast_path_sdcard_full">存储卡已满</string>
     <string name="toast_path_create_dir_fail">创建文件夹失败</string>
     <string name="toast_double_click_exit">再按一次退出</string>
+
+
+    <string name="time_utils_yesterday">昨天 <xliff:g>%s</xliff:g></string>
 
 </resources>

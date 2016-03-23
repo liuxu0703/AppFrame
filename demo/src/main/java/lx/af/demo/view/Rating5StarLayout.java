@@ -20,7 +20,7 @@ public class Rating5StarLayout extends LinearLayout {
     private TextView mScoreView;
     private RatingBar mRatingView;
 
-    private DecimalFormat mDecimalFormat;
+    private String[] mRatingFormatStrings;
 
     public Rating5StarLayout(Context context) {
         super(context);
@@ -40,16 +40,24 @@ public class Rating5StarLayout extends LinearLayout {
         mRatingView.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if (mDecimalFormat == null) {
-                    mDecimalFormat = new DecimalFormat("0.0");
-                }
-                mScoreView.setText(mDecimalFormat.format((int) rating));
+                refreshScoreView((int) rating);
             }
         });
     }
 
-    public Rating5StarLayout setDecimalFormat(DecimalFormat format) {
-        mDecimalFormat = format;
+    private void refreshScoreView(int rating) {
+        if (mRatingFormatStrings == null) {
+            DecimalFormat format = new DecimalFormat("0.0");
+            mScoreView.setText(format.format(rating));
+        } else {
+            mScoreView.setText(mRatingFormatStrings[rating]);
+        }
+    }
+
+    public Rating5StarLayout setRatingFormat(String... formats) {
+        if (formats != null && formats.length >= 5) {
+            mRatingFormatStrings = formats;
+        }
         return this;
     }
 
@@ -60,7 +68,7 @@ public class Rating5StarLayout extends LinearLayout {
 
     public Rating5StarLayout setRating(int rating) {
         mRatingView.setRating(rating);
-        mScoreView.setText(mDecimalFormat.format(rating));
+        refreshScoreView(rating);
         return this;
     }
 

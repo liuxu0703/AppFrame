@@ -1,7 +1,7 @@
 package lx.af.demo.fragment;
 
 import lx.af.demo.consts.DemoConfig;
-import lx.af.demo.model.ActionModel;
+import lx.af.demo.consts.ActionModel;
 
 /**
  * author: lx

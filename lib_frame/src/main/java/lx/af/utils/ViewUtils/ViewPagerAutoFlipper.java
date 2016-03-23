@@ -59,6 +59,11 @@ public class ViewPagerAutoFlipper implements
         if (mViewPager != null) {
             mAutoFlip = true;
             mViewPager.removeCallbacks(mFlipRunnable);
+            mViewPager.removeOnPageChangeListener(this);
+            mViewPager.addOnPageChangeListener(this);
+            mPosition = mViewPager.getCurrentItem();
+            mLastFlipTime = 0;
+            mScrollState = ViewPager.SCROLL_STATE_IDLE;
             mViewPager.postDelayed(mFlipRunnable, mFlipInterval);
         }
     }

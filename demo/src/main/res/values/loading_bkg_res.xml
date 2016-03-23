@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <drawable name="default_loading_bkg_view_load_icon">@drawable/ic_loading_icon</drawable>
+    <drawable name="default_loading_bkg_view_fail_icon">@drawable/ic_loading_icon</drawable>
+    <drawable name="default_loading_bkg_view_empty_icon">@drawable/ic_loading_icon</drawable>
+    <color name="default_loading_bkg_view_text_color">@color/text_color</color>
+    <color name="default_loading_bkg_view_progress_color">@color/teal</color>
+    <string name="loading_bkg_view_message_loading">努力加载中&#8230;</string>
+    <string name="loading_bkg_view_message_fail">啊咧?好像出问题了&#8230;\n请点击重试</string>
+    <string name="loading_bkg_view_message_empty">暂时没有数据</string>
+
+</resources>

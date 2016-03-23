@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <lx.af.view.RatioWidthRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        app:ratioByWidth="0.82" >
 
         <lx.af.view.SwipeRefresh.NestedViewPager
             android:id="@+id/swipe_refresh_header_pager"
             android:layout_width="match_parent"
-            android:layout_height="240dp" />
+            android:layout_height="match_parent" />
 
         <com.viewpagerindicator.CirclePageIndicator
             android:id="@+id/swipe_refresh_header_pager_indicator"
@@ -20,13 +22,20 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:padding="6dp" />
-    </RelativeLayout>
+
+        <lx.af.widget.DanmakuLayout.DanmakuLayout
+            android:id="@+id/swipe_refresh_header_danmaku"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="130dp"
+            android:background="#80000000" />
+    </lx.af.view.RatioWidthRelativeLayout>
 
     <TextView
         android:id="@+id/swipe_refresh_header_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="50dp"
+        android:minHeight="60dp"
         android:background="@color/l_green"
         android:gravity="center"
         android:textColor="#fff"

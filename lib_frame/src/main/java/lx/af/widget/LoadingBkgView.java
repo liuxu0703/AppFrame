@@ -119,15 +119,19 @@ public class LoadingBkgView extends LinearLayout {
         });
     }
 
-    public void done() {
-        GlobalThreadManager.runInUiThread(new Runnable() {
+    public void done(long delay) {
+        GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
             @Override
             public void run() {
                 mViewProgress.stopSpinning();
                 setVisibility(View.GONE);
                 startAnimation(mAnimGone);
             }
-        });
+        }, delay);
+    }
+
+    public void done() {
+        done(0);
     }
 
     public void empty() {
@@ -188,6 +192,10 @@ public class LoadingBkgView extends LinearLayout {
 
     public void setEmptyIcon(int iconResId) {
         mIconEmptyResId = iconResId;
+    }
+
+    public void setRetryOnEmpty(boolean retryOnEmpty) {
+        mRetryOnEmpty = retryOnEmpty;
     }
 
     public void setRetryClickCallback(OnClickListener l) {

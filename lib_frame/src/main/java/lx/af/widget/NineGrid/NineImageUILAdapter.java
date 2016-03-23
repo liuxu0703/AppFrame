@@ -53,6 +53,15 @@ public class NineImageUILAdapter implements NineGridLayout.NineGridAdapter {
         return mImageUris;
     }
 
+    public void refreshForAdapterView(List<String> picList) {
+        if (picList != null && picList.size() > 0) {
+            mGrid.setVisibility(View.VISIBLE);
+            setImageUris(picList);
+        } else {
+            mGrid.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public int getCount() {
         return mImageUris.size();

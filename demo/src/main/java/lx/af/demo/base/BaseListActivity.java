@@ -18,7 +18,7 @@ public abstract class BaseListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swipe_refresh);
+        setContentView(R.layout.activity_post_list);
     }
 
     @Override

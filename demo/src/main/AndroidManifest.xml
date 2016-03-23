@@ -41,9 +41,9 @@
             android:label="Bar Code Scan" >
         </activity>
         <activity
-            android:name=".activity.DemoFrame.SwipeRefreshDemo"
+            android:name=".activity.DemoFrame.PostListActivity"
             android:screenOrientation="portrait"
-            android:label="Auto Slide Pager" >
+            android:label="Post List" >
         </activity>
         <activity
             android:name=".activity.DemoFrame.ScrollViewFadeDemo"

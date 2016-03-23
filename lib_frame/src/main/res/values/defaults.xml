@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- for loading background view, begin -->
     <drawable name="default_loading_bkg_view_load_icon">@drawable/ic_launcher</drawable>
     <drawable name="default_loading_bkg_view_fail_icon">@drawable/ic_launcher</drawable>
     <drawable name="default_loading_bkg_view_empty_icon">@drawable/ic_launcher</drawable>
     <color name="default_loading_bkg_view_text_color">#cccccc</color>
     <color name="default_loading_bkg_view_progress_color">#cccccc</color>
+    <string name="loading_bkg_view_message_loading">努力加载中&#8230;</string>
+    <string name="loading_bkg_view_message_fail">请求失败,请点击重试</string>
+    <string name="loading_bkg_view_message_empty">暂时没有数据</string>
+    <!-- for loading background view, end -->
 
 </resources>

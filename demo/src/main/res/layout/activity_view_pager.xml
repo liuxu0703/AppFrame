@@ -37,7 +37,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/azure"
+        android:background="@color/divider_color"
         android:layout_marginBottom="10dp" />
 
     <android.support.v4.view.ViewPager

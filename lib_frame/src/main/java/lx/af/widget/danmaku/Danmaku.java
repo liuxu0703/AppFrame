@@ -55,18 +55,6 @@ public class Danmaku extends RelativeLayout implements Handler.Callback {
         mHandler.sendEmptyMessageDelayed(MSG_START_NEXT, INTERVAL);
     }
 
-    public void addData(Object ... data) {
-        synchronized (mDataLock) {
-            if (data != null && data.length != 0) {
-                for (Object d : data) {
-                    mDataList.add(0, d);
-                }
-            }
-        }
-        mHandler.removeMessages(MSG_START_NEXT);
-        mHandler.sendEmptyMessageDelayed(MSG_START_NEXT, INTERVAL);
-    }
-
     public void startDanmaku() {
         mIsRunning = true;
     }

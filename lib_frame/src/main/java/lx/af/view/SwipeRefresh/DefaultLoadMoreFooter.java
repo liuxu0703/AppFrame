@@ -40,7 +40,7 @@ public class DefaultLoadMoreFooter extends RelativeLayout implements ILoadMoreFo
     }
 
     @Override
-    public void init(ListView parent) {
+    public void init(SwipeRefreshListLayout refreshLayout, ListView parent) {
         parent.addFooterView(this);
     }
 

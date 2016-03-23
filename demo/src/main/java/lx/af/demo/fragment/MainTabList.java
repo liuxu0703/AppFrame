@@ -13,7 +13,7 @@ import lx.af.demo.R;
 import lx.af.demo.adapter.DemoActionAdapter;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.base.BaseFragment;
-import lx.af.demo.model.ActionModel;
+import lx.af.demo.consts.ActionModel;
 import lx.af.utils.ViewInject.ViewInject;
 
 /**

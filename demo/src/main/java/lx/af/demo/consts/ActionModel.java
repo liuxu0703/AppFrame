@@ -1,4 +1,4 @@
-package lx.af.demo.model;
+package lx.af.demo.consts;
 
 import android.app.Activity;
 

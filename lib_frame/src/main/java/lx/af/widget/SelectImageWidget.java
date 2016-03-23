@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -92,6 +91,7 @@ public class SelectImageWidget extends FlowLayout {
         mItemClickListener = l;
     }
 
+    @NonNull
     public ArrayList<String> getImagePathList() {
         return mPathList;
     }
@@ -212,6 +212,12 @@ public class SelectImageWidget extends FlowLayout {
         notifyImageListChanged();
     }
 
+    public void startSelectImage() {
+        startImageSelector();
+    }
+
+    // ==============================================
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -219,7 +225,8 @@ public class SelectImageWidget extends FlowLayout {
             int screenWidth = ScreenUtils.getScreenWidth();
             int paddingHorizontal = getPaddingLeft() + getPaddingRight();
             if (w > (screenWidth * 4 / 5)) {
-                mImageSize = (w - mImageMargin * 10 - paddingHorizontal) / 5;
+                int count = mMaxCount < 5 ? 4 : 5;
+                mImageSize = (w - mImageMargin * count * 2 - paddingHorizontal) / count;
             } else {
                 mImageSize = (screenWidth - mImageMargin * 10 - paddingHorizontal) / 5;
             }
@@ -332,25 +339,29 @@ public class SelectImageWidget extends FlowLayout {
                 });
     }
 
+    private void startImageSelector() {
+        AbsBaseActivity activity = (AbsBaseActivity) getContext();
+        ImageSelectorLauncher.of(activity)
+                .count(mMaxCount)
+                .preSelect(mPathList)
+                .start(new ActivityResultCallback<ArrayList<String>>() {
+                    @Override
+                    public void onActivityResult(int resultCode, @NonNull ArrayList<String> result) {
+                        resetImagePathList(result);
+                    }
+                });
+    }
+
 
     private ItemClickListener mItemClickListener = new ItemClickListener() {
 
         @Override
         public void onImageAddClicked(SelectImageWidget container, View addView) {
-            AbsBaseActivity activity = (AbsBaseActivity) getContext();
-            ImageSelectorLauncher.of(activity)
-                    .count(mMaxCount)
-                    .preSelect(mPathList)
-                    .start(new ActivityResultCallback<ArrayList<String>>() {
-                        @Override
-                        public void onActivityResult(int resultCode, @NonNull ArrayList<String> result) {
-                            resetImagePathList(result);
-                        }
-                    });
+            startImageSelector();
         }
 
         @Override
-        public void onImageClicked(SelectImageWidget container, ImageView imageView, String path) {
+        public void onImageClicked(SelectImageWidget container, ImageView imageView, @NonNull String path) {
             ImageBrowserLauncher.of(getContext())
                     .tapExit(true)
                     .paths(container.getImagePathList())
@@ -360,7 +371,7 @@ public class SelectImageWidget extends FlowLayout {
         }
 
         @Override
-        public boolean onImageLongClicked(SelectImageWidget container, ImageView imageView, String path) {
+        public boolean onImageLongClicked(SelectImageWidget container, ImageView imageView, @NonNull String path) {
             showMenuDialog(path);
             return true;
         }
@@ -385,12 +396,12 @@ public class SelectImageWidget extends FlowLayout {
 
     public interface ItemClickListener {
         void onImageAddClicked(SelectImageWidget container, View addView);
-        void onImageClicked(SelectImageWidget container, ImageView imageView, String path);
-        boolean onImageLongClicked(SelectImageWidget container, ImageView imageView, String path);
+        void onImageClicked(SelectImageWidget container, ImageView imageView, @NonNull String path);
+        boolean onImageLongClicked(SelectImageWidget container, ImageView imageView, @NonNull String path);
     }
 
     public interface ImageListChangeListener {
-        void onImageListChanged(ArrayList<String> imageList);
+        void onImageListChanged(@NonNull ArrayList<String> imageList);
     }
 
 }

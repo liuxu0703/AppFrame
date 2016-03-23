@@ -8,7 +8,7 @@ import android.widget.ListView;
  */
 public interface ILoadMoreFooter {
 
-    void init(ListView parent);
+    void init(SwipeRefreshListLayout refreshLayout, ListView parent);
 
     void refreshLoadState(ListView parent, SwipeRefreshListLayout.LoadState state);
 
