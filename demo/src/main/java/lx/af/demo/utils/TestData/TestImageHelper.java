@@ -55,7 +55,7 @@ public class TestImageHelper {
         }
     }
 
-    public static int random(int n) {
+    private static int random(int n) {
         return sRandom.nextInt(n);
     }
 

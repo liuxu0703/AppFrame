@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -18,11 +19,12 @@ import java.util.Random;
 import java.util.Stack;
 
 import lx.af.utils.ScreenUtils;
-import lx.af.utils.log.Log;
 
 /**
  * author: lx
  * date: 16-3-1
+ *
+ * a relative layout to display danmaku.
  */
 public class DanmakuLayout extends RelativeLayout implements
         Handler.Callback {
@@ -44,9 +46,11 @@ public class DanmakuLayout extends RelativeLayout implements
     private LinkedList<Track> mRunningTrackList = new LinkedList<>();
     private LinkedList<Track> mUnAvailTrackList = new LinkedList<>();
 
+    private long mMinInterval = DEFAULT_INTERVAL;
     private boolean mIsRunning = false;
     private boolean mIsDataEmpty = false;
-    private long mMinInterval = DEFAULT_INTERVAL;
+
+    private OnDataEmptyListener mDataEmptyListener;
 
     public DanmakuLayout(Context context) {
         super(context);
@@ -61,7 +65,10 @@ public class DanmakuLayout extends RelativeLayout implements
     private void initView() {
     }
 
-    public void setViewAdapter(DanmakuBaseAdapter adapter) {
+    /**
+     * set a data set adapter. data should be added by the adapter.
+     */
+    public void setAdapter(DanmakuBaseAdapter adapter) {
         mAdapter = adapter;
         mAdapter.setDanmakuLayout(this);
         if (mIsRunning) {
@@ -69,6 +76,21 @@ public class DanmakuLayout extends RelativeLayout implements
         }
     }
 
+    /**
+     * get the adapter.
+     */
+    public DanmakuBaseAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    /**
+     * start play danmaku.
+     * if data set is not null, danmaku will show immediately.
+     * if data set is null, we will wait for new data.
+     * data null event can be monitored by either {@link OnDataEmptyListener}
+     * or {@link DanmakuBaseAdapter#onDataEmpty()} in the adapter.
+     * @see #toggleDanmaku()
+     */
     public void startDanmaku() {
         if (!mIsRunning) {
             mIsRunning = true;
@@ -76,11 +98,19 @@ public class DanmakuLayout extends RelativeLayout implements
         }
     }
 
+    /**
+     * stop play danmaku.
+     */
     public void stopDanmaku() {
         mIsRunning = false;
         mHandler.removeMessages(MSG_NEXT);
     }
 
+    /**
+     * start play if stopped; stop play if started.
+     * @see #startDanmaku()
+     * @see #stopDanmaku()
+     */
     public void toggleDanmaku() {
         if (mIsRunning) {
             stopDanmaku();
@@ -89,14 +119,62 @@ public class DanmakuLayout extends RelativeLayout implements
         }
     }
 
+    /**
+     * set a minimum interval for a danmaku to be displayed after another.
+     * this will only affect the speed of retrieving danmaku data.
+     * to set the animation speed, see {@link DanmakuBaseAdapter#getDuration(Object)}
+     */
+    public void setDanmakuMinInterval(long interval) {
+        if (interval < 100) {
+            mMinInterval = DEFAULT_INTERVAL;
+        } else {
+            mMinInterval = interval;
+        }
+    }
+
+    /**
+     * get minimum interval for a danmaku to be displayed after another.
+     * this will only affect the speed of retrieving danmaku data.
+     * to set the animation speed, see {@link DanmakuBaseAdapter#getDuration(Object)}
+     */
+    public long getDanmakuMinInterval() {
+        return mMinInterval;
+    }
+
+    /**
+     * set a callback to be invoked when there is no data in the adapter.
+     * this can also be monitored in the adapter
+     * with {@link DanmakuBaseAdapter#onDataEmpty()}
+     */
+    public void setDanmakuDataEmptyListener(OnDataEmptyListener l) {
+        mDataEmptyListener = l;
+    }
+
+    /**
+     * @return true if danmaku displaying has be started; false otherwise
+     */
     public boolean isDanmakuRunning() {
         return mIsRunning;
     }
 
+    /**
+     *
+     * @return true on no data; false otherwise
+     */
     public boolean isDataEmpty() {
         return mIsDataEmpty;
     }
 
+
+    public interface OnDataEmptyListener {
+
+        /**
+         * callback to be invoked when there is no data in the adapter.
+         * this can also be monitored in the adapter
+         * with {@link DanmakuBaseAdapter#onDataEmpty()}
+         */
+        void onDanmakuDataEmpty(DanmakuLayout danmaku);
+    }
 
     // ===================================================
 
@@ -128,6 +206,9 @@ public class DanmakuLayout extends RelativeLayout implements
                     mIsDataEmpty = true;
                     mHandler.removeMessages(MSG_NEXT);
                     log("get next, stop, data empty");
+                    if (mDataEmptyListener != null) {
+                        mDataEmptyListener.onDanmakuDataEmpty(this);
+                    }
                     break;
                 }
 

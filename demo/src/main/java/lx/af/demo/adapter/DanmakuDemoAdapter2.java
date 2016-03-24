@@ -8,12 +8,10 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Random;
 
-import lx.af.adapter.AbsViewHolder;
 import lx.af.demo.R;
-import lx.af.demo.model.DanmakuModel;
+import lx.af.demo.model.DanmakuModel1;
 import lx.af.demo.utils.ImageLoaderHelper;
 import lx.af.manager.GlobalThreadManager;
-import lx.af.utils.ViewInject.ViewInject;
 import lx.af.widget.DanmakuLayout.DanmakuLayout;
 import lx.af.widget.DanmakuLayout.DanmakuSimpleAdapter;
 
@@ -21,20 +19,20 @@ import lx.af.widget.DanmakuLayout.DanmakuSimpleAdapter;
  * author: lx
  * date: 16-3-23
  */
-public class DanmakuAdapter extends DanmakuSimpleAdapter<DanmakuModel> {
+public class DanmakuDemoAdapter2 extends DanmakuSimpleAdapter<DanmakuModel1> {
 
     private Random mRandom = new Random();
     private Context mContext;
 
-    public DanmakuAdapter(Context context) {
+    public DanmakuDemoAdapter2(Context context) {
         mContext = context;
     }
 
     @Override
-    public View getView(DanmakuModel data, View convertView, DanmakuLayout parent) {
+    public View getView(DanmakuModel1 data, View convertView, DanmakuLayout parent) {
         DanmakuViewHolder vh;
         if (convertView == null) {
-            convertView = View.inflate(mContext, R.layout.item_post_list_danmaku, null);
+            convertView = View.inflate(mContext, R.layout.item_danmaku_1, null);
             vh = new DanmakuViewHolder(convertView);
             convertView.setTag(vh);
         } else {
@@ -45,7 +43,7 @@ public class DanmakuAdapter extends DanmakuSimpleAdapter<DanmakuModel> {
     }
 
     @Override
-    public long getDuration(DanmakuModel data) {
+    public long getDuration(DanmakuModel1 data) {
         return mRandom.nextInt(2500) + 2500; // 2500 - 5500 millis
     }
 
@@ -54,7 +52,7 @@ public class DanmakuAdapter extends DanmakuSimpleAdapter<DanmakuModel> {
         GlobalThreadManager.runInThreadPool(new Runnable() {
             @Override
             public void run() {
-                final List<DanmakuModel> list = DanmakuModel.createRandomList(16);
+                final List<DanmakuModel1> list = DanmakuModel1.createRandomList(16);
                 GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -66,19 +64,17 @@ public class DanmakuAdapter extends DanmakuSimpleAdapter<DanmakuModel> {
     }
 
 
-    private static class DanmakuViewHolder extends AbsViewHolder<DanmakuModel> {
+    private static class DanmakuViewHolder {
 
-        @ViewInject(id = R.id.item_program_topic_danmaku_avatar)
         ImageView avatar;
-        @ViewInject(id = R.id.item_program_topic_danmaku_text)
         TextView text;
 
         public DanmakuViewHolder(View root) {
-            super(root);
+            avatar = (ImageView) root.findViewById(R.id.item_danmaku_avatar);
+            text = (TextView) root.findViewById(R.id.item_danmaku_text);
         }
 
-        @Override
-        public void setData(DanmakuModel data) {
+        public void setData(DanmakuModel1 data) {
             ImageLoaderHelper.displayAvatar(avatar, data.avatar);
             text.setText(data.content);
         }

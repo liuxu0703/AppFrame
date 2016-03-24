@@ -1,23 +1,21 @@
 package lx.af.demo.activity.DemoWidget;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
+import android.widget.Toast;
 
 import lx.af.demo.R;
+import lx.af.demo.adapter.DanmakuDemoAdapter1;
+import lx.af.demo.adapter.DanmakuDemoAdapter2;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
-import lx.af.manager.GlobalThreadManager;
-import lx.af.utils.ViewInject.ViewInject;
-import lx.af.widget.danmaku.Danmaku;
-import lx.af.widget.danmaku.ViewAdapter;
+import lx.af.demo.model.DanmakuModel1;
+import lx.af.demo.utils.ImageLoaderHelper;
+import lx.af.demo.utils.TestData.TestImageHelper;
+import lx.af.widget.DanmakuLayout.DanmakuBaseAdapter;
+import lx.af.widget.DanmakuLayout.DanmakuLayout;
 
 /**
  * author: lx
@@ -27,95 +25,101 @@ public class DanmakuLayoutDemo extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
-    @ViewInject(id = R.id.danmaku_btn_toggle, click = "onClick")
-    private Button mBtnToggle;
-    @ViewInject(id = R.id.danmaku_btn_add_data, click = "onClick")
-    private Button mBtnAddData;
-    @ViewInject(id = R.id.danmaku_bkg_img)
-    private ImageView mHeadBkg;
-    @ViewInject(id = R.id.danmaku_layout)
-    private Danmaku mDanmakuLayout;
-
-    @ViewInject(id = R.id.danmaku_test_view)
-    private View mTestView;
+    private View mDanmakuBtnToggle;
+    private TextView mDanmakuInfoText;
+    private DanmakuLayout mDanmaku;
+    private DanmakuDemoAdapter1 mDanmakuAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danmaku);
-        mDanmakuLayout.setViewAdapter(new DanmakuAdapter());
-        refreshToggleButton();
 
-        GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
+        final DanmakuLayout danmaku2 = (DanmakuLayout) findViewById(R.id.danmaku_layout_2);
+        danmaku2.setAdapter(new DanmakuDemoAdapter2(this));
+        danmaku2.startDanmaku();
+        danmaku2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                TranslateAnimation anim = new TranslateAnimation(
-                        TranslateAnimation.ABSOLUTE, 0,
-                        TranslateAnimation.ABSOLUTE, 300,
-                        TranslateAnimation.ABSOLUTE, 0,
-                        TranslateAnimation.ABSOLUTE, 0);
-                anim.setDuration(9000);
-                anim.setFillAfter(true);
-                mTestView.startAnimation(anim);
+            public void onClick(View v) {
+                danmaku2.toggleDanmaku();
+                String msg = "danmaku " + (danmaku2.isDanmakuRunning() ? "on" : "off");
+                Toast.makeText(DanmakuLayoutDemo.this, msg, Toast.LENGTH_SHORT).show();
             }
-        }, 1500);
+        });
+
+        // =======================================
+
+        ImageView bkg = (ImageView) findViewById(R.id.danmaku_bkg_img);
+        ImageLoaderHelper.displayImage(bkg, TestImageHelper.randomImageL());
+
+        mDanmaku = (DanmakuLayout) findViewById(R.id.danmaku_layout);
+        mDanmakuInfoText = (TextView) findViewById(R.id.danmaku_info_text);
+        mDanmakuBtnToggle = findViewById(R.id.danmaku_btn_toggle);
+        mDanmakuBtnToggle.setOnClickListener(this);
+        mDanmakuBtnToggle.setSelected(mDanmaku.isDanmakuRunning());
+        mDanmakuAdapter = new DanmakuDemoAdapter1(this);
+        mDanmaku.setAdapter(mDanmakuAdapter);
+        mDanmaku.startDanmaku();
+        findViewById(R.id.danmaku_btn_poll_mode).setOnClickListener(this);
+        findViewById(R.id.danmaku_btn_interval).setOnClickListener(this);
+        findViewById(R.id.danmaku_btn_add).setOnClickListener(this);
+
+        refreshInfoText();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.danmaku_btn_toggle: {
-                mDanmakuLayout.toggleDanmaku();
-                refreshToggleButton();
+                mDanmaku.toggleDanmaku();
+                mDanmakuBtnToggle.setSelected(mDanmaku.isDanmakuRunning());
+                if (mDanmaku.isDanmakuRunning() && mDanmaku.isDataEmpty()) {
+                    mDanmakuAdapter.loadData();
+                }
                 break;
             }
-            case R.id.danmaku_btn_add_data: {
-                mDanmakuLayout.addData(DATA);
+            case R.id.danmaku_btn_add: {
+                DanmakuDemoAdapter1.ItemWrapper item = new DanmakuDemoAdapter1.ItemWrapper();
+                item.d4 = DanmakuModel1.createRandom();
+                mDanmakuAdapter.addDataHighPriority(item);
+                break;
+            }
+            case R.id.danmaku_btn_poll_mode: {
+                switch (mDanmakuAdapter.getPollDataMode()) {
+                    case FIFO:
+                        mDanmakuAdapter.setPollDataMode(DanmakuBaseAdapter.PollDataMode.LIFO);
+                        break;
+                    case LIFO:
+                        mDanmakuAdapter.setPollDataMode(DanmakuBaseAdapter.PollDataMode.RANDOM);
+                        break;
+                    case RANDOM:
+                        mDanmakuAdapter.setPollDataMode(DanmakuBaseAdapter.PollDataMode.FIFO);
+                        break;
+                }
+                break;
+            }
+            case R.id.danmaku_btn_interval: {
+                long interval = mDanmaku.getDanmakuMinInterval();
+                if (interval <= 1000) {
+                    mDanmaku.setDanmakuMinInterval(2000);
+                } else if (interval > 1000 && interval <= 2000) {
+                    mDanmaku.setDanmakuMinInterval(3000);
+                } else {
+                    mDanmaku.setDanmakuMinInterval(500);
+                }
                 break;
             }
         }
+
+        refreshInfoText();
     }
 
-    private void refreshToggleButton() {
-        if (mDanmakuLayout.isDanmakuRunning()) {
-            mBtnToggle.setText("stop");
-        } else {
-            mBtnToggle.setText("start");
-        }
-    }
-
-    private class DanmakuAdapter implements ViewAdapter {
-
-        @Override
-        public View getView(Object data, View view, ViewGroup parent) {
-            String str = (String) data;
-            TextView tv;
-            if (view != null) {
-                tv = (TextView) view;
-            } else {
-                tv = new TextView(DanmakuLayoutDemo.this);
-                tv.setBackgroundColor(getResources().getColor(R.color.black));
-                tv.setTextColor(Color.WHITE);
-            }
-            tv.setText(str);
-            return tv;
-        }
-    }
-
-
-
-    private static final ArrayList<Object> DATA = new ArrayList<>();
-    static {
-        DATA.add("1111111111111111111111");
-        DATA.add("22222222222");
-        DATA.add("3333333333333333");
-        DATA.add("4444444");
-        DATA.add("5555555555");
-        DATA.add("6666");
-        DATA.add("77");
-        DATA.add("8888888888888888888");
-        DATA.add("999999999");
-        DATA.add("00000000000000");
+    private void refreshInfoText() {
+        StringBuilder info = new StringBuilder();
+        info.append("running: ").append(mDanmaku.isDanmakuRunning()).append("\n")
+                .append("interval: ").append(mDanmaku.getDanmakuMinInterval()).append("\n")
+                .append("poll mode: ").append(mDanmakuAdapter.getPollDataMode());
+        mDanmakuInfoText.setText(info.toString());
     }
 
 }

@@ -9,7 +9,7 @@
     android:orientation="horizontal" >
 
     <lx.af.widget.RoundImage.RoundedImageView
-        android:id="@+id/item_program_topic_danmaku_avatar"
+        android:id="@+id/item_danmaku_avatar"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:padding="1dp"
@@ -17,11 +17,11 @@
         app:corner_radius="100dp" />
 
     <TextView
-        android:id="@+id/item_program_topic_danmaku_text"
+        android:id="@+id/item_danmaku_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
-        android:layout_marginRight="7dp"
+        android:layout_marginRight="9dp"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:singleLine="true" />

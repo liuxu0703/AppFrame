@@ -28,17 +28,4 @@
         android:background="@color/activity_bkg_1"
         app:loading_retry_on_empty="true" />
 
-    <ImageView
-        android:id="@+id/activity_swipe_refresh_btn_add"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="15dp"
-        android:padding="10dp"
-        android:gravity="center"
-        android:clickable="true"
-        android:background="@drawable/swipe_activity_add_bkg"
-        android:src="@drawable/btn_danmaku_selector"
-        android:contentDescription="@null" />
 </RelativeLayout>

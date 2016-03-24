@@ -11,5 +11,9 @@ public abstract class DanmakuSimpleAdapter<T> extends DanmakuBaseAdapter<T> {
         return 1;
     }
 
+    @Override
+    public void onDataEmpty() {
+
+    }
 
 }

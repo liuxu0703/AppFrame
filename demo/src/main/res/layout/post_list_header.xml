@@ -23,12 +23,6 @@
             android:layout_alignParentBottom="true"
             android:padding="6dp" />
 
-        <lx.af.widget.DanmakuLayout.DanmakuLayout
-            android:id="@+id/swipe_refresh_header_danmaku"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="130dp"
-            android:background="#80000000" />
     </lx.af.view.RatioWidthRelativeLayout>
 
     <TextView

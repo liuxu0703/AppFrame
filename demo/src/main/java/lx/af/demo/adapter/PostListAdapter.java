@@ -20,9 +20,9 @@ import lx.af.widget.NineGrid.NineImageUILAdapter;
  * author: lx
  * date: 16-3-22
  */
-public class PostAdapter extends AbsViewHolderAdapter<PostModel> {
+public class PostListAdapter extends AbsViewHolderAdapter<PostModel> {
 
-    public PostAdapter(Context context) {
+    public PostListAdapter(Context context) {
         super(context);
     }
 

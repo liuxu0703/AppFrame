@@ -12,9 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.demo.R;
-import lx.af.demo.adapter.DanmakuAdapter;
 import lx.af.demo.adapter.ImagePagerAdapter;
-import lx.af.demo.adapter.PostAdapter;
+import lx.af.demo.adapter.PostListAdapter;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.model.PostModel;
@@ -26,7 +25,6 @@ import lx.af.utils.ViewUtils.BufferedOnClickListener;
 import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
 import lx.af.view.SwipeRefresh.SwipeRefreshLayout;
 import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
-import lx.af.widget.DanmakuLayout.DanmakuLayout;
 import lx.af.widget.LoadingBkgView;
 import lx.af.widget.iconify.widget.IconTextView;
 
@@ -45,19 +43,15 @@ public class PostListActivity extends BaseActivity implements
     private ListView mListView;
     @ViewInject(id = R.id.activity_swipe_refresh_loading_view)
     private LoadingBkgView mLoadingView;
-    @ViewInject(id = R.id.activity_swipe_refresh_btn_add)
-    private View mBtnAdd;
 
     private ViewPager mHeaderViewPager;
     private PageIndicator mPageIndicator;
-    private DanmakuLayout mDanmakuView;
     private TextView mActionBarTitle;
     private View mActionBarBack;
     private View mActionBarMenu;
 
     private ViewPagerAutoFlipper mPageFlipper;
-    private PostAdapter mAdapter;
-    private DanmakuAdapter mDanmakuAdapter;
+    private PostListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +65,6 @@ public class PostListActivity extends BaseActivity implements
         mPageIndicator = (PageIndicator)
                 header.findViewById(R.id.swipe_refresh_header_pager_indicator);
         mHeaderViewPager = (ViewPager) header.findViewById(R.id.swipe_refresh_header_pager);
-        mDanmakuView = (DanmakuLayout) header.findViewById(R.id.swipe_refresh_header_danmaku);
         mPageFlipper = ViewPagerAutoFlipper.newInstance(mHeaderViewPager).setInterval(2500);
         mLoadingView.setRetryClickCallback(new View.OnClickListener() {
             @Override
@@ -80,7 +73,7 @@ public class PostListActivity extends BaseActivity implements
             }
         });
 
-        mAdapter = new PostAdapter(this);
+        mAdapter = new PostListAdapter(this);
         mListView.addHeaderView(header);
         mListView.setAdapter(mAdapter);
 
@@ -90,12 +83,10 @@ public class PostListActivity extends BaseActivity implements
                 .endOffset(header)
                 .addFadeWithView(mActionBarTitle)
                 .addFadeWithView(mActionBarMenu)
-                .addFadeReverseView(mBtnAdd)
                 .addFadeReverseDrawable(mActionBarBack.getBackground())
                 .start(mSwipeRefreshLayout);
 
         initData();
-        initDanmakuView();
     }
 
     @Override
@@ -156,7 +147,6 @@ public class PostListActivity extends BaseActivity implements
                             mAdapter.addAll(list);
                             mAdapter.notifyDataSetChanged();
                             resetHeaderViewPager(TestImageHelper.randomImageListL(2, 5));
-                            resetDanmaku();
                         }
                     }
                 });
@@ -179,7 +169,6 @@ public class PostListActivity extends BaseActivity implements
                     public void run() {
                         if (refresh) {
                             resetHeaderViewPager(TestImageHelper.randomImageListL(2, 5));
-                            resetDanmaku();
                         }
 
                         if (postList == null) {
@@ -205,29 +194,7 @@ public class PostListActivity extends BaseActivity implements
     private void resetHeaderViewPager(ArrayList<String> imageList) {
         mHeaderViewPager.setAdapter(new ImagePagerAdapter(imageList));
         mPageIndicator.setViewPager(mHeaderViewPager);
-        //mPageFlipper.start();
-    }
-
-    private void resetDanmaku() {
-        if (mDanmakuView.isDataEmpty()) {
-            mDanmakuAdapter.onDataEmpty();
-        }
-    }
-
-    // =============================================
-
-    private void initDanmakuView() {
-        mDanmakuAdapter = new DanmakuAdapter(this);
-        mDanmakuView.setViewAdapter(mDanmakuAdapter);
-        mDanmakuView.startDanmaku();
-        mBtnAdd.setSelected(!mDanmakuView.isDanmakuRunning());
-        mBtnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDanmakuView.toggleDanmaku();
-                mBtnAdd.setSelected(!mDanmakuView.isDanmakuRunning());
-            }
-        });
+        mPageFlipper.start();
     }
 
 }
