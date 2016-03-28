@@ -82,17 +82,24 @@
             android:screenOrientation="portrait"
             android:label="Select Image Widget" >
         </activity>
+        <activity
+            android:name=".activity.DemoWidget.QuoteDividerDemo"
+            android:screenOrientation="portrait"
+            android:label="Select Image Widget" >
+        </activity>
 
 
         <activity
             android:name=".activity.DemoUtils.ViewPagerAutoFlipDemo"
-            android:screenOrientation="portrait"
-            android:label="Auto Slide Pager" >
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.DemoUtils.WatermarkDemo"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.DemoUtils.HomeKeyWatcherDemo"
-            android:screenOrientation="portrait"
-            android:label="Home Key Watcher" >
+            android:screenOrientation="portrait" >
         </activity>
 
 

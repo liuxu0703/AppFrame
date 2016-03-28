@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.ThumbnailUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -280,35 +279,33 @@ public final class BitmapUtils {
         return b;
     }
 
-    /**
-     * add water mark to bitmap
-     */
-    public static Bitmap addWaterMark(Bitmap bitmap, Bitmap waterMark) {
-        if (bitmap == null) {
-            return null;
-        }
-        if (waterMark == null) {
-            return bitmap;
-        }
-        int fw = bitmap.getWidth();
-        int fh = bitmap.getHeight();
-        int sw = waterMark.getWidth();
-        int sh = waterMark.getHeight();
-        if (fw < 2 * sw) {
-            float scale = (float) fw / (2 * sw);
-            Matrix matrix = new Matrix();
-            matrix.postScale(scale, scale);
-            waterMark = Bitmap.createBitmap(waterMark, 0, 0, waterMark.getWidth(), waterMark.getHeight(), matrix, true);
+    public static Bitmap convertToBlackWhite(Bitmap bmp) {
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+        int[] pixels = new int[width * height];
 
-            sw = waterMark.getWidth();
-            sh = waterMark.getHeight();
-        }
+        bmp.getPixels(pixels, 0, width, 0, 0, width, height);
+        int alpha = 0xFF << 24;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int grey = pixels[width * i + j];
 
-        Bitmap ret = Bitmap.createBitmap(fw, fh, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(ret);
-        canvas.drawBitmap(bitmap, 0, 0, null);
-        canvas.drawBitmap(waterMark, fw - sw - 10, fh - sh, null);
-        return ret;
+                int red = ((grey & 0x00FF0000) >> 16);
+                int green = ((grey & 0x0000FF00) >> 8);
+                int blue = (grey & 0x000000FF);
+
+                grey = (int) (red * 0.3 + green * 0.59 + blue * 0.11);
+                grey = alpha | (grey << 16) | (grey << 8) | grey;
+                pixels[width * i + j] = grey;
+            }
+        }
+        Bitmap newBmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        newBmp.setPixels(pixels, 0, width, 0, 0, width, height);
+        return ThumbnailUtils.extractThumbnail(newBmp, 380, 460);
+    }
+
+    public static WatermarkHelper.EditBuilder addWaterMark() {
+        return new WatermarkHelper.EditBuilder();
     }
 
 }

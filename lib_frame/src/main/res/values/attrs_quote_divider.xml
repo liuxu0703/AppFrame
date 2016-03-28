@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="QuoteDivider">
+        <attr name="dividerQuoteLeft" format="dimension" />
+        <attr name="dividerQuoteAngle" format="integer" />
+        <attr name="dividerQuoteAnimDuration" format="integer" />
+        <attr name="dividerLineWidth" format="dimension" />
+        <attr name="dividerLineColor" format="color" />
+        <attr name="dividerUpperColor" format="color" />
+        <attr name="dividerLowerColor" format="color" />
+    </declare-styleable>
+</resources>

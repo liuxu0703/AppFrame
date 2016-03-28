@@ -4,13 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <View
-        android:id="@+id/default_refresh_footer_load_more_line"
-        android:layout_width="120dp"
-        android:layout_height="1dp"
-        android:layout_centerInParent="true"
-        android:background="@android:color/darker_gray" />
-
     <TextView
         android:id="@+id/default_refresh_footer_load_more_text"
         android:layout_width="wrap_content"
@@ -20,10 +13,9 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:gravity="center"
-        android:background="#f0f0f0"
         android:text="@string/swipe_refresh_default_footer_done"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp" />
+        android:textColor="#cecece"
+        android:textSize="14sp" />
 
     <lx.af.view.ProgressWheel
         xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"

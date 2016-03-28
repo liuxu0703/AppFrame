@@ -19,7 +19,6 @@ public class DefaultLoadMoreFooter extends RelativeLayout implements ILoadMoreFo
 
     private TextView mMessage;
     private ProgressWheel mProgress;
-    private View mLine;
 
     public DefaultLoadMoreFooter(Context context) {
         super(context);
@@ -36,7 +35,6 @@ public class DefaultLoadMoreFooter extends RelativeLayout implements ILoadMoreFo
         setBackgroundColor(Color.parseColor("#f0f0f0"));
         mMessage = (TextView) findViewById(R.id.default_refresh_footer_load_more_text);
         mProgress = (ProgressWheel) findViewById(R.id.default_refresh_footer_load_more_progress);
-        mLine = findViewById(R.id.default_refresh_footer_load_more_line);
     }
 
     @Override
@@ -51,14 +49,12 @@ public class DefaultLoadMoreFooter extends RelativeLayout implements ILoadMoreFo
                 mProgress.setVisibility(View.VISIBLE);
                 mProgress.spin();
                 mMessage.setText(R.string.swipe_refresh_default_footer_loading);
-                mLine.setVisibility(View.GONE);
                 break;
             case IDLE:
             case NO_MORE:
                 mProgress.setVisibility(View.GONE);
                 mProgress.stopSpinning();
                 mMessage.setText(R.string.swipe_refresh_default_footer_done);
-                mLine.setVisibility(View.VISIBLE);
                 break;
         }
     }

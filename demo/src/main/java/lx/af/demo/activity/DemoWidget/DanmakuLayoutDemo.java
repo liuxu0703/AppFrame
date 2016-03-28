@@ -59,6 +59,7 @@ public class DanmakuLayoutDemo extends BaseActivity implements
         mDanmakuBtnToggle.setSelected(mDanmaku.isDanmakuRunning());
         mDanmakuAdapter = new DanmakuDemoAdapter1(this);
         mDanmaku.setAdapter(mDanmakuAdapter);
+        mDanmaku.setDanmakuMinInterval(500);
         mDanmaku.startDanmaku();
         findViewById(R.id.danmaku_btn_poll_mode).setOnClickListener(this);
         findViewById(R.id.danmaku_btn_interval).setOnClickListener(this);

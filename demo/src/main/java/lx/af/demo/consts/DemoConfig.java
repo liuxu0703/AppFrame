@@ -2,6 +2,8 @@ package lx.af.demo.consts;
 
 import android.app.Activity;
 
+import lx.af.demo.activity.DemoUtils.WatermarkDemo;
+import lx.af.demo.activity.DemoWidget.QuoteDividerDemo;
 import lx.af.demo.activity.DemoWidget.SelectImageViewDemo;
 import lx.af.demo.activity.DemoWidget.AutoSlidePagerDemo;
 import lx.af.demo.activity.DemoWidget.DanmakuLayoutDemo;
@@ -34,8 +36,9 @@ public class DemoConfig {
             demo("Auto Slide Pager", AutoSlidePagerDemo.class),
             demo("Dot Circle View", DotCircleDemo.class),
             demo("Running Digit View", DotCircleDemo.class),
-            demo("Select Image Widget", SelectImageViewDemo.class),
+            demo("Quote Divider", QuoteDividerDemo.class),
             demo("Nine Grid Layout", PostListActivity.class),
+            demo("Select Image Widget", SelectImageViewDemo.class),
             demo("Swipe Refresh & Load More", PostListActivity.class),
             demo("Flow Layout", FlowLayoutDemo.class),
             demo("Video Play View", VideoPlayViewDemo.class),
@@ -47,6 +50,7 @@ public class DemoConfig {
             demo("ActionBar Fade - ListView", PostListActivity.class),
             demo("ActionBar Fade - ScrollView", ScrollViewFadeDemo.class),
             demo("ViewPager Auto Flipper", ViewPagerAutoFlipDemo.class),
+            demo("Image Watermark", WatermarkDemo.class),
             demo("Home Key Watcher", HomeKeyWatcherDemo.class),
     };
 
