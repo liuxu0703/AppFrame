@@ -44,6 +44,10 @@ public class WatermarkHelper {
             marginLeft = marginRight = marginTop = marginBottom = margin;
         }
 
+        public void setMaxSizeScale(int scale) {
+            this.maxWatermarkWidthScale = this.maxWatermarkHeightScale = scale;
+        }
+
         @Override
         public String toString() {
             return "WatermarkOptions{" +
@@ -62,11 +66,11 @@ public class WatermarkHelper {
     // ===================================================
 
 
-    private static int sDefaultWaterMarkIconId = -1;
+    private static int sDefaultWatermarkIconId = -1;
     private static WatermarkOptions sDefaultOptions;
 
     public static void init(int defaultWaterMarkIconId, WatermarkOptions defaultOptions) {
-        sDefaultWaterMarkIconId = defaultWaterMarkIconId;
+        sDefaultWatermarkIconId = defaultWaterMarkIconId;
         sDefaultOptions = defaultOptions;
     }
 
@@ -265,8 +269,8 @@ public class WatermarkHelper {
             if (watermarkBitmap == null && watermarkResId != 0) {
                 watermarkBitmap = BitmapUtils.res2bitmap(watermarkResId);
             }
-            if (watermarkBitmap == null && sDefaultWaterMarkIconId != 0) {
-                watermarkBitmap = BitmapUtils.res2bitmap(sDefaultWaterMarkIconId);
+            if (watermarkBitmap == null && sDefaultWatermarkIconId != 0) {
+                watermarkBitmap = BitmapUtils.res2bitmap(sDefaultWatermarkIconId);
             }
             if (watermarkBitmap == null) {
                 Log.e(TAG, "no watermark found");

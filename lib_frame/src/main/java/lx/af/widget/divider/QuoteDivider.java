@@ -38,6 +38,8 @@ import lx.af.R;
  * dividerUpperColor:           color of space above divider and quote. default is transparent.
  * dividerLowerColor:           color of space bellow divider and quote. default is transparent.
  *
+ * this view will not honor WRAP_CONTENT. the quote triangle's height
+ * is determined by the view's height.
  */
 public class QuoteDivider extends View {
 
@@ -143,7 +145,7 @@ public class QuoteDivider extends View {
 
     /**
      * set quote move animation interpolator.
-     * @see #setQuoteLeftWithAnim(int) 
+     * @see #setQuoteLeftWithAnim(int)
      */
     public void setQuoteAnimInteroplator(Interpolator interpolator) {
         mInterpolator = interpolator;

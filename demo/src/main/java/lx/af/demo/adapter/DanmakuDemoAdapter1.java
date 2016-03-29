@@ -2,6 +2,7 @@ package lx.af.demo.adapter;
 
 import android.content.Context;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import lx.af.demo.model.DanmakuModel2;
 import lx.af.demo.model.DanmakuModel3;
 import lx.af.demo.utils.ImageLoaderHelper;
 import lx.af.manager.GlobalThreadManager;
+import lx.af.utils.Animation.interpolator.FlashHoverInterpolator;
 import lx.af.widget.DanmakuLayout.DanmakuBaseAdapter;
 import lx.af.widget.DanmakuLayout.DanmakuLayout;
 
@@ -82,9 +84,18 @@ public class DanmakuDemoAdapter1 extends DanmakuBaseAdapter<DanmakuDemoAdapter1.
     @Override
     public long getDuration(ItemWrapper data) {
         if (data.d4 != null) {
-            return 6000;
+            return 8000;
         } else {
-            return sRandom.nextInt(1500) + 5000; // 1.5 - 6.5 second
+            return sRandom.nextInt(8000) + 2000;
+        }
+    }
+
+    @Override
+    public Interpolator getInterpolator(ItemWrapper data) {
+        if (data.d4 != null) {
+            return new FlashHoverInterpolator(0.7f);
+        } else {
+            return null;
         }
     }
 

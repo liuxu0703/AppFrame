@@ -20,6 +20,7 @@ class DanmakuAnimator {
     private View view;
     private int type;
     private long duration;
+    private Interpolator interpolator;
 
     private int width;
     private int height;
@@ -29,20 +30,22 @@ class DanmakuAnimator {
 
     private Callback callback;
 
-    DanmakuAnimator(View v, int type, long duration) {
+    DanmakuAnimator(View v, int type, long duration, Interpolator interpolator) {
         this.view = v;
         this.type = type;
         this.duration = duration <= 0 ? DEFAULT_DURATION : duration;
         this.view.setLayoutParams(new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        this.interpolator = interpolator != null ? interpolator : DEFAULT_INTERPOLATOR;
     }
 
-    DanmakuAnimator reset(View v, int type, long duration) {
+    DanmakuAnimator reset(View v, int type, long duration, Interpolator interpolator) {
         this.view = v;
         this.type = type;
         this.duration = duration <= 0 ? DEFAULT_DURATION : duration;
         this.view.setLayoutParams(new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        this.interpolator = interpolator != null ? interpolator : DEFAULT_INTERPOLATOR;
         return this;
     }
 
@@ -50,8 +53,12 @@ class DanmakuAnimator {
         this.width = width;
         this.height = height;
         this.parentWidth = parentWidth;
-        this.speed = (float) (parentWidth + width) / duration;
         this.startTime = 0;
+        if (interpolator instanceof LinearInterpolator) {
+            this.speed = (float) (parentWidth + width) / duration;
+        } else {
+            this.speed = -1;
+        }
         return this;
     }
 
@@ -76,6 +83,10 @@ class DanmakuAnimator {
     }
 
     public boolean isAvailable(DanmakuAnimator pendingDa) {
+        if (pendingDa.speed == -1 || speed == -1) {
+            // interpolator is not LinearInterpolator, mark as unavailable
+            return false;
+        }
         if (pendingDa.speed > speed) {
             return false;
         }
@@ -93,7 +104,7 @@ class DanmakuAnimator {
                 TranslateAnimation.ABSOLUTE, y);
         anim.setFillAfter(true);
         anim.setDuration(duration);
-        anim.setInterpolator(DEFAULT_INTERPOLATOR);
+        anim.setInterpolator(interpolator);
         anim.setAnimationListener(mListener);
         view.startAnimation(anim);
         view.setVisibility(View.VISIBLE);
