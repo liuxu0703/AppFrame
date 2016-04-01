@@ -2,6 +2,7 @@ package lx.af.demo.base;
 
 import lx.af.base.AbsBaseApp;
 import lx.af.demo.R;
+import lx.af.test.Test;
 import lx.af.utils.PathUtils;
 import lx.af.utils.WatermarkHelper;
 
@@ -16,6 +17,7 @@ public class DemoApp extends AbsBaseApp {
         super.onCreate();
 
         PathUtils.setSdDir("AppFrameDemo");
+        Test.init(this);
         initWatermark();
     }
 

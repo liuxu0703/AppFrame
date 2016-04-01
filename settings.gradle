@@ -1,1 +1,1 @@
-include ':lib_frame', ':demo'
+include ':lib_frame', ':demo', ':lib_test_data'

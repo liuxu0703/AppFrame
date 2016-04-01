@@ -84,7 +84,7 @@ public class DanmakuDemoAdapter1 extends DanmakuBaseAdapter<DanmakuDemoAdapter1.
     @Override
     public long getDuration(ItemWrapper data) {
         if (data.d4 != null) {
-            return 8000;
+            return 4000;
         } else {
             return sRandom.nextInt(8000) + 2000;
         }

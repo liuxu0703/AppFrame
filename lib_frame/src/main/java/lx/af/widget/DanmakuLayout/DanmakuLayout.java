@@ -29,7 +29,7 @@ import lx.af.utils.ScreenUtils;
 public class DanmakuLayout extends RelativeLayout implements
         Handler.Callback {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final int TRACK_DIS = ScreenUtils.dip2px(6);
     private static final long DEFAULT_INTERVAL = 1000;
 
@@ -176,6 +176,7 @@ public class DanmakuLayout extends RelativeLayout implements
         void onDanmakuDataEmpty(DanmakuLayout danmaku);
     }
 
+
     // ===================================================
 
 
@@ -202,13 +203,15 @@ public class DanmakuLayout extends RelativeLayout implements
                 } else {
                     da = retrieveDanmakuAnimator();
                 }
-                if (da == null) {
+                if (da == null || !mAdapter.hasData()) {
                     mIsDataEmpty = true;
                     mHandler.removeMessages(MSG_NEXT);
                     log("get next, stop, data empty");
                     if (mDataEmptyListener != null) {
                         mDataEmptyListener.onDanmakuDataEmpty(this);
                     }
+                }
+                if (da == null) {
                     break;
                 }
 
@@ -310,6 +313,11 @@ public class DanmakuLayout extends RelativeLayout implements
 
     private int findStartY(DanmakuAnimator da) {
         synchronized (mTrackLock) {
+            if (mRunningTrackList.size() == 0) {
+                // no running danmaku in the layout, show the first one in the middle.
+                return (getHeight() - da.getHeight()) / 2;
+            }
+
             Track track = findNewTrack(mRunningTrackList, da);
             if (track == null) {
                 mUnAvailTrackList.clear();

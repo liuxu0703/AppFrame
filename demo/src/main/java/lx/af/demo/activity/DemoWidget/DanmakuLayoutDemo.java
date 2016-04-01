@@ -13,7 +13,7 @@ import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.model.DanmakuModel1;
 import lx.af.demo.utils.ImageLoaderHelper;
-import lx.af.demo.utils.TestData.TestImageHelper;
+import lx.af.test.TestImageHelper;
 import lx.af.widget.DanmakuLayout.DanmakuBaseAdapter;
 import lx.af.widget.DanmakuLayout.DanmakuLayout;
 

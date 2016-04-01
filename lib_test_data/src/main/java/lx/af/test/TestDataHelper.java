@@ -1,4 +1,4 @@
-package lx.af.demo.utils.TestData;
+package lx.af.test;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
-import lx.af.demo.base.DemoApp;
 
 /**
  * author: lx
@@ -24,7 +22,7 @@ public class TestDataHelper {
 
     public static String getRandomName() {
         if (mNameList == null) {
-            PackageManager pm = DemoApp.getInstance().getPackageManager();
+            PackageManager pm = Test.sApp.getPackageManager();
             List<ApplicationInfo> appList = pm.getInstalledApplications(PackageManager.GET_META_DATA);
             mNameList = new ArrayList<>(appList.size());
             for (ApplicationInfo ai : appList) {
@@ -78,9 +76,9 @@ public class TestDataHelper {
 
 
     private static void initLongStringList() {
-        PackageManager pm = DemoApp.getInstance().getPackageManager();
+        PackageManager pm = Test.sApp.getPackageManager();
         try {
-            PackageInfo pi = pm.getPackageInfo(DemoApp.getInstance().getPackageName(), 0);
+            PackageInfo pi = pm.getPackageInfo(Test.sApp.getPackageName(), 0);
             String pkgName = pi.packageName;
             PackageInfo pkgInfo = pm.getPackageInfo(pkgName, PackageManager.GET_PERMISSIONS);
             String sharedPkgList[] = pkgInfo.requestedPermissions;

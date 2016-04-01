@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
+import lx.af.R;
+
 /**
  * author: lx
  * date: 16-1-6
@@ -32,9 +34,9 @@ public abstract class AbsViewHolderAdapter<T> extends AbsListAdapter<T> {
         if (convertView == null) {
             convertView = createItemView(context);
             vh = createViewHolder(convertView);
-            convertView.setTag(vh);
+            convertView.setTag(R.id.tag_id_view_holder, vh);
         } else {
-            vh = (AbsViewHolder<T>) convertView.getTag();
+            vh = (AbsViewHolder<T>) convertView.getTag(R.id.tag_id_view_holder);
         }
         vh.setData(getItem(position));
         return convertView;

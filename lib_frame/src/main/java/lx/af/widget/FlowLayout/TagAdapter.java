@@ -70,7 +70,7 @@ public abstract class TagAdapter<T>
 
     public T getItem(int position)
     {
-        return mTagDatas.get(position);
+        return mTagDatas == null ? null : mTagDatas.get(position);
     }
 
     public abstract View getView(FlowLayout parent, int position, T t);

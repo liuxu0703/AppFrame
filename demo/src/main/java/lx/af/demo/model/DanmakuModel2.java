@@ -2,10 +2,7 @@ package lx.af.demo.model;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.ArrayList;
-
-import lx.af.demo.utils.TestData.TestDataHelper;
-import lx.af.demo.utils.TestData.TestImageHelper;
+import lx.af.test.TestImageHelper;
 
 /**
  * author: lx

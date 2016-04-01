@@ -1,12 +1,10 @@
 package lx.af.demo.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
 
-import lx.af.demo.utils.TestData.TestDataHelper;
-import lx.af.demo.utils.TestData.TestImageHelper;
+import lx.af.test.TestDataHelper;
+import lx.af.test.TestImageHelper;
 import lx.af.utils.StringUtils;
 
 /**

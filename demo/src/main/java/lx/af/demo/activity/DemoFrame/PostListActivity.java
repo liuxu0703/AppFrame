@@ -17,7 +17,7 @@ import lx.af.demo.adapter.PostListAdapter;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.model.PostModel;
-import lx.af.demo.utils.TestData.TestImageHelper;
+import lx.af.test.TestImageHelper;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.utils.ViewInject.ViewInject;
 import lx.af.utils.ViewUtils.ActionBarScrollFadeHelper;

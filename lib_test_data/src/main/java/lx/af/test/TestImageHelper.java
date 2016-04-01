@@ -1,4 +1,4 @@
-package lx.af.demo.utils.TestData;
+package lx.af.test;
 
 import java.util.ArrayList;
 import java.util.Random;

@@ -1,4 +1,4 @@
-package lx.af.demo.utils.TestData;
+package lx.af.test;
 
 /**
  * author: lx
