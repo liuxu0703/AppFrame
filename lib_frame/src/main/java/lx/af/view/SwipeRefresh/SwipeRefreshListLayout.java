@@ -1,6 +1,7 @@
 package lx.af.view.SwipeRefresh;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -42,10 +43,12 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
     public SwipeRefreshListLayout(Context context) {
         this(context, null);
+        setColorSchemeColors(Color.parseColor("#01c6f0"));
     }
 
     public SwipeRefreshListLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setColorSchemeColors(Color.parseColor("#01c6f0"));
     }
 
     @Override

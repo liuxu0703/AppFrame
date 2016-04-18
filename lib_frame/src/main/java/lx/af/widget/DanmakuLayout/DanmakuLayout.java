@@ -51,6 +51,8 @@ public class DanmakuLayout extends RelativeLayout implements
     private boolean mIsDataEmpty = false;
 
     private OnDataEmptyListener mDataEmptyListener;
+    private OnDataAnimStartListener mDataStartListener;
+    private HashMap<Object, OnDataAnimStartListener> mStartListenerMap;
 
     public DanmakuLayout(Context context) {
         super(context);
@@ -151,6 +153,13 @@ public class DanmakuLayout extends RelativeLayout implements
     }
 
     /**
+     * set a callback to be invoked when a danmaku animation starts
+     */
+    public void setDanmakuAnimStartListener(OnDataAnimStartListener l) {
+        mDataStartListener = l;
+    }
+
+    /**
      * @return true if danmaku displaying has be started; false otherwise
      */
     public boolean isDanmakuRunning() {
@@ -174,6 +183,16 @@ public class DanmakuLayout extends RelativeLayout implements
          * with {@link DanmakuBaseAdapter#onDataEmpty()}
          */
         void onDanmakuDataEmpty(DanmakuLayout danmaku);
+    }
+
+
+    public interface OnDataAnimStartListener {
+
+        /**
+         * callback to be invoked when a danmaku animation starts.
+         * @param data the data behind the anim.
+         */
+        void onDanmakuAnimStart(Object data);
     }
 
 
@@ -263,6 +282,13 @@ public class DanmakuLayout extends RelativeLayout implements
                 mHandler.sendEmptyMessageDelayed(MSG_NEXT, mMinInterval);
             }
         }
+    }
+
+    void addDataAnimStartListener(Object data, OnDataAnimStartListener l) {
+        if (mStartListenerMap == null) {
+            mStartListenerMap = new HashMap<>();
+        }
+        mStartListenerMap.put(data, l);
     }
 
     void addToRecycler(DanmakuAnimator da) {
@@ -388,6 +414,16 @@ public class DanmakuLayout extends RelativeLayout implements
     private DanmakuAnimator.Callback mAnimatorCallback = new DanmakuAnimator.Callback() {
         @Override
         public void onAnimationStart(DanmakuAnimator da) {
+            if (mDataStartListener != null) {
+                mDataStartListener.onDanmakuAnimStart(da.getData());
+            }
+            if (mStartListenerMap != null && mStartListenerMap.size() != 0) {
+                OnDataAnimStartListener l = mStartListenerMap.get(da.getData());
+                if (l != null) {
+                    l.onDanmakuAnimStart(da.getData());
+                    mStartListenerMap.remove(da.getData());
+                }
+            }
             mHandler.sendEmptyMessageDelayed(MSG_NEXT, mMinInterval);
         }
 

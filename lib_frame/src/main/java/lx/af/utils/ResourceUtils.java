@@ -1,5 +1,7 @@
 package lx.af.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.Application;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.ColorStateList;
@@ -97,6 +99,16 @@ public final class ResourceUtils {
 
     public static Animation loadAnimation(int animId, long duration) {
         Animation anim = AnimationUtils.loadAnimation(sApp, animId);
+        anim.setDuration(duration);
+        return anim;
+    }
+
+    public static Animator loadAnimator(int animId) {
+        return AnimatorInflater.loadAnimator(sApp, animId);
+    }
+
+    public static Animator loadAnimator(int animId, long duration) {
+        Animator anim = AnimatorInflater.loadAnimator(sApp, animId);
         anim.setDuration(duration);
         return anim;
     }

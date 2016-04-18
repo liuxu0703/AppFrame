@@ -34,10 +34,10 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onActionBarCreated(View actionBar, IconTextView left, TextView title, IconTextView right) {
         left.setVisibility(View.GONE);
-        title.setOnClickListener(new BufferedOnClickListener() {
+        actionBar.setOnClickListener(new BufferedOnClickListener() {
             @Override
             public void onBufferedClick(View v, int clickCount) {
-                if (clickCount > 2) {
+                if (clickCount >= 2) {
                     startActivity(ActivityTest.class);
                 }
             }

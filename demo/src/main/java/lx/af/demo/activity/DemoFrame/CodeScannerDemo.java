@@ -15,7 +15,7 @@ import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.utils.Paths;
-import lx.af.dialog.MessageDialog;
+import lx.af.dialog.DialogFactory;
 import lx.af.utils.ActivityLauncher.ActivityResultCallback;
 import lx.af.utils.ActivityLauncher.CodeScannerLauncher;
 import lx.af.utils.BitmapUtils;
@@ -93,21 +93,18 @@ public class CodeScannerDemo extends BaseActivity implements
                 break;
             }
             case R.id.scanner_qr_code_image: {
-                new MessageDialog.Builder(this)
-                        .setMessage("Save QRCode image to sdcard?")
-                        .setCancelListener(null)
-                        .setConfirmListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String path = Paths.generateCropImagePath().toString();
-                                if (BitmapUtils.saveBitmap(qrcodeBitmap, path)) {
-                                    FileUtils.scanFile(path);
-                                    toastLong("save to path " + Paths.QR_CODE_PATH + "/");
-                                } else {
-                                    toastShort("save fail");
-                                }
-                            }
-                        }).create().show();
+                DialogFactory.showConfirmDialog(this, "Save QRCode image to sdcard?", new Runnable() {
+                    @Override
+                    public void run() {
+                        String path = Paths.generateCropImagePath().toString();
+                        if (BitmapUtils.saveBitmap(qrcodeBitmap, path)) {
+                            FileUtils.scanFile(path);
+                            toastLong("save to path " + Paths.QR_CODE_PATH + "/");
+                        } else {
+                            toastShort("save fail");
+                        }
+                    }
+                });
                 break;
             }
         }

@@ -86,7 +86,6 @@ public class AbsBaseApp extends Application{
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)

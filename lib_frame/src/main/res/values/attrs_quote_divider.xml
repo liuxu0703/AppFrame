@@ -2,6 +2,8 @@
 <resources>
 	<declare-styleable name="QuoteDivider">
         <attr name="dividerQuoteLeft" format="dimension" />
+        <attr name="dividerQuoteRight" format="dimension" />
+        <attr name="dividerQuoteMiddle" format="boolean" />
         <attr name="dividerQuoteAngle" format="integer" />
         <attr name="dividerQuoteAnimDuration" format="integer" />
         <attr name="dividerLineWidth" format="dimension" />

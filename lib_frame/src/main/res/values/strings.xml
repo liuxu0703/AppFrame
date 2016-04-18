@@ -6,6 +6,8 @@
     <string name="dlg_edit_title">编辑</string>
     <string name="dlg_loading_default_message">正在加载&#8230;</string>
     <string name="dlg_loading_login_message">正在登录&#8230;</string>
+    <string name="dlg_delete_title">提示</string>
+    <string name="dlg_delete_message">确定要删除?</string>
 
     <string name="crop_image_title">裁剪图片</string>
     <string name="crop_image_saving">正在保存照片&#8230;</string>

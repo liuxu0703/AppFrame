@@ -52,11 +52,13 @@ public class QuoteDivider extends View {
     private static final int DEFAULT_QUOTE_ANIM_DURATION = 500;
 
     private int mTriangleLeft;
+    private int mTriangleRight;
     private int mTriangleAngle;
     private int mLineWidth;
     private int mLineColor;
     private int mUpperColor;
     private int mLowerColor;
+    private boolean mTriangleMiddle = false;
 
     private int mTriangleX;
     private int mTriangleFinalX;
@@ -105,7 +107,14 @@ public class QuoteDivider extends View {
      * set distance between view left edge and the quote triangle.
      */
     public void setQuoteLeft(int left) {
-        mTriangleLeft = left - mTriangleBottomHalf;
+        mTriangleLeft = left;
+        resetTriangleValues();
+        postInvalidate();
+    }
+
+    public void setQuoteRight(int right) {
+        mTriangleRight = right;
+        resetTriangleValues();
         postInvalidate();
     }
 
@@ -165,6 +174,8 @@ public class QuoteDivider extends View {
             mLineWidth = a.getDimensionPixelOffset(R.styleable.QuoteDivider_dividerLineWidth, DEFAULT_LINE_WIDTH);
             mTriangleAngle = a.getInteger(R.styleable.QuoteDivider_dividerQuoteAngle, DEFAULT_QUOTE_ANGLE);
             mTriangleLeft = a.getDimensionPixelOffset(R.styleable.QuoteDivider_dividerQuoteLeft, 0);
+            mTriangleRight = a.getDimensionPixelOffset(R.styleable.QuoteDivider_dividerQuoteRight, 0);
+            mTriangleMiddle = a.getBoolean(R.styleable.QuoteDivider_dividerQuoteMiddle, false);
             mAnimDuration = a.getInteger(R.styleable.QuoteDivider_dividerQuoteAnimDuration, DEFAULT_QUOTE_ANIM_DURATION);
             a.recycle();
         } else {
@@ -242,6 +253,11 @@ public class QuoteDivider extends View {
         mTriangleHeight = getHeight() - getPaddingTop() - getPaddingBottom() - mLineWidth;
         if (mTriangleHeight < 0) {
             throw new IllegalStateException("not enough space to draw divider");
+        }
+        if (mTriangleMiddle) {
+            mTriangleLeft = getWidth() / 2;
+        } else if (mTriangleLeft == 0 && mTriangleRight != 0) {
+            mTriangleLeft = getWidth() - mTriangleRight;
         }
         double angle = (mTriangleAngle / 2) * (Math.PI / 180);
         mTriangleBottomHalf = (int) (mTriangleHeight * Math.tan(angle));

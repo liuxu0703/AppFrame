@@ -17,6 +17,7 @@ class DanmakuAnimator {
     private static final long DEFAULT_DURATION = 4000;
     private static final Interpolator DEFAULT_INTERPOLATOR = new LinearInterpolator();
 
+    private Object data;
     private View view;
     private int type;
     private long duration;
@@ -30,7 +31,8 @@ class DanmakuAnimator {
 
     private Callback callback;
 
-    DanmakuAnimator(View v, int type, long duration, Interpolator interpolator) {
+    DanmakuAnimator(Object data, View v, int type, long duration, Interpolator interpolator) {
+        this.data = data;
         this.view = v;
         this.type = type;
         this.duration = duration <= 0 ? DEFAULT_DURATION : duration;
@@ -39,7 +41,8 @@ class DanmakuAnimator {
         this.interpolator = interpolator != null ? interpolator : DEFAULT_INTERPOLATOR;
     }
 
-    DanmakuAnimator reset(View v, int type, long duration, Interpolator interpolator) {
+    DanmakuAnimator reset(Object data, View v, int type, long duration, Interpolator interpolator) {
+        this.data = data;
         this.view = v;
         this.type = type;
         this.duration = duration <= 0 ? DEFAULT_DURATION : duration;
@@ -60,6 +63,10 @@ class DanmakuAnimator {
             this.speed = -1;
         }
         return this;
+    }
+
+    Object getData() {
+        return data;
     }
 
     View getView() {

@@ -1,59 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/test_root"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#40696969"
-        >
-
-        <lx.af.widget.kenburnsview.KenBurnsView
-            android:id="@+id/test_kbv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_gallery_default"
-            />
-    </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/divider_color"
-        android:layout_marginBottom="10dp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@color/grey" />
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/test_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="@null"/>
+
+        <Button
+            android:id="@+id/test_btn_1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="test" />
+
+        <Button
+            android:id="@+id/test_btn_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="test" />
+
+        <Button
+            android:id="@+id/test_btn_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="praise anim" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/test_btn_1"
+    <TextView
+        android:id="@+id/test_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="test" />
+        android:padding="5dp"
+        android:background="@color/l_green"
+        android:textColor="@color/white"/>
 
-    <Button
-        android:id="@+id/test_btn_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="test" />
-
-</LinearLayout>
+</RelativeLayout>

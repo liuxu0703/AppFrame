@@ -53,15 +53,16 @@ public class SimpleTransitionGenerator implements TransitionGenerator {
 
             float dw = drawableBounds.width();
             float dh = drawableBounds.height();
+            float dr = dh == 0 ? 0 : dw / dh;
             float vw = viewport.width();
             float vh = viewport.height();
-            float ratio = vw / vh;
+            float vr = vh == 0 ? 1 : vw / vh;
 
-            if (dw < dh) {
+            if (dr < vr) {
                 // vertical
                 float delta = dw / 20;
                 float w = dw - 2 * delta;
-                float h = w / ratio;
+                float h = w / vr;
                 mHeadRect.set(delta, 0, dw - delta, h);
                 mTailRest.set(mHeadRect);
                 mTailRest.offset(0f, dh - h);
@@ -69,7 +70,7 @@ public class SimpleTransitionGenerator implements TransitionGenerator {
                 // horizontal
                 float delta = dh / 10;
                 float h = dh - 2 * delta;
-                float w = h * ratio;
+                float w = h * vr;
                 mHeadRect.set(0, delta, w, dh - delta);
                 mTailRest.set(mHeadRect);
                 mTailRest.offset(dw - w, 0f);

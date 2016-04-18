@@ -32,7 +32,6 @@ public class DefaultLoadMoreFooter extends RelativeLayout implements ILoadMoreFo
 
     private void initView(Context context) {
         inflate(context, R.layout.swipe_refresh_default_footer, this);
-        setBackgroundColor(Color.parseColor("#f0f0f0"));
         mMessage = (TextView) findViewById(R.id.default_refresh_footer_load_more_text);
         mProgress = (ProgressWheel) findViewById(R.id.default_refresh_footer_load_more_progress);
     }

@@ -23,6 +23,10 @@ public final class ScreenUtils {
         wm.getDefaultDisplay().getMetrics(sMetric);
     }
 
+    public static float getScaledDensity() {
+        return sMetric.scaledDensity;
+    }
+
     /**
      * convert sp to px
      */

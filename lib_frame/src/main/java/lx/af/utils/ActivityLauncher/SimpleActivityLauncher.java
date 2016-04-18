@@ -1,6 +1,7 @@
 package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -31,6 +32,14 @@ public class SimpleActivityLauncher {
         mActivity = mFragment.getActivity();
         mFragment = fragment;
         mIntent = new Intent(fragment.getActivity(), target);
+    }
+
+    public static SimpleActivityLauncher of(Context context, Class<? extends Activity> target) {
+        if (context instanceof Activity) {
+            return new SimpleActivityLauncher((Activity) context, target);
+        } else {
+            throw new IllegalArgumentException("launch with non-activity context");
+        }
     }
 
     public static SimpleActivityLauncher of(Activity activity, Class<? extends Activity> target) {

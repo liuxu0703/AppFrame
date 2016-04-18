@@ -1,8 +1,11 @@
 package lx.af.demo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
@@ -11,15 +14,15 @@ import lx.af.demo.R;
 import lx.af.demo.activity.main.MainActivity;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
-import lx.af.test.TestRes;
+import lx.af.demo.utils.m3u.M3uAudio.M3uAudioPlayer;
 import lx.af.net.HttpRequest.DataHull;
 import lx.af.net.HttpRequest.ErrorHandler.ErrorHandler;
 import lx.af.net.HttpRequest.RequestCallback;
 import lx.af.net.HttpRequest.VolleyJsonRequest;
+import lx.af.test.TestRes;
 import lx.af.utils.ViewInject.ViewInject;
+import lx.af.utils.ViewUtils.ViewUtils;
 import lx.af.utils.log.Log;
-import lx.af.demo.utils.m3u.M3uAudio.M3uAudioPlayer;
-import lx.af.widget.kenburnsview.KenBurnsView;
 
 /**
  * author: lx
@@ -29,22 +32,33 @@ public class ActivityTest extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
-    private static final String L = "http://i.k1982.com/design_img/201008/20100806201117702.jpg";
-    private static final String T = "http://img5.duitang.com/uploads/item/201405/03/20140503222852_aNXJL.thumb.700_0.jpeg";
-
-    @ViewInject(id = R.id.test_kbv)
-    KenBurnsView kbv;
-
+    @ViewInject(id = R.id.test_root)
+    RelativeLayout root;
     @ViewInject(id = R.id.test_btn_1, click = "onClick")
     Button btn;
     @ViewInject(id = R.id.test_btn_2, click = "onClick")
     Button btn2;
-
-    String current = L;
+    @ViewInject(id = R.id.test_btn_3, click = "onClick")
+    Button btn3;
+    @ViewInject(id = R.id.test_img)
+    View img;
+    @ViewInject(id = R.id.test_text)
+    TextView tv;
 
     M3uAudioPlayer mM3uAudioPlayer;
 
     static int activity_count = 0;
+
+    static final String S1 = "111111111111111111";
+    static final String S2 = "22222222222";
+
+    String text = S1;
+
+    private static final String SERVICECMD =
+            "com.android.music.musicservicecommand";
+    private static final String CMDNAME = "command";
+    private static final String CMDPAUSE = "pause";
+    public static final String CMDTOGGLEPAUSE = "togglepause";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,18 +97,38 @@ public class ActivityTest extends BaseActivity implements
                 break;
             }
             case R.id.test_btn_2: {
-                activity_count ++;
-                if (activity_count >= 3) {
-                    startActivity(MainActivity.class);
-                    activity_count = 0;
-                } else {
-                    startActivity(getClass());
-                }
+//                activity_count ++;
+//                if (activity_count >= 3) {
+//                    startActivity(MainActivity.class);
+//                    activity_count = 0;
+//                } else {
+//                    startActivity(getClass());
+//                }
+
+
+                Intent freshIntent = new Intent();
+                freshIntent.setAction("com.android.music.musicservicecommand.pause");
+                freshIntent.putExtra("command", "pause");
+                sendBroadcast(freshIntent);
+                break;
+            }
+            case R.id.test_btn_3: {
+                text = text.equals(S1) ? S2 : S1;
+                ViewUtils.animateTextChangeByWidth(tv, text);
+
+
+                toggleNativePlayer();
                 break;
             }
         }
     }
 
+    private void toggleNativePlayer() {
+        Log.d("liuxu", "111111111 toggle player 1111111111111111");
+        Intent intent = new Intent("com.android.music.musicservicecommand");
+        intent.putExtra("command", "togglepause");
+        sendBroadcast(intent);
+    }
 
     private static class LiveUrlModel {
         /** state 字段取值: 请求成功 */

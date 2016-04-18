@@ -1,11 +1,8 @@
 package lx.af.utils;
 
 import android.app.Application;
-import android.app.Dialog;
-import android.content.Context;
 import android.widget.Toast;
 
-import lx.af.dialog.MessageDialog;
 import lx.af.manager.GlobalThreadManager;
 
 /**
@@ -45,18 +42,6 @@ public final class AlertUtils {
                 Toast.makeText(sApp, msg, duration).show();
             }
         });
-    }
-
-    public static Dialog showMessageDialog(Context context, String message) {
-        MessageDialog dialog = MessageDialog.builder(context).setMessage(message).create();
-        dialog.show();
-        return dialog;
-    }
-
-    public static Dialog showMessageDialog(Context context, int resId) {
-        MessageDialog dialog = MessageDialog.builder(context).setMessage(resId).create();
-        dialog.show();
-        return dialog;
     }
 
 }
