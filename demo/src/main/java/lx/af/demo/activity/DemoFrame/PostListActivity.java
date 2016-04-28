@@ -11,15 +11,16 @@ import com.viewpagerindicator.PageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import lx.af.demo.R;
 import lx.af.demo.adapter.ImagePagerAdapter;
 import lx.af.demo.adapter.PostListAdapter;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.model.PostModel;
-import lx.af.test.TestImageHelper;
 import lx.af.manager.GlobalThreadManager;
-import lx.af.utils.ViewInject.ViewInject;
+import lx.af.test.TestImageHelper;
 import lx.af.utils.ViewUtils.ActionBarScrollFadeHelper;
 import lx.af.utils.ViewUtils.BufferedOnClickListener;
 import lx.af.utils.ViewUtils.ViewPagerAutoFlipper;
@@ -37,12 +38,12 @@ public class PostListActivity extends BaseActivity implements
         SwipeRefreshListLayout.OnLoadMoreListener,
         ActionBar.Default.Callback.Overlay {
 
-    @ViewInject(id = R.id.activity_swipe_refresh_layout)
-    private SwipeRefreshListLayout mSwipeRefreshLayout;
-    @ViewInject(id = R.id.activity_swipe_refresh_listview)
-    private ListView mListView;
-    @ViewInject(id = R.id.activity_swipe_refresh_loading_view)
-    private LoadingBkgView mLoadingView;
+    @InjectView(R.id.activity_swipe_refresh_listview)
+    ListView mListView;
+    @InjectView(R.id.activity_swipe_refresh_layout)
+    SwipeRefreshListLayout mSwipeRefreshLayout;
+    @InjectView(R.id.activity_swipe_refresh_loading_view)
+    LoadingBkgView mLoadingView;
 
     private ViewPager mHeaderViewPager;
     private PageIndicator mPageIndicator;
@@ -57,6 +58,7 @@ public class PostListActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_list);
+        ButterKnife.inject(this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setLoadMorePreCount(1);

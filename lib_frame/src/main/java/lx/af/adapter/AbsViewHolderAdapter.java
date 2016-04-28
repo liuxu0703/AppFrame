@@ -3,7 +3,6 @@ package lx.af.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import java.util.List;
 
@@ -30,10 +29,10 @@ public abstract class AbsViewHolderAdapter<T> extends AbsListAdapter<T> {
     @SuppressWarnings("unchecked")
     @Override
     public View getView(Context context, int position, View convertView, ViewGroup parent) {
-        AbsViewHolder<T> vh;
+        IViewHolder<T> vh;
         if (convertView == null) {
-            convertView = createItemView(context);
-            vh = createViewHolder(convertView);
+            vh = createViewHolder(context);
+            convertView = vh.getRootView();
             convertView.setTag(R.id.tag_id_view_holder, vh);
         } else {
             vh = (AbsViewHolder<T>) convertView.getTag(R.id.tag_id_view_holder);
@@ -43,13 +42,8 @@ public abstract class AbsViewHolderAdapter<T> extends AbsListAdapter<T> {
     }
 
     /**
-     * create item view for {@link BaseAdapter#getView(int, View, ViewGroup)}
+     * create view holder
      */
-    public abstract View createItemView(Context context);
-
-    /**
-     * create view holder for item view returned by {@link #createItemView(Context)}
-     */
-    public abstract AbsViewHolder<T> createViewHolder(View itemView);
+    public abstract IViewHolder<T> createViewHolder(Context context);
 
 }

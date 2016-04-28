@@ -7,11 +7,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.view.Rating5StarLayout;
-import lx.af.utils.ViewInject.ViewInject;
 import lx.af.widget.SelectImageWidget;
 
 /**
@@ -22,25 +24,26 @@ public class SelectImageViewDemo extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
-    @ViewInject(id = R.id.activity_select_rating_1)
-    private Rating5StarLayout mRating1;
-    @ViewInject(id = R.id.activity_select_rating_2)
-    private Rating5StarLayout mRating2;
-    @ViewInject(id = R.id.activity_select_rating_3)
-    private Rating5StarLayout mRating3;
-    @ViewInject(id = R.id.activity_select_rating_4)
-    private Rating5StarLayout mRating4;
-    @ViewInject(id = R.id.activity_select_editor)
-    private EditText mEditor;
-    @ViewInject(id = R.id.activity_select_image_view)
-    private SelectImageWidget mSelectImageWidget;
-    @ViewInject(id = R.id.activity_select_image_text)
-    private TextView mTextView;
+    @InjectView(R.id.activity_select_rating_1)
+    Rating5StarLayout mRating1;
+    @InjectView(R.id.activity_select_rating_2)
+    Rating5StarLayout mRating2;
+    @InjectView(R.id.activity_select_rating_3)
+    Rating5StarLayout mRating3;
+    @InjectView(R.id.activity_select_rating_4)
+    Rating5StarLayout mRating4;
+    @InjectView(R.id.activity_select_editor)
+    EditText mEditor;
+    @InjectView(R.id.activity_select_image_view)
+    SelectImageWidget mSelectImageWidget;
+    @InjectView(R.id.activity_select_image_text)
+    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_image_widget);
+        ButterKnife.inject(this);
 
         mRating1.setTitle("Rating 1").setRating(2);
         mRating2.setTitle("Rating 2").setRating(3);
@@ -86,6 +89,10 @@ public class SelectImageViewDemo extends BaseActivity implements
     }
 
     @Override
+    @OnClick({
+            R.id.activity_select_image_btn_get,
+            R.id.activity_select_image_text,
+    })
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_select_image_btn_get: {

@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
@@ -22,7 +24,6 @@ import lx.af.utils.BitmapUtils;
 import lx.af.utils.FileUtils;
 import lx.af.utils.QRDecoder;
 import lx.af.utils.QRGenerator;
-import lx.af.utils.ViewInject.ViewInject;
 
 /**
  * author: lx
@@ -33,22 +34,12 @@ public class CodeScannerDemo extends BaseActivity implements
         ActivityResultCallback<String>,
         ActionBar.Default {
 
-    @ViewInject(id = R.id.scanner_btn_scan_all, click = "onClick")
-    Button btn1;
-    @ViewInject(id = R.id.scanner_btn_scan_qr_code, click = "onClick")
-    Button btn2;
-    @ViewInject(id = R.id.scanner_btn_scan_bar_code, click = "onClick")
-    Button btn3;
-    @ViewInject(id = R.id.scanner_btn_generate_qr_code, click = "onClick")
-    Button btn4;
-    @ViewInject(id = R.id.scanner_btn_read_pic, click = "onClick")
-    Button btn5;
-    @ViewInject(id = R.id.scanner_qr_code_image, click = "onClick")
-    ImageView image;
-    @ViewInject(id = R.id.scanner_text)
-    TextView text;
-    @ViewInject(id = R.id.scanner_editor_text)
+    @InjectView(R.id.scanner_editor_text)
     EditText editor;
+    @InjectView(R.id.scanner_text)
+    TextView text;
+    @InjectView(R.id.scanner_qr_code_image)
+    ImageView image;
 
     private Bitmap qrcodeBitmap;
 
@@ -56,6 +47,7 @@ public class CodeScannerDemo extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
+        ButterKnife.inject(this);
     }
 
     @Override
@@ -64,6 +56,14 @@ public class CodeScannerDemo extends BaseActivity implements
     }
 
     @Override
+    @OnClick({
+            R.id.scanner_btn_scan_all,
+            R.id.scanner_btn_scan_qr_code,
+            R.id.scanner_btn_scan_bar_code,
+            R.id.scanner_btn_read_pic,
+            R.id.scanner_btn_generate_qr_code,
+            R.id.scanner_qr_code_image,
+    })
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.scanner_btn_scan_all: {

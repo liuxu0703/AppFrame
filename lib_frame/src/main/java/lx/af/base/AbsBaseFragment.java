@@ -10,7 +10,6 @@ import java.util.LinkedList;
 
 import lx.af.dialog.LoadingDialog;
 import lx.af.utils.AlertUtils;
-import lx.af.utils.ViewInject.ViewInjectUtils;
 
 /**
  * Created by liuxu on 15-12-11.
@@ -35,7 +34,6 @@ public abstract class AbsBaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ViewInjectUtils.inject(AbsBaseFragment.class, this, view);
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.util.List;
 
 import lx.af.adapter.AbsViewHolder;
 import lx.af.adapter.AbsViewHolderAdapter;
+import lx.af.adapter.IViewHolder;
 import lx.af.demo.R;
 import lx.af.demo.consts.ActionModel;
 import lx.af.utils.ViewInject.ViewInject;
@@ -23,7 +24,6 @@ import lx.af.widget.iconify.widget.IconTextView;
 public class DemoActionAdapter extends AbsViewHolderAdapter<ActionModel> implements
         AdapterView.OnItemClickListener {
 
-
     public DemoActionAdapter(Context context, List<ActionModel> list) {
         super(context, list);
     }
@@ -33,20 +33,15 @@ public class DemoActionAdapter extends AbsViewHolderAdapter<ActionModel> impleme
     }
 
     @Override
+    public IViewHolder<ActionModel> createViewHolder(Context context) {
+        return new ViewHolder(View.inflate(context, R.layout.item_main_tab_list, null));
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ActionModel model = getItem(position);
         Intent intent = new Intent(getContext(), model.activity);
         getContext().startActivity(intent);
-    }
-
-    @Override
-    public View createItemView(Context context) {
-        return View.inflate(context, R.layout.item_main_tab_list, null);
-    }
-
-    @Override
-    public AbsViewHolder<ActionModel> createViewHolder(View itemView) {
-        return new ViewHolder(itemView);
     }
 
 

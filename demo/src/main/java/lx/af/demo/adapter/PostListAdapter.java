@@ -5,14 +5,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import lx.af.adapter.AbsViewHolder;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import lx.af.adapter.AbsViewHolderAdapter;
+import lx.af.adapter.IViewHolder;
 import lx.af.demo.R;
 import lx.af.demo.model.PostModel;
 import lx.af.demo.view.PostItem.PostUserView;
 import lx.af.utils.ActivityLauncher.ImageBrowserLauncher;
 import lx.af.utils.TimeFormatUtils;
-import lx.af.utils.ViewInject.ViewInject;
 import lx.af.widget.NineGrid.NineGridLayout;
 import lx.af.widget.NineGrid.NineImageUILAdapter;
 
@@ -27,33 +28,28 @@ public class PostListAdapter extends AbsViewHolderAdapter<PostModel> {
     }
 
     @Override
-    public View createItemView(Context context) {
-        return View.inflate(context, R.layout.item_post_list, null);
+    public IViewHolder<PostModel> createViewHolder(Context context) {
+        return new PostViewHolder(context);
     }
 
-    @Override
-    public AbsViewHolder<PostModel> createViewHolder(View itemView) {
-        return new PostViewHolder(itemView);
-    }
+    static class PostViewHolder implements IViewHolder<PostModel> {
+        View mRootView;
+        @InjectView(R.id.item_post_user_view)
+        PostUserView mUserView;
+        @InjectView(R.id.item_post_content)
+        TextView mContentView;
+        @InjectView(R.id.item_post_image_grid)
+        NineGridLayout mImageGrid;
+        @InjectView(R.id.item_post_time)
+        TextView mTimeView;
+        @InjectView(R.id.item_post_address)
+        TextView mAddressView;
 
+        NineImageUILAdapter mImageAdapter;
 
-    private static class PostViewHolder extends AbsViewHolder<PostModel> {
-
-        @ViewInject(id = R.id.item_post_user_view)
-        private PostUserView mUserView;
-        @ViewInject(id = R.id.item_post_content)
-        private TextView mContentView;
-        @ViewInject(id = R.id.item_post_image_grid)
-        private NineGridLayout mImageGrid;
-        @ViewInject(id = R.id.item_post_address)
-        private TextView mAddressView;
-        @ViewInject(id = R.id.item_post_time)
-        private TextView mTimeView;
-
-        private NineImageUILAdapter mImageAdapter;
-
-        public PostViewHolder(View root) {
-            super(root);
+        PostViewHolder(Context context) {
+            mRootView = View.inflate(context, R.layout.item_post_list, null);
+            ButterKnife.inject(this, mRootView);
             mImageAdapter = new NineImageUILAdapter(mImageGrid);
             mImageAdapter.setOnItemClickListener(new NineImageUILAdapter.OnItemClickListener() {
                 @Override
@@ -79,6 +75,11 @@ public class PostListAdapter extends AbsViewHolderAdapter<PostModel> {
             mAddressView.setVisibility(TextUtils.isEmpty(data.address) ? View.GONE : View.VISIBLE);
             mAddressView.setText(data.address);
             mTimeView.setText(TimeFormatUtils.getDisplayTime(data.createTime));
+        }
+
+        @Override
+        public View getRootView() {
+            return mRootView;
         }
     }
 

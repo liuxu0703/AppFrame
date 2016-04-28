@@ -92,7 +92,6 @@ public class QuoteDivider extends View {
 
     /**
      * set distance between view left edge and the quote triangle, with an animation.
-     * @see #setQuoteAnimInteroplator(Interpolator)
      */
     public void setQuoteLeftWithAnim(int left) {
         mTriangleStartX = mTriangleX;
@@ -108,14 +107,24 @@ public class QuoteDivider extends View {
      */
     public void setQuoteLeft(int left) {
         mTriangleLeft = left;
-        resetTriangleValues();
-        postInvalidate();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                resetTriangleValues();
+                postInvalidate();
+            }
+        });
     }
 
     public void setQuoteRight(int right) {
         mTriangleRight = right;
-        resetTriangleValues();
-        postInvalidate();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                resetTriangleValues();
+                postInvalidate();
+            }
+        });
     }
 
     /**
@@ -123,8 +132,13 @@ public class QuoteDivider extends View {
      */
     public void setQuoteAngle(int angle) {
         mTriangleAngle = angle;
-        resetTriangleValues();
-        postInvalidate();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                resetTriangleValues();
+                postInvalidate();
+            }
+        });
     }
 
     /**
@@ -132,7 +146,6 @@ public class QuoteDivider extends View {
      */
     public void setLineColor(int color) {
         mLineColor = color;
-        resetTriangleValues();
         postInvalidate();
     }
 
@@ -150,14 +163,6 @@ public class QuoteDivider extends View {
     public void setLowerColor(int color) {
         mLowerColor = color;
         postInvalidate();
-    }
-
-    /**
-     * set quote move animation interpolator.
-     * @see #setQuoteLeftWithAnim(int)
-     */
-    public void setQuoteAnimInteroplator(Interpolator interpolator) {
-        mInterpolator = interpolator;
     }
 
 

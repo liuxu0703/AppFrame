@@ -25,6 +25,7 @@ import lx.af.utils.ResourceUtils;
 import lx.af.utils.ScreenUtils;
 import lx.af.utils.StringUtils;
 import lx.af.utils.SystemUtils;
+import lx.af.utils.UIL.displayer.AnimateDisplayer;
 import lx.af.utils.log.LogUtils;
 import lx.af.widget.iconify.Iconify;
 
@@ -86,6 +87,7 @@ public class AbsBaseApp extends Application{
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
+                .displayer(new AnimateDisplayer())
                 .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
@@ -94,8 +96,7 @@ public class AbsBaseApp extends Application{
                 .tasksProcessingOrder(QueueProcessingType.FIFO)
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCacheSizePercentage(12)
-                .memoryCacheExtraOptions(480, 480)
-                .diskCacheSize(60 * 1024 * 1024)
+                .diskCacheSize(200 * 1024 * 1024)
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
                 .writeDebugLogs()
                 .defaultDisplayImageOptions(defaultOptions)

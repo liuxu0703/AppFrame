@@ -5,7 +5,6 @@ import android.os.Bundle;
 import lx.af.demo.R;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.view.FLItemView;
-import lx.af.utils.ViewInject.ViewInject;
 
 /**
  * author: lx
@@ -13,13 +12,13 @@ import lx.af.utils.ViewInject.ViewInject;
  */
 public class FlowLayoutDemo extends BaseActivity {
 
-    @ViewInject(id = R.id.activity_flow_layout_item1)
     private FLItemView line1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_layout);
+        line1 = (FLItemView) findViewById(R.id.activity_flow_layout_item1);
 
         line1.setFlowTags(new String[] {
                 "Hello", "Android", "Weclome Hi ", "Button", "TextView", "Hello",

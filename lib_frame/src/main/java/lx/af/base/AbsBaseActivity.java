@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import lx.af.R;
 import lx.af.dialog.LoadingDialog;
 import lx.af.utils.AlertUtils;
-import lx.af.utils.ViewInject.ViewInjectUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -331,8 +330,6 @@ public abstract class AbsBaseActivity extends FragmentActivity {
                 }
             }
         }
-
-        ViewInjectUtils.inject(AbsBaseActivity.class, this);
     }
 
     private boolean isFeatureEnabled(int feature) {

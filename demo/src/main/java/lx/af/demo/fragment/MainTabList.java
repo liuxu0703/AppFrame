@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import lx.af.demo.R;
 import lx.af.demo.adapter.DemoActionAdapter;
 import lx.af.demo.base.BaseActivity;
 import lx.af.demo.base.BaseFragment;
 import lx.af.demo.consts.ActionModel;
-import lx.af.utils.ViewInject.ViewInject;
 
 /**
  * author: lx
@@ -22,15 +23,17 @@ import lx.af.utils.ViewInject.ViewInject;
  */
 public abstract class MainTabList extends BaseFragment {
 
-    @ViewInject(id = R.id.fragment_tab_list_view)
-    private ListView mListView;
+    @InjectView(R.id.fragment_tab_list_view)
+    ListView mListView;
 
-    private DemoActionAdapter mAdapter;
+    DemoActionAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_list, null);
+        View view = inflater.inflate(R.layout.fragment_tab_list, null);
+        ButterKnife.inject(this, view);
+        return view;
     }
 
     @Override
@@ -57,4 +60,9 @@ public abstract class MainTabList extends BaseFragment {
         }
     };
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
 }
