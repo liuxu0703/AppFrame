@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.view.View;
-import android.widget.ImageView;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,20 +53,11 @@ public final class BitmapUtils {
      * @return bitmap
      */
     public static Bitmap file2bitmap(String path) {
-        return file2bitmap(path, 0, 0);
+        return file2bitmap(path, 0, 0, true);
     }
 
-    /**
-     * author: liuxu
-     * de-sample according to width and height of the given ImageView. if required
-     * width or height is smaller than the origin picture's with or height, de-sample it.
-     * NOTE: if image quality is your first concern, do not use this method.
-     * @param path full path for the picture
-     * @param imageView the ImageView used to determine bitmap width and height
-     * @return bitmap
-     */
-    public static Bitmap file2bitmapImageView(String path, ImageView imageView) {
-        return file2bitmap(path, imageView.getWidth(), imageView.getHeight());
+    public static Bitmap file2bitmap(String path, int width, int height) {
+        return file2bitmap(path, width, height, true);
     }
 
     /**
@@ -76,9 +68,10 @@ public final class BitmapUtils {
      * @param path full path for the picture
      * @param width the required width
      * @param height the required height
+     * @param considerExifRotate true and the bitmap will be rotated according to exif (if exists)
      * @return bitmap
      */
-    public static Bitmap file2bitmap(String path, int width, int height) {
+    public static Bitmap file2bitmap(String path, int width, int height, boolean considerExifRotate) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
 
         if (width != 0 && height != 0) {
@@ -94,7 +87,54 @@ public final class BitmapUtils {
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         options.inPurgeable = true;
         options.inInputShareable = true;
-        return BitmapFactory.decodeFile(path, options);
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+
+        if (considerExifRotate) {
+            int exifDegree = getFileExifDegree(path);
+            if (exifDegree == 0) {
+                return bitmap;
+            } else {
+                return rotateBitmap(bitmap, exifDegree);
+            }
+        } else {
+            return bitmap;
+        }
+    }
+
+    public static int getFileExifDegree(String path) {
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    return 90;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    return 180;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return 270;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap src, int degree) {
+        Bitmap ret = null;
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        try {
+            ret = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
+        } catch (OutOfMemoryError ignore) {
+        }
+        if (ret == null) {
+            ret = src;
+        }
+        if (src != ret) {
+            src.recycle();
+        }
+        return ret;
     }
 
     /**

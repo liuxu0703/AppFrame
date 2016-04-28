@@ -29,7 +29,7 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
     // ============================================
 
     private static final boolean DEBUG = false;
-    private static final int LOAD_FAIL_SCROLL_DURATION = 500;
+    private static final int LOAD_FAIL_SCROLL_DURATION = 300;
 
     private ListView mListView;
     private ILoadMoreFooter mLoadMoreFooter;
@@ -111,13 +111,22 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
                 totalItemCount != 0 &&
                 firstVisibleItem + visibleItemCount + preCount >= totalItemCount &&
                 totalItemCount != mListView.getHeaderViewsCount() + mListView.getFooterViewsCount()) {
-            loadMore();
+            int delay = mIsPrevLoadMoreFailed ? LOAD_FAIL_SCROLL_DURATION + 100 : 100;
+            removeCallbacks(mDelayLoadMoreRunnable);
+            postDelayed(mDelayLoadMoreRunnable, delay);
         }
 
         if (mOnScrollListener != null) {
             mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
     }
+
+    private Runnable mDelayLoadMoreRunnable = new Runnable() {
+        @Override
+        public void run() {
+            loadMore();
+        }
+    };
 
     // =============================================
 
@@ -181,7 +190,7 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
             public void run() {
                 setLoading(false);
             }
-        }, LOAD_FAIL_SCROLL_DURATION + 100);
+        }, LOAD_FAIL_SCROLL_DURATION + 150);
     }
 
     public void setLoadMorePreCount(int count) {

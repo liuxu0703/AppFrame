@@ -252,7 +252,8 @@ public class QuoteDivider extends View {
     private void resetTriangleValues() {
         mTriangleHeight = getHeight() - getPaddingTop() - getPaddingBottom() - mLineWidth;
         if (mTriangleHeight < 0) {
-            throw new IllegalStateException("not enough space to draw divider");
+            throw new IllegalStateException(
+                    "not enough space to draw divider, triangle height=" + mTriangleHeight);
         }
         if (mTriangleMiddle) {
             mTriangleLeft = getWidth() / 2;

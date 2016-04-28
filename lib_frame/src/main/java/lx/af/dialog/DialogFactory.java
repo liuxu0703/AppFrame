@@ -37,6 +37,22 @@ public final class DialogFactory {
                     }
                 }).create().show();
     }
+    public static void showConfirmDialog(Context context, String message, final Runnable okAction, final Runnable cancelAction) {
+        new AlertDialog.Builder(context)
+                .setMessage(message)
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cancelAction.run();
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        okAction.run();
+                    }
+                }).create().show();
+    }
 
     public static void showConfirmDialog(Context context, int stringId, final Runnable action) {
         showConfirmDialog(context, ResourceUtils.getString(stringId), action);
@@ -53,6 +69,13 @@ public final class DialogFactory {
                         deleteAction.run();
                     }
                 }).create().show();
+    }
+
+    public static LoadingDialog showLoadingDialog(Context context, boolean cancelable) {
+        LoadingDialog dialog = new LoadingDialog(context, null);
+        dialog.setCancelable(cancelable);
+        dialog.show();
+        return dialog;
     }
 
 }

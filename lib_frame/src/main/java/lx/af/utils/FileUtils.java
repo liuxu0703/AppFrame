@@ -9,6 +9,7 @@ import android.os.StatFs;
 import android.provider.MediaStore;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -377,14 +378,24 @@ public class FileUtils {
 
     /**
      * Writes string to file. Basically same as "echo -n $string > $filename"
-     * @throws java.io.IOException
      */
-    public static void stringToFile(String filename, String string) throws IOException {
-        FileWriter out = new FileWriter(filename);
+    public static boolean stringToFile(String filename, String string) {
+        FileWriter fw = null;
+        BufferedWriter bw = null;
         try {
-            out.write(string);
-        } finally {
-            out.close();
+            fw = new FileWriter(filename, true);
+            bw = new BufferedWriter(fw);
+            bw.write(string);
+            bw.newLine();
+            bw.flush();
+            bw.close();
+            fw.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            closeSilently(bw);
+            closeSilently(fw);
+            return false;
         }
     }
 
