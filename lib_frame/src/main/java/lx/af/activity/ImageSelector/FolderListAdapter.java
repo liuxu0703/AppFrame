@@ -17,7 +17,6 @@ import lx.af.utils.UIL.UILLoader;
 class FolderListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private FolderListView mFolderListView;
     private LayoutInflater mInflater;
 
     private List<FolderModel> mFolders = new ArrayList<>();
@@ -25,7 +24,6 @@ class FolderListAdapter extends BaseAdapter {
 
     public FolderListAdapter(FolderListView folderListView) {
         mContext = folderListView.getContext();
-        mFolderListView = folderListView;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

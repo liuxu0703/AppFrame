@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.R;
-import lx.af.activity.ImageSelector.ImageItemView.OnItemViewClickListener;
+import lx.af.activity.ImageSelector.ImageItemView.OnItemImageClickListener;
 import lx.af.utils.ScreenUtils;
 
 /**
@@ -32,9 +32,9 @@ class ImageGridAdapter extends BaseAdapter {
     private List<ImageModel> mSelectedImages = new ArrayList<>();
     private int mItemSize;
 
-    private OnItemClickListener mItemClickListener;
+    private OnItemViewClickListener mItemClickListener;
 
-    public ImageGridAdapter(ImageGridView gridView, OnItemClickListener l, boolean showCamera) {
+    public ImageGridAdapter(ImageGridView gridView, OnItemViewClickListener l, boolean showCamera) {
         mGridView = gridView;
         mItemClickListener = l;
         Context context = gridView.getContext();
@@ -178,7 +178,7 @@ class ImageGridAdapter extends BaseAdapter {
         }
     };
 
-    interface OnItemClickListener extends OnItemViewClickListener {
+    interface OnItemViewClickListener extends OnItemImageClickListener {
         void onItemCameraClicked();
     }
 

@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="#181819">
+
+    <lx.af.activity.ImageSelector.ImageGridView
+        android:id="@+id/mis_fragment_img_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="45dp"
+        android:paddingBottom="@dimen/mis_bottom_bar_height"
+        android:horizontalSpacing="@dimen/mis_grid_spacing"
+        android:verticalSpacing="@dimen/mis_grid_spacing"
+        android:clipToPadding="false"
+        android:numColumns="3" />
 
     <RelativeLayout
+        android:id="@+id/mis_activity_action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black" >
+        android:background="#80000000"
+        android:layout_alignParentTop="true" >
 
         <ImageView
             android:id="@+id/mis_activity_btn_back"
@@ -49,13 +64,65 @@
             android:textSize="14sp"
             android:textColor="@color/mis_btn_text_color"
             android:text="@string/mis_finish_btn" />
-
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/mis_activity_image_grid"
+    <TextView
+        android:id="@+id/mis_fragment_time_line"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#181819" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mis_activity_action_bar"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="#60000000"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        tools:text="2015年4月1日" />
 
-</LinearLayout>
+    <lx.af.activity.ImageSelector.FolderListView
+        android:id="@+id/mis_fragment_folder_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mis_bottom_bar_height"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="#cc000000"
+        android:clickable="true" >
+
+        <TextView
+            android:id="@+id/mis_fragment_btn_show_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#CDCECE"
+            android:textSize="16sp"
+            android:drawableRight="@drawable/mis_folder_indicator"
+            android:drawablePadding="5dp"
+            tools:text="All Images" />
+    </RelativeLayout>
+
+    <lx.af.view.ProgressWheel
+        xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/mis_fragment_loading_progress"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        ProgressWheel:rimColor="#40696969"
+        ProgressWheel:barLength="75dp"
+        ProgressWheel:barColor="#696969"
+        ProgressWheel:barWidth="4dp"
+        ProgressWheel:rimWidth="0dp"
+        ProgressWheel:contourColor="#00000000"
+        ProgressWheel:spinSpeed="2dp" />
+
+</RelativeLayout>

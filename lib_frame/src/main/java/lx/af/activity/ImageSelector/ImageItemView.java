@@ -28,9 +28,9 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
     private ImageView mCheck;
 
     private ImageModel mData;
-    private OnItemViewClickListener mClickListener;
+    private OnItemImageClickListener mClickListener;
 
-    public ImageItemView(ImageGridView gridView, OnItemViewClickListener listener) {
+    public ImageItemView(ImageGridView gridView, OnItemImageClickListener listener) {
         super(gridView.getContext());
         mGridView = gridView;
         mClickListener = listener;
@@ -98,7 +98,7 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    public interface OnItemViewClickListener {
+    interface OnItemImageClickListener {
         void onItemCheckClicked(ImageItemView view, ImageModel data);
         void onItemImageClicked(ImageItemView view, ImageModel data);
     }
