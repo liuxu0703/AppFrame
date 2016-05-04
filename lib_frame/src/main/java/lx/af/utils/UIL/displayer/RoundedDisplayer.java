@@ -2,7 +2,6 @@ package lx.af.utils.UIL.displayer;
 
 import android.graphics.Bitmap;
 
-import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
@@ -10,7 +9,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
  * author: lx
  * date: 16-4-27
  */
-public class RoundedDisplayer extends AnimateDisplayer {
+public class RoundedDisplayer extends BaseDisplayer {
 
     private final int mCornerRadius;
     private final int mBorderWidth;
@@ -27,9 +26,10 @@ public class RoundedDisplayer extends AnimateDisplayer {
     }
 
     @Override
-    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom) {
+    public void display(Bitmap bitmap, ImageAware imageAware) {
         if (!(imageAware instanceof ImageViewAware)) {
-            throw new IllegalArgumentException("ImageAware should wrap ImageView. ImageViewAware is expected.");
+            throw new IllegalArgumentException(
+                    "ImageAware should wrap ImageView. ImageViewAware is expected.");
         }
         RoundedDrawable drawable = RoundedDrawable.fromBitmap(bitmap);
         drawable.setCornerRadius(mCornerRadius);

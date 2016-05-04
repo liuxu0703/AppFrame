@@ -8,24 +8,23 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import lx.af.R;
 import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
 import lx.af.net.HttpRequest.VolleyManager;
+import lx.af.manager.KV;
 import lx.af.utils.AlertUtils;
 import lx.af.utils.BitmapUtils;
 import lx.af.utils.CrashHandler;
-import lx.af.manager.KV;
 import lx.af.utils.NetStateUtils;
 import lx.af.utils.PathUtils;
 import lx.af.utils.ResourceUtils;
 import lx.af.utils.ScreenUtils;
 import lx.af.utils.StringUtils;
 import lx.af.utils.SystemUtils;
-import lx.af.utils.UIL.displayer.AnimateDisplayer;
 import lx.af.utils.log.LogUtils;
 import lx.af.widget.iconify.Iconify;
 
@@ -87,7 +86,7 @@ public class AbsBaseApp extends Application{
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
-                .displayer(new AnimateDisplayer())
+                .displayer(new FadeInBitmapDisplayer(300))
                 .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)

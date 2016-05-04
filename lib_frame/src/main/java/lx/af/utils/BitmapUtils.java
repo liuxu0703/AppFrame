@@ -282,7 +282,7 @@ public final class BitmapUtils {
         long hash = 31;
         for (int x = 0; x < bitmap.getWidth(); x ++) {
             for (int y = 0; y < bitmap.getHeight(); y ++) {
-                hash *= (bitmap.getPixel(x,y) + 31);
+                hash *= (bitmap.getPixel(x, y) + 31);
             }
         }
         return hash;
@@ -296,7 +296,9 @@ public final class BitmapUtils {
     public static Bitmap capture(View v) {
         v.setDrawingCacheEnabled(true);
         v.buildDrawingCache();
-        return v.getDrawingCache();
+        Bitmap bitmap = v.getDrawingCache();
+        v.setDrawingCacheEnabled(false);
+        return bitmap;
     }
 
     /**

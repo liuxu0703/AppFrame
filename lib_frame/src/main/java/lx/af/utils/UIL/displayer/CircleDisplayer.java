@@ -3,7 +3,6 @@ package lx.af.utils.UIL.displayer;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
@@ -11,7 +10,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
  * author: lx
  * date: 16-4-27
  */
-public class CircleDisplayer extends AnimateDisplayer {
+public class CircleDisplayer extends BaseDisplayer {
 
     private final int mBorderWidth;
     private final int mBorderColor;
@@ -26,9 +25,10 @@ public class CircleDisplayer extends AnimateDisplayer {
     }
 
     @Override
-    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom) {
+    public void display(Bitmap bitmap, ImageAware imageAware) {
         if (!(imageAware instanceof ImageViewAware)) {
-            throw new IllegalArgumentException("ImageAware should wrap ImageView. ImageViewAware is expected.");
+            throw new IllegalArgumentException(
+                    "ImageAware should wrap ImageView. ImageViewAware is expected.");
         }
         RoundedDrawable drawable = RoundedDrawable.fromBitmap(bitmap);
         drawable.setOval(true);

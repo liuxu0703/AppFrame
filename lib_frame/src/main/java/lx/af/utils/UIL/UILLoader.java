@@ -5,12 +5,16 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
 
 import lx.af.R;
-import lx.af.utils.UIL.displayer.AnimateDisplayer;
+import lx.af.utils.UIL.displayer.BaseDisplayer;
 import lx.af.utils.UIL.displayer.CircleDisplayer;
+import lx.af.utils.UIL.displayer.DefaultDisplayer;
 import lx.af.utils.UIL.displayer.RoundedDisplayer;
+import lx.af.utils.UIL.displayer.animator.BaseAnimator;
+import lx.af.utils.UIL.displayer.animator.FadeInAnimator;
+import lx.af.utils.UIL.displayer.animator.FloatInAnimator;
+import lx.af.utils.UIL.displayer.animator.ScaleInAnimator;
 
 /**
  * author: lx
@@ -23,11 +27,13 @@ public class UILLoader {
     protected ImageView mImageView;
     protected String mUri;
     protected DisplayImageOptions.Builder mOptionsBuilder;
-    protected BitmapDisplayer mBitmapDisplayer;
+    protected BaseDisplayer mDisplayer;
+    protected BaseAnimator mDisplayerAnimator;
 
     protected int mBorderWidth;
     protected int mBorderColor;
     protected int mCornerRadius;
+    protected int mBlurRadius;
     protected boolean mAsCircle;
 
     public static UILLoader of(ImageView imageView, String uri) {
@@ -35,14 +41,7 @@ public class UILLoader {
     }
 
     public void display() {
-        if (mOptionsBuilder == null) {
-            mOptionsBuilder = getOptionsBuilder();
-        }
-        if (mBitmapDisplayer == null) {
-            mBitmapDisplayer = getBitmapDisplayer();
-        }
-        mOptionsBuilder.displayer(getBitmapDisplayer());
-        sImageLoader.displayImage(mUri, mImageView, mOptionsBuilder.build());
+        sImageLoader.displayImage(mUri, mImageView, getOptions());
     }
 
     public UILLoader(ImageView imageView, String uri) {
@@ -63,6 +62,15 @@ public class UILLoader {
 
     public UILLoader asCircle() {
         mAsCircle = true;
+        return this;
+    }
+
+    /**
+     * show image with blur effect
+     * @param radius [1,10] recommended
+     */
+    public UILLoader blur(int radius) {
+        mBlurRadius = radius;
         return this;
     }
 
@@ -94,12 +102,36 @@ public class UILLoader {
         return this;
     }
 
-    public UILLoader bitmapDisplayer(BitmapDisplayer displayer) {
-        mBitmapDisplayer = displayer;
+    public UILLoader displayer(BaseDisplayer displayer) {
+        mDisplayer = displayer;
+        return this;
+    }
+
+    public UILLoader displayerAnimator(BaseAnimator animator) {
+        mDisplayerAnimator = animator;
+        return this;
+    }
+
+    public UILLoader animateFadeIn() {
+        mDisplayerAnimator = new FadeInAnimator();
+        return this;
+    }
+
+    public UILLoader animateScaleIn() {
+        mDisplayerAnimator = new ScaleInAnimator();
+        return this;
+    }
+
+    public UILLoader animateFloatIn() {
+        mDisplayerAnimator = new FloatInAnimator();
         return this;
     }
 
     // ====================================================
+
+    protected DisplayImageOptions getOptions() {
+        return getOptionsBuilder().displayer(getBitmapDisplayer()).build();
+    }
 
     protected DisplayImageOptions.Builder getOptionsBuilder() {
         if (mOptionsBuilder == null) {
@@ -115,13 +147,26 @@ public class UILLoader {
         return mOptionsBuilder;
     }
 
-    protected BitmapDisplayer getBitmapDisplayer() {
-        if (mAsCircle) {
-            return new CircleDisplayer(mBorderWidth, mBorderColor);
-        } else if (mBorderWidth > 0 || mCornerRadius > 0) {
-            return new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor);
+    protected BaseDisplayer getBitmapDisplayer() {
+        if (mDisplayer != null) {
+            return mDisplayer;
         } else {
-            return new AnimateDisplayer();
+            BaseDisplayer displayer;
+            if (mAsCircle) {
+                displayer = new CircleDisplayer(mBorderWidth, mBorderColor);
+            } else if (mBorderWidth > 0 || mCornerRadius > 0) {
+                displayer = new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor);
+            } else {
+                displayer = new DefaultDisplayer();
+            }
+            if (mBlurRadius > 0) {
+                displayer.setBlur(mBlurRadius);
+            }
+            if (mDisplayerAnimator == null) {
+                mDisplayerAnimator = new FadeInAnimator();
+            }
+            displayer.setDisplayerAnimator(mDisplayerAnimator);
+            return displayer;
         }
     }
 
