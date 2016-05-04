@@ -1,6 +1,7 @@
 package lx.af.utils.UIL.displayer;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
@@ -14,6 +15,7 @@ public class RoundedDisplayer extends BaseDisplayer {
     private final int mCornerRadius;
     private final int mBorderWidth;
     private final int mBorderColor;
+    private boolean mAsSquare = false;
 
     public RoundedDisplayer(int cornerRadius) {
         this(cornerRadius, 0, 0);
@@ -23,6 +25,11 @@ public class RoundedDisplayer extends BaseDisplayer {
         mCornerRadius = cornerRadius;
         mBorderColor = borderColor;
         mBorderWidth = borderWidth;
+    }
+
+    public RoundedDisplayer setAsSquare(boolean asSquare) {
+        mAsSquare = asSquare;
+        return this;
     }
 
     @Override
@@ -36,6 +43,11 @@ public class RoundedDisplayer extends BaseDisplayer {
         if (mBorderWidth != 0) {
             drawable.setBorderColor(mBorderColor);
             drawable.setBorderWidth(mBorderWidth);
+        }
+        if (mAsSquare) {
+            drawable.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ImageView imageView = (ImageView) imageAware.getWrappedView();
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         }
         imageAware.setImageDrawable(drawable);
     }

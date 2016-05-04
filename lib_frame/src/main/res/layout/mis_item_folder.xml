@@ -53,7 +53,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/mis_ic_check"
+        android:src="@drawable/mis_ic_selected"
         android:contentDescription="@null" />
 
 </LinearLayout>

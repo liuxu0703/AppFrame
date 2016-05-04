@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.R;
-import lx.af.utils.ScreenUtils;
 import lx.af.activity.ImageSelector.ImageItemView.OnItemViewClickListener;
+import lx.af.utils.ScreenUtils;
 
 /**
  * import and modified by liuxu on 2015.04.22
@@ -30,9 +30,7 @@ class ImageGridAdapter extends BaseAdapter {
 
     private List<ImageModel> mImages = new ArrayList<>();
     private List<ImageModel> mSelectedImages = new ArrayList<>();
-
     private int mItemSize;
-    private GridView.LayoutParams mItemLayoutParams;
 
     private OnItemClickListener mItemClickListener;
 
@@ -44,17 +42,12 @@ class ImageGridAdapter extends BaseAdapter {
         this.mShowCamera = showCamera;
         int gridItemSpace = context.getResources().getDimensionPixelOffset(R.dimen.mis_grid_spacing);
         mItemSize = (ScreenUtils.getScreenWidth() - 2 * gridItemSpace) / 3;
-        mItemLayoutParams = new GridView.LayoutParams(mItemSize, mItemSize);
     }
 
     public void setShowCamera(boolean b) {
         if (mShowCamera == b) return;
         mShowCamera = b;
         notifyDataSetChanged();
-    }
-
-    public boolean isShowCamera() {
-        return mShowCamera;
     }
 
     public void select(ImageModel image) {
@@ -163,14 +156,16 @@ class ImageGridAdapter extends BaseAdapter {
         } else if (type == TYPE_NORMAL) {
             if (view == null) {
                 view = new ImageItemView(mGridView, mItemClickListener);
-                /** Fixed View Size */
-                GridView.LayoutParams lp = (GridView.LayoutParams) view.getLayoutParams();
-                if (lp == null || lp.height != mItemSize) {
-                    view.setLayoutParams(mItemLayoutParams);
-                }
             }
             ImageItemView itemView = (ImageItemView) view;
             itemView.setData(getItem(position));
+        }
+
+        /** Fixed View Size */
+        GridView.LayoutParams lp = (GridView.LayoutParams) view.getLayoutParams();
+        if (lp == null || lp.height != mItemSize) {
+            lp = new GridView.LayoutParams(mItemSize, mItemSize);
+            view.setLayoutParams(lp);
         }
 
         return view;
@@ -183,7 +178,7 @@ class ImageGridAdapter extends BaseAdapter {
         }
     };
 
-    public interface OnItemClickListener extends OnItemViewClickListener {
+    interface OnItemClickListener extends OnItemViewClickListener {
         void onItemCameraClicked();
     }
 

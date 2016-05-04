@@ -8,12 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import lx.af.R;
+import lx.af.utils.UIL.UILLoader;
 
 class FolderListAdapter extends BaseAdapter {
 
@@ -106,14 +105,11 @@ class FolderListAdapter extends BaseAdapter {
     }
 
     private void displayImage(ImageView imageView, ImageModel image) {
-        if (mFolderListView.isScrolling()) {
-            // avoid decode bitmap when scrolling
-            imageView.setImageResource(R.drawable.img_gallery_default);
-        } else {
-            String imgUri = image.getDisplayUri();
-            ImageLoader.getInstance().displayImage(
-                    imgUri, imageView, ImageOptions.getDisplayImageOptions());
-        }
+        String imgUri = image.getDisplayUri();
+        UILLoader.of(imageView, imgUri)
+                .imageDefault(R.drawable.img_gallery_default)
+                .animateFadeIn()
+                .display();
     }
 
     class ViewHolder {

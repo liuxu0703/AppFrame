@@ -5,6 +5,10 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import lx.af.R;
 import lx.af.utils.UIL.displayer.BaseDisplayer;
@@ -30,23 +34,38 @@ public class UILLoader {
     protected BaseDisplayer mDisplayer;
     protected BaseAnimator mDisplayerAnimator;
 
+    protected ImageLoadingListener mLoadListener;
+    protected ImageLoadingProgressListener mProgressListener;
+
+    protected int mMaxWidth = -1;
+    protected int mMaxHeight = -1;
     protected int mBorderWidth;
     protected int mBorderColor;
     protected int mCornerRadius;
     protected int mBlurRadius;
     protected boolean mAsCircle;
+    protected boolean mAsSquare;
 
     public static UILLoader of(ImageView imageView, String uri) {
         return new UILLoader(imageView, uri);
     }
 
     public void display() {
-        sImageLoader.displayImage(mUri, mImageView, getOptions());
+        sImageLoader.displayImage(
+                mUri, new ImageViewAware(mImageView),
+                getOptions(), getImageSize(),
+                mLoadListener, mProgressListener);
     }
 
     public UILLoader(ImageView imageView, String uri) {
         mImageView = imageView;
         mUri = uri;
+    }
+
+    public UILLoader maxSize(int maxWidth, int maxHeight) {
+        mMaxWidth = maxWidth;
+        mMaxHeight = maxHeight;
+        return this;
     }
 
     public UILLoader border(int borderWidth, int borderColor) {
@@ -62,6 +81,11 @@ public class UILLoader {
 
     public UILLoader asCircle() {
         mAsCircle = true;
+        return this;
+    }
+
+    public UILLoader asSquare() {
+        mAsSquare = true;
         return this;
     }
 
@@ -127,6 +151,16 @@ public class UILLoader {
         return this;
     }
 
+    public UILLoader setLoadListener(ListenerAdapter listener) {
+        mLoadListener = listener;
+        return this;
+    }
+
+    public UILLoader setProgressListener(ImageLoadingProgressListener listener) {
+        mProgressListener = listener;
+        return this;
+    }
+
     // ====================================================
 
     protected DisplayImageOptions getOptions() {
@@ -154,8 +188,9 @@ public class UILLoader {
             BaseDisplayer displayer;
             if (mAsCircle) {
                 displayer = new CircleDisplayer(mBorderWidth, mBorderColor);
-            } else if (mBorderWidth > 0 || mCornerRadius > 0) {
-                displayer = new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor);
+            } else if (mBorderWidth > 0 || mCornerRadius > 0 || mAsSquare) {
+                displayer = new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor)
+                        .setAsSquare(mAsSquare);
             } else {
                 displayer = new DefaultDisplayer();
             }
@@ -167,6 +202,14 @@ public class UILLoader {
             }
             displayer.setDisplayerAnimator(mDisplayerAnimator);
             return displayer;
+        }
+    }
+
+    protected ImageSize getImageSize() {
+        if (mMaxWidth > 0 && mMaxHeight > 0) {
+            return new ImageSize(mMaxWidth, mMaxHeight);
+        } else {
+            return null;
         }
     }
 

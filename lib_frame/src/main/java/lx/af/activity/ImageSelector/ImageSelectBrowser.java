@@ -52,6 +52,11 @@ public class ImageSelectBrowser extends ImageBrowserActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        submitResult(false);
+    }
+
+    @Override
     protected boolean isAutoHideFunctionBar() {
         return false;
     }
@@ -81,6 +86,7 @@ public class ImageSelectBrowser extends ImageBrowserActivity {
         mCheck = (ImageView) bar.findViewById(R.id.mis_browser_bottom_bar_check);
         mText = (TextView) bar.findViewById(R.id.mis_browser_bottom_bar_text);
         mCheck.setOnClickListener(mCheckClickListener);
+        mText.setOnClickListener(mCheckClickListener);
         refreshSelected();
         return bar;
     }
