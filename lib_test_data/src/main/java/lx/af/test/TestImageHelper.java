@@ -24,13 +24,25 @@ public class TestImageHelper {
 
     private static Random sRandom = new Random();
 
+    public static String randomImageL() {
+        int groupIdx = random(IMAGE_GROUP_ARRAY.length);
+        return IMAGE_GROUP_ARRAY[groupIdx].random();
+    }
+
     public static String randomAvatarL() {
         return AVATAR.random();
     }
 
-    public static String randomImageL() {
-        int groupIdx = random(IMAGE_GROUP_ARRAY.length);
-        return IMAGE_GROUP_ARRAY[groupIdx].random();
+    public static String randomSceneL() {
+        return SCENE.random();
+    }
+
+    public static String randomCartoonL() {
+        return CARTOON.random();
+    }
+
+    public static String randomGirlL() {
+        return GIRL.random();
     }
 
     public static ArrayList<String> randomImageListL() {

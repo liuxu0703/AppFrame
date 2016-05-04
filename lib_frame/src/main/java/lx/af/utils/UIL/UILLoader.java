@@ -126,6 +126,11 @@ public class UILLoader {
         return this;
     }
 
+    public UILLoader resetBeforeLoading() {
+        getOptionsBuilder().resetViewBeforeLoading(true);
+        return this;
+    }
+
     public UILLoader displayer(BaseDisplayer displayer) {
         mDisplayer = displayer;
         return this;

@@ -90,6 +90,10 @@
 
 
         <activity
+            android:name=".activity.DemoUtils.UILLoaderDemo"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".activity.DemoUtils.ViewPagerAutoFlipDemo"
             android:screenOrientation="portrait" >
         </activity>

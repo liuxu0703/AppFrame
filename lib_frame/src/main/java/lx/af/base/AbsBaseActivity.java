@@ -39,14 +39,18 @@ public abstract class AbsBaseActivity extends FragmentActivity {
     private boolean mIsForeground = false;
 
     private final LinkedList<LifeCycleListener> mLifeCycleListeners = new LinkedList<>();
+    private final LinkedList<LifeCycleListener> mLifeCycleListenersCopy = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         TAG = this.getClass().getSimpleName();
         super.onCreate(savedInstanceState);
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityCreated(this, savedInstanceState);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
@@ -57,69 +61,93 @@ public abstract class AbsBaseActivity extends FragmentActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivitySaveInstanceState(this, outState);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityRestoreInstanceState(this, savedInstanceState);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityStarted(this);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mIsForeground = true;
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityResumed(this);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mIsForeground = false;
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityPaused(this);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityStopped(this);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
     protected void onDestroy() {
         dismissLoadingDialog();
         super.onDestroy();
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityDestroyed(this);
         }
         mLifeCycleListeners.clear();
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        for (LifeCycleListener listener : mLifeCycleListeners) {
+        // iterate copied listener list to prevent potential ConcurrentModificationException
+        mLifeCycleListenersCopy.addAll(mLifeCycleListeners);
+        for (LifeCycleListener listener : mLifeCycleListenersCopy) {
             listener.onActivityResult(this, requestCode, resultCode, data);
         }
+        mLifeCycleListenersCopy.clear();
     }
 
     @Override

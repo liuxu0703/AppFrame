@@ -1,6 +1,7 @@
 package lx.af.activity.ImageSelector;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -12,7 +13,6 @@ import lx.af.R;
 import lx.af.utils.ScreenUtils;
 import lx.af.utils.UIL.ListenerAdapter;
 import lx.af.utils.UIL.UILLoader;
-import lx.af.utils.log.Log;
 
 /**
  * Created by liuxu on 15-5-13.

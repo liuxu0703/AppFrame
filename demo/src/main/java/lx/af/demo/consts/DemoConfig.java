@@ -2,6 +2,7 @@ package lx.af.demo.consts;
 
 import android.app.Activity;
 
+import lx.af.demo.activity.DemoUtils.UILLoaderDemo;
 import lx.af.demo.activity.DemoUtils.WatermarkDemo;
 import lx.af.demo.activity.DemoWidget.QuoteDividerDemo;
 import lx.af.demo.activity.DemoWidget.SelectImageViewDemo;
@@ -48,7 +49,8 @@ public class DemoConfig {
 
     public static final ActionModel[] UTILS_DEMO = new ActionModel[] {
             demo("ActionBar Fade - ListView", PostListActivity.class),
-            demo("ActionBar Fade - ScrollView", ScrollViewFadeDemo.class),
+            demo("ActionBar Fade - ListView", PostListActivity.class),
+            demo("UILLoader", UILLoaderDemo.class),
             demo("ViewPager Auto Flipper", ViewPagerAutoFlipDemo.class),
             demo("Image Watermark", WatermarkDemo.class),
             demo("Home Key Watcher", HomeKeyWatcherDemo.class),
