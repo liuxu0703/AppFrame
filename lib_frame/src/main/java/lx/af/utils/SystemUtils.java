@@ -22,6 +22,9 @@ import java.util.List;
 public final class SystemUtils {
 
     private static Application sApp;
+    private static int sAppVersionCode = -1;
+    private static String sAppVersionName;
+    private static final Object sLock = new Object();
 
     private SystemUtils() {
     }
@@ -256,33 +259,46 @@ public final class SystemUtils {
      * get app version code
      */
     public static int getAppVersionCode() {
-        int versionCode = 0;
-        PackageManager pm = sApp.getPackageManager();
-        try {
-            PackageInfo pi;
-            pi = pm.getPackageInfo(sApp.getPackageName(),
-                    PackageManager.GET_ACTIVITIES);
-            versionCode = pi.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if (sAppVersionCode == -1) {
+            synchronized (sLock) {
+                PackageManager pm = sApp.getPackageManager();
+                try {
+                    PackageInfo pi;
+                    pi = pm.getPackageInfo(sApp.getPackageName(),
+                            PackageManager.GET_ACTIVITIES);
+                    sAppVersionCode = pi.versionCode;
+                    sAppVersionName = pi.versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return versionCode;
+        return sAppVersionCode;
     }
 
     /**
      * get app version name
      */
     public static String getAppVersionName() {
-        String versionName = "1.0.0";
-        PackageManager pm = sApp.getPackageManager();
-        try {
-            PackageInfo pi;
-            pi = pm.getPackageInfo(sApp.getPackageName(), PackageManager.GET_ACTIVITIES);
-            versionName = pi.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if (sAppVersionCode == -1) {
+            synchronized (sLock) {
+                PackageManager pm = sApp.getPackageManager();
+                try {
+                    PackageInfo pi;
+                    pi = pm.getPackageInfo(sApp.getPackageName(),
+                            PackageManager.GET_ACTIVITIES);
+                    sAppVersionCode = pi.versionCode;
+                    sAppVersionName = pi.versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return versionName;
+        if (sAppVersionName == null) {
+            return "1.0.0";
+        } else {
+            return sAppVersionName;
+        }
     }
 
     /**

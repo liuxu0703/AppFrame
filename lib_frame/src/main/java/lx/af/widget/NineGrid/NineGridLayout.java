@@ -32,6 +32,7 @@ public class NineGridLayout extends ViewGroup {
     private int mSize3Column;
     private int mSpaceSize;
     private boolean mAutoSize = false;
+    private boolean mSizeMatchParent = false;
 
     private ArrayList<View> mViews = new ArrayList<>(9);
     private Map<View, Integer> mViewMap = new HashMap<>(9);
@@ -58,11 +59,12 @@ public class NineGridLayout extends ViewGroup {
             mSize1Column = a.getDimensionPixelSize(R.styleable.NineGridLayout_viewSizeOneColumn, 0);
             mSize2Column = a.getDimensionPixelSize(R.styleable.NineGridLayout_viewSizeTwoColumn, 0);
             mSize3Column = a.getDimensionPixelSize(R.styleable.NineGridLayout_viewSizeThreeColumn, 0);
+            mSizeMatchParent = a.getBoolean(R.styleable.NineGridLayout_viewSizeMatchParent, false);
             mSpaceSize = a.getDimensionPixelSize(R.styleable.NineGridLayout_gridSpaceSize, 0);
             a.recycle();
         }
 
-        if (mSize1Column == 0 || mSize2Column == 0 || mSize3Column == 0) {
+        if (!mSizeMatchParent && (mSize1Column == 0 || mSize2Column == 0 || mSize3Column == 0)) {
             mAutoSize = true;
         }
     }
@@ -128,7 +130,12 @@ public class NineGridLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (mAutoSize) {
+        if (mSizeMatchParent) {
+            int width = MeasureSpec.getSize(widthMeasureSpec);
+            mSize1Column = width;
+            mSize2Column = (width - mSpaceSize) / 2;
+            mSize3Column = (width - 2 * mSpaceSize) / 3;
+        } else if (mAutoSize) {
             int width = MeasureSpec.getSize(widthMeasureSpec);
             mSize1Column = width;
             mSize2Column = mSize3Column = (width - 2 * mSpaceSize) / 3;

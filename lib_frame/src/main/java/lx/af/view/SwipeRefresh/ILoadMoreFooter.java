@@ -1,6 +1,7 @@
 package lx.af.view.SwipeRefresh;
 
-import android.widget.ListView;
+import android.view.View;
+import android.widget.AbsListView;
 
 /**
  * author: lx
@@ -8,8 +9,8 @@ import android.widget.ListView;
  */
 public interface ILoadMoreFooter {
 
-    void init(SwipeRefreshListLayout refreshLayout, ListView parent);
+    View getLoadMoreFooterView();
 
-    void refreshLoadState(ListView parent, SwipeRefreshListLayout.LoadState state);
+    void refreshLoadState(AbsListView parent, ILoadMoreRefreshLayout.LoadState state);
 
 }

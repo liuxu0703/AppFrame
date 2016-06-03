@@ -146,18 +146,17 @@ public class ImageSelectBrowser extends ImageBrowserActivity {
     }
 
     private void submitResult(boolean done) {
+        ArrayList<String> paths = null;
         if (mSelectedImages != null && mSelectedImages.size() != 0) {
-            ArrayList<String> paths = new ArrayList<>(mSelectedImages.size());
+            paths = new ArrayList<>(mSelectedImages.size());
             for (String uri : mSelectedImages) {
                 paths.add(Uri.parse(uri).getPath());
             }
-            Intent intent = new Intent();
-            intent.putStringArrayListExtra(EXTRA_RESULT, paths);
-            intent.putExtra(EXTRA_RESULT_DONE, done);
-            setResult(RESULT_OK, intent);
-        } else {
-            setResult(RESULT_CANCELED);
         }
+        Intent intent = new Intent();
+        intent.putStringArrayListExtra(EXTRA_RESULT, paths);
+        intent.putExtra(EXTRA_RESULT_DONE, done);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

@@ -10,6 +10,8 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import lx.af.utils.UIL.ImageInfo;
+import lx.af.utils.UIL.ImageInfoCallback;
 import lx.af.utils.UIL.displayer.animator.BaseAnimator;
 
 /**
@@ -23,6 +25,8 @@ public abstract class BaseDisplayer implements BitmapDisplayer {
     private BaseAnimator mDisplayerAnimator;
     private int mBlurRadius = -1;
 
+    private ImageInfoCallback mImageInfoCallback;
+
     public BaseDisplayer setDisplayerAnimator(BaseAnimator animator) {
         mDisplayerAnimator = animator;
         return this;
@@ -33,8 +37,21 @@ public abstract class BaseDisplayer implements BitmapDisplayer {
         return this;
     }
 
+    public BaseDisplayer setImageInfoCallback(ImageInfoCallback c) {
+        mImageInfoCallback = c;
+        return this;
+    }
+
     @Override
     public void display(final Bitmap bitmap, final ImageAware imageAware, final LoadedFrom loadedFrom) {
+        if (mImageInfoCallback != null) {
+            ImageInfo info = new ImageInfo();
+            info.width = bitmap.getWidth();
+            info.height = bitmap.getHeight();
+            info.size = bitmap.getByteCount();
+            mImageInfoCallback.onGetImageInfo(info);
+        }
+
         if (mBlurRadius > 0) {
             THREAD_POOL.execute(new Runnable() {
                 @Override

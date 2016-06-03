@@ -36,6 +36,7 @@ public class LoadingBkgView extends LinearLayout {
     private int mIconFailResId;
     private int mIconEmptyResId;
 
+    private boolean mIsLoading = false;
     private int mErrorType = ERROR_TYPE_FAIL;
     private boolean mRetryOnEmpty = false;
     private OnClickListener mRetryClickListener;
@@ -108,6 +109,7 @@ public class LoadingBkgView extends LinearLayout {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
+                mIsLoading = true;
                 setVisibility(View.VISIBLE);
                 mViewProgress.setVisibility(View.VISIBLE);
                 mViewProgress.spin();
@@ -123,6 +125,7 @@ public class LoadingBkgView extends LinearLayout {
         GlobalThreadManager.runInUiThreadDelayed(new Runnable() {
             @Override
             public void run() {
+                mIsLoading = false;
                 mViewProgress.stopSpinning();
                 setVisibility(View.GONE);
                 startAnimation(mAnimGone);
@@ -146,6 +149,7 @@ public class LoadingBkgView extends LinearLayout {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
+                mIsLoading = false;
                 mErrorType = ERROR_TYPE_EMPTY;
                 setVisibility(View.VISIBLE);
                 mMessageEmpty = message;
@@ -172,6 +176,7 @@ public class LoadingBkgView extends LinearLayout {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
+                mIsLoading = false;
                 mErrorType = ERROR_TYPE_FAIL;
                 setVisibility(View.VISIBLE);
                 mMessageFail = message;
@@ -201,6 +206,10 @@ public class LoadingBkgView extends LinearLayout {
     public void setRetryClickCallback(OnClickListener l) {
         mRetryClickListener = l;
         mViewMessage.setOnClickListener(l);
+    }
+
+    public boolean isLoading() {
+        return mIsLoading;
     }
 
     private OnClickListener mRetryClickListenerInner = new OnClickListener() {

@@ -145,7 +145,7 @@ public class ImageBrowserActivity extends AbsBaseActivity {
         currentIdx = currentIdx == -1 ? 0 : currentIdx;
         mTvPageIdx.setText((currentIdx + 1) + "/" + mImgUris.size());
 
-        mAdapter = new ImagePagerAdapter(mImgUris);
+        mAdapter = new ImagePagerAdapter(mImgUris, mImgInfoMap);
         mAdapter.setLoadImageCallback(mLoadImageCallback);
         mAdapter.setClickImageCallback(mClickImageCallback);
 
@@ -383,7 +383,7 @@ public class ImageBrowserActivity extends AbsBaseActivity {
     // ==========================================
 
 
-    private static class ImageInfo {
+    static class ImageInfo {
         String uri;
         ImageValidation valid = ImageValidation.UNKNOWN;
 

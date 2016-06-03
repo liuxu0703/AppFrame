@@ -101,7 +101,9 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
     public void reset(List<T> list) {
         synchronized (mLock) {
             mObjects.clear();
-            mObjects.addAll(list);
+            if (list != null) {
+                mObjects.addAll(list);
+            }
         }
         if (mNotifyOnChange) notifyDataSetChanged();
     }

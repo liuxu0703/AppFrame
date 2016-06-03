@@ -60,8 +60,16 @@ public class UILLoaderDemo extends BaseActivity implements
             imageView.setLayoutParams(params);
             container1.addView(imageView);
 
-            UILLoader.of(imageView, TestImageHelper.randomImageL())
-                    .imageDefault(R.drawable.img_default)
+            String uri;
+            if (i == 0) {
+                uri = "http://111"; // simulate wrong uri
+            } else if (i == 1) {
+                uri = null; // simulate empty uri
+            } else {
+                uri = TestImageHelper.randomImageL();
+            }
+            UILLoader.of(imageView, uri)
+                    .imageDefault(R.drawable.img_gallery_default)
                     .asCircle()
                     .border(10, Color.WHITE)
                     .animateScaleIn()

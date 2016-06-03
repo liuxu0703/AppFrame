@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="GridFlowLayout">
+        <attr name="gridSpacing" format="dimension" />
+        <attr name="gridColumnCount" format="integer" />
+        <attr name="gridMaxCount" format="integer" />
+        <attr name="gridRatio" format="float" />
+    </declare-styleable>
+</resources>

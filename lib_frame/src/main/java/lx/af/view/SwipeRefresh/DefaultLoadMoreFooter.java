@@ -1,10 +1,9 @@
 package lx.af.view.SwipeRefresh;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,12 +36,12 @@ public class DefaultLoadMoreFooter extends RelativeLayout implements ILoadMoreFo
     }
 
     @Override
-    public void init(SwipeRefreshListLayout refreshLayout, ListView parent) {
-        parent.addFooterView(this);
+    public View getLoadMoreFooterView() {
+        return this;
     }
 
     @Override
-    public void refreshLoadState(ListView parent, SwipeRefreshListLayout.LoadState state) {
+    public void refreshLoadState(AbsListView parent, SwipeRefreshListLayout.LoadState state) {
         switch (state) {
             case LOADING:
                 mProgress.setVisibility(View.VISIBLE);
@@ -52,6 +51,7 @@ public class DefaultLoadMoreFooter extends RelativeLayout implements ILoadMoreFo
             case IDLE:
             case NO_MORE:
                 mProgress.setVisibility(View.GONE);
+                mProgress.setVisibility(View.VISIBLE);
                 mProgress.stopSpinning();
                 mMessage.setText(R.string.swipe_refresh_default_footer_done);
                 break;

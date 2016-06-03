@@ -2,11 +2,15 @@ package lx.af.demo.base;
 
 import android.app.Activity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import lx.af.base.ActionBarAdapter;
 import lx.af.demo.R;
+import lx.af.utils.ScreenUtils;
 import lx.af.widget.iconify.widget.IconTextView;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * author: lx
@@ -44,6 +48,14 @@ class ActionBarAdapterTextMenu implements ActionBarAdapter {
             ActionBar.TextMenu.Callback c = (ActionBar.TextMenu.Callback) mActivity;
             c.onActionBarCreated(view, left, title, right);
         }
+        return view;
+    }
+
+    @Override
+    public View getActionBarDivider(Activity activity) {
+        View view = new View(activity);
+        view.setBackgroundResource(lx.af.R.drawable.divider_horizontal_gradient_down);
+        view.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, ScreenUtils.dip2px(2f)));
         return view;
     }
 

@@ -35,7 +35,7 @@ public abstract class AbsViewHolderAdapter<T> extends AbsListAdapter<T> {
             convertView = vh.getRootView();
             convertView.setTag(R.id.tag_id_view_holder, vh);
         } else {
-            vh = (AbsViewHolder<T>) convertView.getTag(R.id.tag_id_view_holder);
+            vh = (IViewHolder<T>) convertView.getTag(R.id.tag_id_view_holder);
         }
         vh.setData(getItem(position));
         return convertView;

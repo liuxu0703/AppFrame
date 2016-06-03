@@ -53,8 +53,9 @@ class ImageItemView extends FrameLayout implements View.OnClickListener {
         updateChecked();
         String imgUri = mData.getDisplayUri();
         UILLoader.of(mImage, imgUri)
-                .imageDefault(R.drawable.img_gallery_default)
+                .imageOnFail(R.drawable.img_gallery_default)
                 .maxSize(MAX_SIZE, MAX_SIZE)
+                .resetBeforeLoading()
                 .delayBeforeLoading(mGridView.isScrolling() ? 200 : 0)
                 .animateFloatIn()
                 .setLoadListener(new ListenerAdapter() {

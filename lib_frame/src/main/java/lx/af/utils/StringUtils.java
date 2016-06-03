@@ -1,6 +1,7 @@
 package lx.af.utils;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -16,9 +17,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -377,6 +383,43 @@ public final class StringUtils {
     }
 
     // ==========================================================
+    // string extract
+
+    /**
+     * extract http links from a string
+     * @param content the string
+     * @return a list of http links. if no link is found, return a list with size of 0
+     */
+    @NonNull
+    public static List<String> extractHttpLinks(String content) {
+        String pattern = "https?://[\\w-]+\\.[\\w-]+[^\\s]*";
+        return extractStrings(content, pattern);
+    }
+
+    /**
+     * extract patterns from a string
+     * @param content the string
+     * @param pattern the pattern
+     * @return a list of matched patterns. if no pattern is found, return a list with size of 0
+     */
+    @NonNull
+    public static List<String> extractStrings(String content, String pattern) {
+        ArrayList<String> ret = new ArrayList<>(4);
+        if (content == null || content.length() == 0) {
+            return ret;
+        }
+        Pattern p = Pattern.compile("(" + pattern + ")");
+        Matcher matcher = p.matcher(content);
+        while (matcher.find()) {
+            String link = matcher.group(1);
+            if (link != null) {
+                ret.add(link);
+            }
+        }
+        return ret;
+    }
+
+    // ==========================================================
 
     /**
      * add query string for url
@@ -484,6 +527,39 @@ public final class StringUtils {
             dest = m.replaceAll("");
         }
         return dest;
+    }
+
+
+    // ==========================================================
+    // data format
+
+
+    private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
+    static {
+        suffixes.put(1_000L, "k");
+        suffixes.put(1_000_000L, "M");
+        suffixes.put(1_000_000_000L, "G");
+        suffixes.put(1_000_000_000_000L, "T");
+        suffixes.put(1_000_000_000_000_000L, "P");
+        suffixes.put(1_000_000_000_000_000_000L, "E");
+    }
+
+    /**
+     * format number to string: 1453 -> 1.4k, 2400000 -> 2.4M
+     */
+    public static String formatNumber(long value) {
+        //Long.MIN_VALUE == -Long.MIN_VALUE so we need an adjustment here
+        if (value == Long.MIN_VALUE) return formatNumber(Long.MIN_VALUE + 1);
+        if (value < 0) return "-" + formatNumber(-value);
+        if (value < 1000) return Long.toString(value); //deal with easy case
+
+        Map.Entry<Long, String> e = suffixes.floorEntry(value);
+        Long divideBy = e.getKey();
+        String suffix = e.getValue();
+
+        long truncated = value / (divideBy / 10); //the number part of the output times 10
+        boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
+        return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
     }
 
 }

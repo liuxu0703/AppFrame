@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -187,6 +188,15 @@ public class FileUtils {
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
         return (availableBlocks * blockSize) / 1024 / 1024; // in MB
+    }
+
+    public static boolean isFileExists(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return false;
+        } else {
+            File file = new File(path);
+            return file.exists();
+        }
     }
 
     /**

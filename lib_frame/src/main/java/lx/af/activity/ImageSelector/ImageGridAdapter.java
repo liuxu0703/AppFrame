@@ -16,7 +16,10 @@ import lx.af.activity.ImageSelector.ImageItemView.OnItemImageClickListener;
 import lx.af.utils.ScreenUtils;
 
 /**
- * import and modified by liuxu on 2015.04.22
+ * author: lx
+ * date: 15-04-22
+ *
+ * inspired by https://github.com/lovetuzitong/MultiImageSelector
  */
 class ImageGridAdapter extends BaseAdapter {
 
@@ -60,27 +63,13 @@ class ImageGridAdapter extends BaseAdapter {
 
     public void setDefaultSelected(ArrayList<String> resultList) {
         mSelectedImages.clear();
-        for (String path : resultList) {
-            ImageModel image = getImageByPath(path);
-            if (image != null) {
-                image.selected = true;
+        for (ImageModel image : mImages) {
+            image.selected = resultList != null && resultList.contains(image.path);
+            if (image.selected) {
                 mSelectedImages.add(image);
             }
         }
-        if (mSelectedImages.size() > 0) {
-            notifyDataSetChanged();
-        }
-    }
-
-    private ImageModel getImageByPath(String path) {
-        if (mImages != null && mImages.size()>0) {
-            for (ImageModel image : mImages) {
-                if (image.path.equalsIgnoreCase(path)) {
-                    return image;
-                }
-            }
-        }
-        return null;
+        notifyDataSetChanged();
     }
 
     public ArrayList<String> getImageUriList() {

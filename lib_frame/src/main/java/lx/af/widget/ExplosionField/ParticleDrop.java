@@ -59,9 +59,9 @@ public abstract class ParticleDrop implements Particle {
         bottom = (bound.height() * (random.nextFloat() - 0.5f)) * 1.8f;
         float f = nextFloat < 0.2f ? bottom : nextFloat < 0.8f ? bottom * 0.6f : bottom * 0.3f;
         if (direction == DIRECTION_LEFT) {
-            bottom = - Math.abs(f);
-        } else if (direction == DIRECTION_RIGHT) {
             bottom = Math.abs(f);
+        } else if (direction == DIRECTION_RIGHT) {
+            bottom = - Math.abs(f);
         } else {
             bottom = f;
         }

@@ -78,7 +78,7 @@ public class QuoteDivider extends View {
     private boolean mIsAnim = false;
     private long mAnimDuration = DEFAULT_QUOTE_ANIM_DURATION;
     private long mAnimStartTime;
-    private Interpolator mInterpolator;
+    private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
 
     public QuoteDivider(Context context) {
         super(context);
@@ -93,13 +93,17 @@ public class QuoteDivider extends View {
     /**
      * set distance between view left edge and the quote triangle, with an animation.
      */
-    public void setQuoteLeftWithAnim(int left) {
-        mTriangleStartX = mTriangleX;
-        mTriangleFinalX = left - mTriangleBottomHalf;
-        mAnimStartTime = System.currentTimeMillis();
-        mIsAnim = true;
-        ensureInterpolator();
-        postInvalidate();
+    public void setQuoteLeftWithAnim(final int left) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                mTriangleStartX = mTriangleX;
+                mTriangleFinalX = left - mTriangleBottomHalf;
+                mAnimStartTime = System.currentTimeMillis();
+                mIsAnim = true;
+                postInvalidate();
+            }
+        });
     }
 
     /**
@@ -210,9 +214,10 @@ public class QuoteDivider extends View {
         int pBottom = getPaddingBottom() - mLineWidth / 2;
         mPointLineBegin.set(0, pTop + mTriangleHeight);
         mPointLineEnd.set(w, pTop + mTriangleHeight);
-        mPointTriangle1.set(mTriangleX, pTop + mTriangleHeight);
-        mPointTriangle2.set(mTriangleX + mTriangleBottomHalf, pTop);
-        mPointTriangle3.set(mTriangleX + 2 * mTriangleBottomHalf, pTop + mTriangleHeight);
+        int offset = (int) Math.ceil((double) mLineWidth / 2);
+        mPointTriangle1.set(mTriangleX, pTop + mTriangleHeight + offset);
+        mPointTriangle2.set(mTriangleX + mTriangleBottomHalf, pTop + offset);
+        mPointTriangle3.set(mTriangleX + 2 * mTriangleBottomHalf, pTop + mTriangleHeight + offset);
 
         // draw upper part
         if (mUpperColor != 0) {
@@ -276,12 +281,6 @@ public class QuoteDivider extends View {
         mPaintLine.setStyle(Paint.Style.STROKE);
         mPaintLine.setStrokeWidth(mLineWidth);
         mPaintLine.setColor(mLineColor);
-    }
-
-    private void ensureInterpolator() {
-        if (mInterpolator == null) {
-            mInterpolator = new AccelerateDecelerateInterpolator();
-        }
     }
 
     private void scheduleAnim() {

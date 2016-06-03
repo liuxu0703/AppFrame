@@ -10,7 +10,7 @@ import android.widget.TextView;
  * author: lx
  * date: 16-4-13
  */
-public final class ViewUtils {
+public final class TextViewUtils {
 
 
     // ===============================================

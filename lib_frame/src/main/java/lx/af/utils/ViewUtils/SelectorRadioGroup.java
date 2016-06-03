@@ -28,6 +28,10 @@ public class SelectorRadioGroup {
         }
     };
 
+    public static SelectorRadioGroup newInstance() {
+        return new SelectorRadioGroup();
+    }
+
     public SelectorRadioGroup addSelector(View... views) {
         mSelectors.add(new SelectorGroup(null, views));
         views[0].setOnClickListener(mOnClickListener);

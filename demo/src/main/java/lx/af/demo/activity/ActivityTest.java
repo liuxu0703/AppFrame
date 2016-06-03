@@ -1,29 +1,12 @@
 package lx.af.demo.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.reflect.TypeToken;
 
 import butterknife.OnClick;
 import lx.af.demo.R;
-import lx.af.demo.activity.main.MainActivity;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
-import lx.af.demo.utils.m3u.M3uAudio.M3uAudioPlayer;
-import lx.af.net.HttpRequest.DataHull;
-import lx.af.net.HttpRequest.ErrorHandler.ErrorHandler;
-import lx.af.net.HttpRequest.RequestCallback;
-import lx.af.net.HttpRequest.VolleyJsonRequest;
-import lx.af.test.TestRes;
-import lx.af.utils.ViewInject.ViewInject;
-import lx.af.utils.ViewUtils.ViewUtils;
-import lx.af.utils.log.Log;
 
 /**
  * author: lx

@@ -1,17 +1,24 @@
 package lx.af.utils.UIL;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.assist.LoadedFrom;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
-import lx.af.R;
 import lx.af.utils.UIL.displayer.BaseDisplayer;
+import lx.af.utils.UIL.displayer.BaseDrawableDisplayer;
 import lx.af.utils.UIL.displayer.CircleDisplayer;
 import lx.af.utils.UIL.displayer.DefaultDisplayer;
 import lx.af.utils.UIL.displayer.RoundedDisplayer;
@@ -29,6 +36,7 @@ public class UILLoader {
     protected static ImageLoader sImageLoader = ImageLoader.getInstance();
 
     protected ImageView mImageView;
+    protected ImageAware mImageViewAware;
     protected String mUri;
     protected DisplayImageOptions.Builder mOptionsBuilder;
     protected BaseDisplayer mDisplayer;
@@ -36,6 +44,11 @@ public class UILLoader {
 
     protected ImageLoadingListener mLoadListener;
     protected ImageLoadingProgressListener mProgressListener;
+    protected ImageInfoCallback mImageInfoCallback;
+
+    protected int mResIdOnFail;
+    protected int mResIdOnEmptyUri;
+    protected int mResIdOnLoading;
 
     protected int mMaxWidth = -1;
     protected int mMaxHeight = -1;
@@ -43,6 +56,7 @@ public class UILLoader {
     protected int mBorderColor;
     protected int mCornerRadius;
     protected int mBlurRadius;
+    protected int mVisibilityOnFail = -1;
     protected boolean mAsCircle;
     protected boolean mAsSquare;
 
@@ -51,14 +65,23 @@ public class UILLoader {
     }
 
     public void display() {
+        if (TextUtils.isEmpty(mUri) && mResIdOnEmptyUri != 0) {
+            Bitmap bitmap = BitmapFactory.decodeResource(mImageView.getResources(), mResIdOnEmptyUri);
+            if (bitmap != null) {
+                getBitmapDisplayer().display(bitmap, mImageViewAware, LoadedFrom.MEMORY_CACHE);
+            }
+            return;
+        }
+
         sImageLoader.displayImage(
-                mUri, new ImageViewAware(mImageView),
+                mUri, mImageViewAware,
                 getOptions(), getImageSize(),
-                mLoadListener, mProgressListener);
+                mInnerLoadListener, mProgressListener);
     }
 
     public UILLoader(ImageView imageView, String uri) {
         mImageView = imageView;
+        mImageViewAware = new ImageViewAware(mImageView);
         mUri = uri;
     }
 
@@ -98,26 +121,28 @@ public class UILLoader {
         return this;
     }
 
+    public UILLoader setVisibilityOnFail(int visibility) {
+        mVisibilityOnFail = visibility;
+        return this;
+    }
+
     public UILLoader imageDefault(int imageRes) {
-        DisplayImageOptions.Builder builder = getOptionsBuilder();
-        builder.showImageForEmptyUri(imageRes);
-        builder.showImageOnFail(imageRes);
-        builder.showImageOnLoading(imageRes);
+        mResIdOnFail = mResIdOnEmptyUri = mResIdOnLoading = imageRes;
         return this;
     }
 
     public UILLoader imageOnLoading(int imageRes) {
-        getOptionsBuilder().showImageOnLoading(imageRes);
+        mResIdOnLoading = imageRes;
         return this;
     }
 
     public UILLoader imageForEmptyUri(int imageRes) {
-        getOptionsBuilder().showImageForEmptyUri(imageRes);
+        mResIdOnEmptyUri = imageRes;
         return this;
     }
 
     public UILLoader imageOnFail(int imageRes) {
-        getOptionsBuilder().showImageOnFail(imageRes);
+        mResIdOnFail = imageRes;
         return this;
     }
 
@@ -156,7 +181,7 @@ public class UILLoader {
         return this;
     }
 
-    public UILLoader setLoadListener(ListenerAdapter listener) {
+    public UILLoader setLoadListener(ImageLoadingListener listener) {
         mLoadListener = listener;
         return this;
     }
@@ -166,18 +191,40 @@ public class UILLoader {
         return this;
     }
 
+    public UILLoader setImageInfoCallback(ImageInfoCallback c) {
+        mImageInfoCallback = c;
+        return this;
+    }
+
     // ====================================================
 
     protected DisplayImageOptions getOptions() {
-        return getOptionsBuilder().displayer(getBitmapDisplayer()).build();
+        BaseDisplayer displayer = getBitmapDisplayer();
+        if (displayer instanceof BaseDrawableDisplayer) {
+            if (mResIdOnLoading != 0) {
+                Drawable drawable = createDrawableByDisplayer(
+                        (BaseDrawableDisplayer) displayer, mResIdOnLoading);
+                if (drawable != null) {
+                    getOptionsBuilder().showImageOnLoading(drawable);
+                }
+            }
+        } else {
+            if (mResIdOnEmptyUri != 0) {
+                getOptionsBuilder().showImageForEmptyUri(mResIdOnEmptyUri);
+            }
+            if (mResIdOnFail != 0) {
+                getOptionsBuilder().showImageOnFail(mResIdOnFail);
+            }
+            if (mResIdOnLoading != 0) {
+                getOptionsBuilder().showImageOnLoading(mResIdOnLoading);
+            }
+        }
+        return getOptionsBuilder().displayer(displayer).build();
     }
 
     protected DisplayImageOptions.Builder getOptionsBuilder() {
         if (mOptionsBuilder == null) {
             mOptionsBuilder = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.drawable.img_default)
-                    .showImageForEmptyUri(R.drawable.img_default)
-                    .showImageOnFail(R.drawable.img_default)
                     .cacheOnDisk(true)
                     .cacheInMemory(true)
                     .considerExifParams(true)
@@ -187,27 +234,25 @@ public class UILLoader {
     }
 
     protected BaseDisplayer getBitmapDisplayer() {
-        if (mDisplayer != null) {
-            return mDisplayer;
-        } else {
-            BaseDisplayer displayer;
+        if (mDisplayer == null) {
             if (mAsCircle) {
-                displayer = new CircleDisplayer(mBorderWidth, mBorderColor);
+                mDisplayer = new CircleDisplayer(mBorderWidth, mBorderColor);
             } else if (mBorderWidth > 0 || mCornerRadius > 0 || mAsSquare) {
-                displayer = new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor)
+                mDisplayer = new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor)
                         .setAsSquare(mAsSquare);
             } else {
-                displayer = new DefaultDisplayer();
+                mDisplayer = new DefaultDisplayer();
             }
             if (mBlurRadius > 0) {
-                displayer.setBlur(mBlurRadius);
+                mDisplayer.setBlur(mBlurRadius);
             }
             if (mDisplayerAnimator == null) {
                 mDisplayerAnimator = new FadeInAnimator();
             }
-            displayer.setDisplayerAnimator(mDisplayerAnimator);
-            return displayer;
+            mDisplayer.setDisplayerAnimator(mDisplayerAnimator);
+            mDisplayer.setImageInfoCallback(mImageInfoCallback);
         }
+        return mDisplayer;
     }
 
     protected ImageSize getImageSize() {
@@ -217,5 +262,62 @@ public class UILLoader {
             return null;
         }
     }
+
+    protected Drawable createDrawableByDisplayer(BaseDrawableDisplayer displayer, int resId) {
+        if (resId == 0) {
+            return null;
+        }
+        Bitmap bitmap = BitmapFactory.decodeResource(mImageView.getResources(), resId);
+        if (bitmap == null) {
+            return null;
+        }
+        return displayer.createDisplayDrawable(bitmap);
+    }
+
+
+    private ImageLoadingListener mInnerLoadListener = new ImageLoadingListener() {
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+            if (mLoadListener != null) {
+                mLoadListener.onLoadingStarted(imageUri, view);
+            }
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            if (mVisibilityOnFail == View.VISIBLE) {
+                mImageView.setVisibility(View.VISIBLE);
+            } else if (mVisibilityOnFail == View.INVISIBLE) {
+                mImageView.setVisibility(View.INVISIBLE);
+            } else if (mVisibilityOnFail == View.GONE) {
+                mImageView.setVisibility(View.GONE);
+            }
+
+            if (mResIdOnFail != 0) {
+                Bitmap bitmap = BitmapFactory.decodeResource(view.getResources(), mResIdOnFail);
+                if (bitmap != null) {
+                    mDisplayer.display(bitmap, mImageViewAware, LoadedFrom.MEMORY_CACHE);
+                }
+            }
+
+            if (mLoadListener != null) {
+                mLoadListener.onLoadingFailed(imageUri, view, failReason);
+            }
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            if (mLoadListener != null) {
+                mLoadListener.onLoadingComplete(imageUri, view, loadedImage);
+            }
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+            if (mLoadListener != null) {
+                mLoadListener.onLoadingCancelled(imageUri, view);
+            }
+        }
+    };
 
 }

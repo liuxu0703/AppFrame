@@ -18,4 +18,6 @@ public interface ActionBarAdapter {
 
     View getActionBarView(Activity activity);
 
+    View getActionBarDivider(Activity activity);
+
 }

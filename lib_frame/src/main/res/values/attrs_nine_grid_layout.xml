@@ -4,6 +4,7 @@
         <attr name="viewSizeOneColumn" format="dimension" />
         <attr name="viewSizeTwoColumn" format="dimension" />
         <attr name="viewSizeThreeColumn" format="dimension" />
+        <attr name="viewSizeMatchParent" format="boolean" />
         <attr name="gridSpaceSize" format="dimension" />
     </declare-styleable>
 </resources>

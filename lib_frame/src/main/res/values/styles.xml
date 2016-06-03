@@ -45,4 +45,16 @@
         <item name="android:windowExitAnimation">@anim/slide_bottom_out</item>
     </style>
 
+    <style name="divider_horizontal_gradient_down">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">3dp</item>
+        <item name="android:background">@drawable/divider_horizontal_gradient_down</item>
+    </style>
+
+    <style name="divider_horizontal_gradient_up">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">3dp</item>
+        <item name="android:background">@drawable/divider_horizontal_gradient_up</item>
+    </style>
+
 </resources>

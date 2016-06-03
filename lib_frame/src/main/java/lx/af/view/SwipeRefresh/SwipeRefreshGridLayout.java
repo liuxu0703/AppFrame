@@ -6,20 +6,19 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ListView;
 
 /**
  * author: lx
  * date: 15-12-15
  */
-public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
+public class SwipeRefreshGridLayout extends SwipeRefreshLayout implements
         ILoadMoreRefreshLayout,
         AbsListView.OnScrollListener {
 
     private static final boolean DEBUG = false;
     private static final int LOAD_FAIL_SCROLL_DURATION = 300;
 
-    private ListView mListView;
+    private ExGridView mListView;
     private ILoadMoreFooter mLoadMoreFooter;
     private OnLoadMoreListener mOnLoadMoreListener;
     private AbsListView.OnScrollListener mOnScrollListener;
@@ -29,12 +28,12 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
     private boolean mIsFooterViewInit = false;
     private boolean mIsPrevLoadMoreFailed = false;
 
-    public SwipeRefreshListLayout(Context context) {
+    public SwipeRefreshGridLayout(Context context) {
         this(context, null);
         setColorSchemeColors(Color.parseColor("#01c6f0"));
     }
 
-    public SwipeRefreshListLayout(Context context, AttributeSet attrs) {
+    public SwipeRefreshGridLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setColorSchemeColors(Color.parseColor("#01c6f0"));
     }
@@ -55,8 +54,8 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
 
         for (int i = 0; i < count; i ++) {
             View childView = getChildAt(i);
-            if (childView instanceof AbsListView) {
-                mListView = (ListView) childView;
+            if (childView instanceof ExGridView) {
+                mListView = (ExGridView) childView;
                 mListView.setOnScrollListener(this);
                 if (!mIsFooterViewInit && mLoadMoreFooter != null) {
                     mListView.addFooterView(mLoadMoreFooter.getLoadMoreFooterView());
@@ -77,11 +76,11 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
     }
 
     private int getListViewHeaderCount() {
-        return mListView.getHeaderViewsCount();
+        return mListView.getHeaderViewCount();
     }
 
     private int getListViewFooterCount() {
-        return mListView.getFooterViewsCount();
+        return mListView.getFooterViewCount();
     }
 
     private static void log(String msg) {
@@ -104,7 +103,7 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
                 firstVisibleItem + "|" + visibleItemCount + "|" + totalItemCount);
         int preCount = mIsPrevLoadMoreFailed ? 0 : mLoadMorePreCount;
         if (mOnLoadMoreListener != null && mState == LoadState.IDLE && !isRefreshing() &&
-                totalItemCount != 0 &&
+                totalItemCount != 0 && firstVisibleItem != 0 &&
                 firstVisibleItem + visibleItemCount + preCount >= totalItemCount &&
                 totalItemCount != getListViewHeaderCount() + getListViewFooterCount()) {
             int delay = mIsPrevLoadMoreFailed ? LOAD_FAIL_SCROLL_DURATION + 100 : 100;
@@ -178,7 +177,7 @@ public class SwipeRefreshListLayout extends SwipeRefreshLayout implements
         mIsPrevLoadMoreFailed = true;
         if (mLoadMoreFooter != null) {
             View footerView = (View) mLoadMoreFooter;
-            int offset = mListView.getDividerHeight() + 3;
+            int offset = mListView.getVerticalSpacing() + 3;
             int scroll = footerView.getHeight() + offset;
             mListView.smoothScrollBy(-scroll, LOAD_FAIL_SCROLL_DURATION);
         }

@@ -116,6 +116,10 @@ public final class GlobalThreadManager {
         handler.postDelayed(runnable, bufferTime);
     }
 
+    public static void removeUiThreadCallback(Runnable runnable) {
+        getUiThreadHandler().removeCallbacks(runnable);
+    }
+
     /**
      * check if the current calling thread is running in main thread.
      * @return true if current thread is main thread

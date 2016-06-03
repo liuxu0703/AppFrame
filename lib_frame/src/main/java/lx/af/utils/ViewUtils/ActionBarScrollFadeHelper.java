@@ -1,6 +1,8 @@
 package lx.af.utils.ViewUtils;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -10,7 +12,9 @@ import android.widget.ListView;
 
 import java.util.LinkedList;
 
+import lx.af.utils.ScreenUtils;
 import lx.af.view.ObservableScrollView;
+import lx.af.view.SwipeRefresh.SwipeRefreshGridLayout;
 import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
 
 /**
@@ -19,8 +23,9 @@ import lx.af.view.SwipeRefresh.SwipeRefreshListLayout;
  */
 public class ActionBarScrollFadeHelper {
 
+    private static final boolean DEBUG = false;
+
     private View mActionBar;
-    private ViewParent mViewRoot;
     private View mEndOffsetView;
     private View mStartOffsetView;
     private FadeListener mFadeListener;
@@ -163,6 +168,16 @@ public class ActionBarScrollFadeHelper {
 
     /**
      * start to show fade effect.
+     * {@link #endOffset(View)} must be called before calling to this method.
+     * @param list fade effect will be set accordingly when the list is scrolled
+     */
+    public void start(SwipeRefreshGridLayout list) {
+        init(list, true);
+        list.setOnScrollListener(mListViewScrollListener);
+    }
+
+    /**
+     * start to show fade effect.
      * {@link #endOffset(View)} or {@link #endOffset(int)} must be called
      * before calling to this method.
      * @param scrollView fade effect will be set accordingly when the ScrollView is scrolled
@@ -174,7 +189,6 @@ public class ActionBarScrollFadeHelper {
 
     private ActionBarScrollFadeHelper(View actionBar) {
         mActionBar = actionBar;
-        mViewRoot = mActionBar.getParent();
         mFadeDrawableList.add(new FadeDrawableInfo(mActionBar.getBackground(), false));
     }
 
@@ -198,10 +212,10 @@ public class ActionBarScrollFadeHelper {
             @Override
             public void onGlobalLayout() {
                 if (mEndOffsetValue == 0) {
-                    mEndOffsetValue = getViewBottom(mViewRoot, mEndOffsetView);
+                    mEndOffsetValue = getViewBottom(mEndOffsetView);
                 }
                 if (mStartOffsetValue == 0 && mStartOffsetView != null) {
-                    mStartOffsetValue = getViewBottom(mViewRoot, mStartOffsetView);
+                    mStartOffsetValue = getViewBottom(mStartOffsetView);
                 }
                 if (mEndOffsetValue != 0 && (mStartOffsetValue != 0 || mStartOffsetView == null)) {
                     if (android.os.Build.VERSION.SDK_INT >= 16) {
@@ -219,6 +233,7 @@ public class ActionBarScrollFadeHelper {
         int acHeight = mActionBar.getHeight();
         int start = mStartOffsetValue;
         int end = mEndOffsetValue;
+        float ratio = 0.0f;
         if (scroll <= start - acHeight || scroll <= 0) {
             // set to init state
             alpha = mAlphaIncrease ? 0 : 255;
@@ -226,7 +241,6 @@ public class ActionBarScrollFadeHelper {
             // set to final state
             alpha = mAlphaIncrease ? 255 : 0;
         } else {
-            float ratio;
             int delta = Math.abs(end - start);
             if (mAlphaIncrease) {
                 ratio = (float) Math.abs(scroll + acHeight - start) / delta;
@@ -236,8 +250,11 @@ public class ActionBarScrollFadeHelper {
             alpha = (int) (ratio * 255);
         }
 
-        //Log.d("liuxu", "ActionBarFadeHelper, onNewScroll, start=" + start + ", end=" + end +
-        //        ", scroll=" + scroll + ", alpha=" + alpha);
+        if (DEBUG) {
+            Log.d("liuxu", "ActionBarFadeHelper, onNewScroll" +
+                    ", acHeight=" + acHeight + ", start=" + start + ", end=" + end +
+                    ", scroll=" + scroll + ", ratio=" + ratio + ", alpha=" + alpha);
+        }
         fade(alpha);
     }
 
@@ -273,17 +290,17 @@ public class ActionBarScrollFadeHelper {
     }
 
     // get distance between (0,0) and view bottom line
-    private static int getViewBottom(ViewParent root, View view) {
+    private static int getViewBottom(View view) {
         if (view == null) {
             return 0;
         }
-        int top = 0;
-        ViewParent parent = view.getParent();
-        while (parent != root && parent instanceof View) {
-            top += ((View) parent).getTop();
-            parent = parent.getParent();
+        if (view.getHeight() == 0) {
+            return 0;
         }
-        return view.getHeight() + top;
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        return location[1] + view.getHeight()
+                - ScreenUtils.getStatusBarHeight((Activity) view.getContext());
     }
 
     private AbsListView.OnScrollListener mListViewScrollListener = new AbsListView.OnScrollListener() {
@@ -295,7 +312,7 @@ public class ActionBarScrollFadeHelper {
             } else if (first == mEndOffsetView) {
                 onNewScroll(-mEndOffsetView.getTop());
             } else if (isContainView(first, mEndOffsetView)) {
-                onNewScroll(-(first.getTop() + mEndOffsetView.getTop()));
+                onNewScroll(-(first.getTop()));
             } else {
                 onNewScroll(mEndOffsetValue);
             }

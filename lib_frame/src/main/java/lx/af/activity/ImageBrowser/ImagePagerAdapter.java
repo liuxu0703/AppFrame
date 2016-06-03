@@ -12,8 +12,10 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import java.util.List;
+import java.util.Map;
 
 import lx.af.R;
+import lx.af.activity.ImageBrowser.ImageBrowserActivity.ImageInfo;
 import lx.af.view.ProgressWheel;
 import lx.af.view.photoview.PhotoView;
 import lx.af.view.photoview.PhotoViewAttacher.OnViewTapListener;
@@ -29,11 +31,13 @@ class ImagePagerAdapter extends PagerAdapter implements
     private static DisplayImageOptions sDisplayImageOptions;
 
     private final List<String> mUriList;
+    private Map<String, ImageInfo> mImgInfoMap;
     private LoadImageCallback mLoadImageCallback;
     private ClickImageCallback mClickImageCallback;
 
-    public ImagePagerAdapter(List<String> resources) {
+    public ImagePagerAdapter(List<String> resources, Map<String, ImageInfo> infoMap) {
         this.mUriList = resources;
+        this.mImgInfoMap = infoMap;
     }
 
     @Override
@@ -88,7 +92,7 @@ class ImagePagerAdapter extends PagerAdapter implements
         }
     }
 
-    private static class LoadListener implements ImageLoadingListener, ImageLoadingProgressListener {
+    private class LoadListener implements ImageLoadingListener, ImageLoadingProgressListener {
 
         ProgressWheel progress;
         String uri;
@@ -101,11 +105,22 @@ class ImagePagerAdapter extends PagerAdapter implements
         }
 
         @Override
-        public void onLoadingStarted(String imageUri, View view) {
-            if (uri.equals(imageUri)) {
-                progress.setVisibility(View.VISIBLE);
-                progress.spin();
-            }
+        public void onLoadingStarted(final String imageUri, View view) {
+            progress.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (uri.equals(imageUri)) {
+                        ImageInfo info = mImgInfoMap.get(imageUri);
+                        if (info.valid == ImageBrowserActivity.ImageValidation.UNKNOWN) {
+                            progress.setVisibility(View.VISIBLE);
+                            progress.spin();
+                        } else {
+                            progress.setVisibility(View.GONE);
+                            progress.stopSpinning();
+                        }
+                    }
+                }
+            }, 300);
         }
 
         @Override

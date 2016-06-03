@@ -1,6 +1,7 @@
 package lx.af.utils.UIL.displayer;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
@@ -10,7 +11,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
  * author: lx
  * date: 16-4-27
  */
-public class CircleDisplayer extends BaseDisplayer {
+public class CircleDisplayer extends BaseDrawableDisplayer {
 
     private final int mBorderWidth;
     private final int mBorderColor;
@@ -30,6 +31,13 @@ public class CircleDisplayer extends BaseDisplayer {
             throw new IllegalArgumentException(
                     "ImageAware should wrap ImageView. ImageViewAware is expected.");
         }
+        ImageView imageView = (ImageView) imageAware.getWrappedView();
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageAware.setImageDrawable(createDisplayDrawable(bitmap));
+    }
+
+    @Override
+    public Drawable createDisplayDrawable(Bitmap bitmap) {
         RoundedDrawable drawable = RoundedDrawable.fromBitmap(bitmap);
         drawable.setOval(true);
         if (mBorderWidth != 0) {
@@ -37,9 +45,6 @@ public class CircleDisplayer extends BaseDisplayer {
             drawable.setBorderWidth(mBorderWidth);
         }
         drawable.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        ImageView imageView = (ImageView) imageAware.getWrappedView();
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageAware.setImageDrawable(drawable);
+        return drawable;
     }
-
 }

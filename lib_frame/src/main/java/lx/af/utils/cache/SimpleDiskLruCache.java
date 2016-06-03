@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package lx.af.utils;
+package lx.af.utils.cache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;

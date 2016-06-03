@@ -83,6 +83,7 @@ public class PostListActivity extends BaseActivity implements
                 .with(getActionBarView())
                 .startOffset(mHeaderViewPager)
                 .endOffset(header)
+                .addFadeWithView(getActionBarDivider())
                 .addFadeWithView(mActionBarTitle)
                 .addFadeWithView(mActionBarMenu)
                 .addFadeReverseDrawable(mActionBarBack.getBackground())

@@ -25,7 +25,7 @@ import android.view.MotionEvent;
  *
  * @author Chris Banes
  */
-class HackyViewPager extends ViewPager {
+public class HackyViewPager extends ViewPager {
 
 	private boolean isLocked;
 	

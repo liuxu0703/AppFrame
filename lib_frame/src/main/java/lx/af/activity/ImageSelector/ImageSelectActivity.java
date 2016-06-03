@@ -8,14 +8,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
@@ -37,10 +36,10 @@ import lx.af.manager.GlobalThreadManager;
 import lx.af.view.ProgressWheel;
 
 /**
- * import and modified by liuxu on 2015.04.22 (heavily modified ...)
+ * author: lx
+ * date: 15-04-22
  *
- * Created by Nereo on 2015/4/7. link:
- * https://github.com/lovetuzitong/MultiImageSelector
+ * inspired by https://github.com/lovetuzitong/MultiImageSelector
  */
 public class ImageSelectActivity extends AbsBaseActivity implements
         ImageGridAdapter.OnItemViewClickListener,
@@ -157,27 +156,27 @@ public class ImageSelectActivity extends AbsBaseActivity implements
                 onCameraShot(mCameraFile);
             }
         } else if (requestCode == AC_IMAGE_BROWSER) {
-            if (data != null) {
-                ArrayList<String> tmp = data.getStringArrayListExtra(
-                        ImageSelectBrowser.EXTRA_RESULT);
-                if (tmp != null && tmp.size() > 0) {
-                    if (mDesireImageCount == 1) {
-                        // single select mode
-                        onSelectDone(tmp);
-                    } else {
-                        // multi select mode
-                        boolean done = data.getBooleanExtra(
-                                ImageSelectBrowser.EXTRA_RESULT_DONE, false);
-                        if (done) {
-                            // done select, set result and finish
-                            onSelectDone(tmp);
-                            return;
-                        }
-                        mResultList = tmp;
-                        mImageAdapter.setDefaultSelected(mResultList);
-                        onRefreshImageSelected(mResultList);
-                    }
-                }
+            if (data == null) {
+                return;
+            }
+            ArrayList<String> tmp = data.getStringArrayListExtra(ImageSelectBrowser.EXTRA_RESULT);
+            if (data.getBooleanExtra(ImageSelectBrowser.EXTRA_RESULT_DONE, false)) {
+                // done select, set result and finish
+                onSelectDone(tmp);
+                return;
+            }
+            if (tmp == null || tmp.size() == 0) {
+                onRefreshImageSelected(tmp);
+                mImageAdapter.setDefaultSelected(tmp);
+                return;
+            }
+            if (mDesireImageCount == 1) {
+                // single select mode
+                onSelectDone(tmp);
+            } else {
+                // multi select mode
+                onRefreshImageSelected(tmp);
+                mImageAdapter.setDefaultSelected(tmp);
             }
         }
     }
@@ -191,7 +190,7 @@ public class ImageSelectActivity extends AbsBaseActivity implements
 
     @Override
     public void onItemImageClicked(ImageItemView view, ImageModel data) {
-        startImageBrowser(Uri.parse("file://" + data.path).toString());
+        startImageBrowser(view, Uri.parse("file://" + data.path).toString());
     }
 
     @Override
@@ -301,14 +300,16 @@ public class ImageSelectActivity extends AbsBaseActivity implements
         }
     }
 
-    private void startImageBrowser(String currentImageUri) {
+    private void startImageBrowser(View view, String currentImageUri) {
         Intent intent = new Intent(this, ImageSelectBrowser.class);
         intent.putExtra(ImageSelectBrowser.EXTRA_IMAGE_URI_LIST, mImageAdapter.getImageUriList());
         intent.putExtra(ImageSelectBrowser.EXTRA_CURRENT_IMAGE_URI, currentImageUri);
         intent.putExtra(ImageSelectBrowser.EXTRA_SELECT_COUNT, mDesireImageCount);
         intent.putExtra(ImageSelectBrowser.EXTRA_SELECTED_LIST, mImageAdapter.getSelectedImageUriList());
         this.overridePendingTransition(R.anim.image_browser_show, R.anim.fade_out);
-        startActivityForResult(intent, AC_IMAGE_BROWSER);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
+                view, view.getWidth() / 2, view.getHeight() / 2, 0, 0);
+        ActivityCompat.startActivityForResult(this, intent, AC_IMAGE_BROWSER, options.toBundle());
     }
 
     private void selectImageFromGrid(ImageItemView view, ImageModel image) {
@@ -401,7 +402,9 @@ public class ImageSelectActivity extends AbsBaseActivity implements
 
     private void onRefreshImageSelected(List<String> paths) {
         mResultList.clear();
-        mResultList.addAll(paths);
+        if (paths != null && paths.size() != 0) {
+            mResultList.addAll(paths);
+        }
         refreshSubmitButton();
     }
 

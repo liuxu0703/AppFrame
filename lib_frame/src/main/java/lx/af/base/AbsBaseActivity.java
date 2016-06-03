@@ -2,11 +2,10 @@ package lx.af.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.LinkedList;
@@ -24,7 +23,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  *
  * activity base
  */
-public abstract class AbsBaseActivity extends FragmentActivity {
+public abstract class AbsBaseActivity extends AppCompatActivity {
 
     public static final int FEATURE_DOUBLE_BACK_EXIT = 0x01 << 1;
 
@@ -33,6 +32,7 @@ public abstract class AbsBaseActivity extends FragmentActivity {
     private LoadingDialog mLoadingDialog;
     private View mCContentView;  // custom content view
     private View mCActionBar;  // custom action bar
+    private View mCActionBarDivider;  // custom action bar divider;
 
     private int mFeatures = 0x00;
     private long mDoubleBackTime = 0;
@@ -320,6 +320,10 @@ public abstract class AbsBaseActivity extends FragmentActivity {
         return mCActionBar;
     }
 
+    protected View getActionBarDivider() {
+        return mCActionBarDivider;
+    }
+
     private void setContentViewInner(View view, ViewGroup.LayoutParams params) {
         mCContentView = view;
         if (params == null) {
@@ -330,33 +334,58 @@ public abstract class AbsBaseActivity extends FragmentActivity {
             super.setContentView(view, params);
         } else {
             mCActionBar = adapter.getActionBarView(this);
+            if (mCActionBar == null) {
+                super.setContentView(view, params);
+                return;
+            }
+
+            mCActionBar.setId(R.id.action_bar_id);
+            mCActionBarDivider = adapter.getActionBarDivider(this);
+            RelativeLayout contentView = new RelativeLayout(this);
             ActionBarAdapter.Type type = adapter.getActionBarType();
             type = type == null ? ActionBarAdapter.Type.NORMAL : type;
+
+            { // add action bar
+                RelativeLayout.LayoutParams actionBarParams;
+                if (mCActionBar.getLayoutParams() != null) {
+                    actionBarParams = new RelativeLayout.LayoutParams(mCActionBar.getLayoutParams());
+                } else {
+                    actionBarParams = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+                }
+                actionBarParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                contentView.addView(mCActionBar, actionBarParams);
+            }
+
+            if (mCActionBarDivider != null) { // add action bar divider
+                RelativeLayout.LayoutParams dividerParams;
+                if (mCActionBarDivider.getLayoutParams() != null) {
+                    dividerParams = new RelativeLayout.LayoutParams(mCActionBarDivider.getLayoutParams());
+                } else {
+                    dividerParams = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+                }
+                dividerParams.addRule(RelativeLayout.BELOW, R.id.action_bar_id);
+                contentView.addView(mCActionBarDivider, dividerParams);
+            }
+
+            // add the real content view
             switch (type) {
                 case NORMAL: {
-                    // use LinearLayout as content view
-                    LinearLayout contentView = new LinearLayout(this);
-                    contentView.setOrientation(LinearLayout.VERTICAL);
-                    contentView.setDividerDrawable(
-                            getResources().getDrawable(R.drawable.shape_action_bar_divider));
-                    contentView.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-                    contentView.addView(mCActionBar, MATCH_PARENT, WRAP_CONTENT);
-                    contentView.addView(mCContentView, params);
+                    RelativeLayout.LayoutParams contentViewParams =
+                            new RelativeLayout.LayoutParams(params);
+                    contentViewParams.addRule(RelativeLayout.BELOW, R.id.action_bar_id);
+                    contentView.addView(mCContentView, 0, contentViewParams);
                     super.setContentView(contentView);
                     break;
                 }
                 case OVERLAY: {
                     // use RelativeLayout as content view
-                    RelativeLayout contentView = new RelativeLayout(this);
-                    RelativeLayout.LayoutParams ap = new RelativeLayout.LayoutParams(
-                            MATCH_PARENT, WRAP_CONTENT);
-                    ap.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    contentView.addView(mCContentView, params);
-                    contentView.addView(mCActionBar, ap);
+                    contentView.addView(mCContentView, 0, params);
                     super.setContentView(contentView);
                     break;
                 }
             }
+
+            super.setContentView(contentView);
         }
     }
 
@@ -379,7 +408,7 @@ public abstract class AbsBaseActivity extends FragmentActivity {
         void onActivityRestoreInstanceState(AbsBaseActivity activity, Bundle savedInstanceState);
     }
 
-    public static class LifeCycleAdapter implements LifeCycleListener {
+    public static abstract class LifeCycleAdapter implements LifeCycleListener {
         public void onActivityCreated(AbsBaseActivity activity, Bundle savedInstanceState) {}
         public void onActivityStarted(AbsBaseActivity activity) {}
         public void onActivityResumed(AbsBaseActivity activity) {}
