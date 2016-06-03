@@ -5,8 +5,6 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
@@ -16,6 +14,7 @@ import java.util.Map;
 
 import lx.af.R;
 import lx.af.activity.ImageBrowser.ImageBrowserActivity.ImageInfo;
+import lx.af.utils.UIL.UILLoader;
 import lx.af.view.ProgressWheel;
 import lx.af.view.photoview.PhotoView;
 import lx.af.view.photoview.PhotoViewAttacher.OnViewTapListener;
@@ -27,8 +26,6 @@ import lx.af.view.photoview.PhotoViewAttacher.OnViewTapListener;
 class ImagePagerAdapter extends PagerAdapter implements
         OnViewTapListener,
         View.OnLongClickListener {
-
-    private static DisplayImageOptions sDisplayImageOptions;
 
     private final List<String> mUriList;
     private Map<String, ImageInfo> mImgInfoMap;
@@ -52,8 +49,12 @@ class ImagePagerAdapter extends PagerAdapter implements
         photoView.setOnLongClickListener(this);
         photoView.setTag(uri);
         LoadListener listener = new LoadListener(progress, uri, mLoadImageCallback);
-        ImageLoader.getInstance().displayImage(
-                uri, photoView, getDisplayImageOptions(), listener, listener);
+        UILLoader.of(photoView, uri)
+                .imageOnFail(R.drawable.img_gallery_default)
+                .imageForEmptyUri(R.drawable.img_gallery_default)
+                .setProgressListener(listener)
+                .setLoadListener(listener)
+                .display();
         container.addView(itemView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         return itemView;
@@ -165,20 +166,6 @@ class ImagePagerAdapter extends PagerAdapter implements
                 progress.setText(percentage + "%");
             }
         }
-    }
-
-    private static DisplayImageOptions getDisplayImageOptions() {
-        if (sDisplayImageOptions == null) {
-            sDisplayImageOptions = new DisplayImageOptions.Builder()
-                    .showImageForEmptyUri(R.drawable.img_gallery_default)
-                    .showImageOnFail(R.drawable.img_gallery_default)
-                    .cacheInMemory(true)
-                    .cacheOnDisk(true)
-                    .considerExifParams(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565)
-                    .build();
-        }
-        return sDisplayImageOptions;
     }
 
     public void setLoadImageCallback(LoadImageCallback c) {

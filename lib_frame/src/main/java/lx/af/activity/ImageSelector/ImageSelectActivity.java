@@ -65,9 +65,6 @@ public class ImageSelectActivity extends AbsBaseActivity implements
     private static final int AC_REQUEST_CAMERA = 100;
     private static final int AC_IMAGE_BROWSER = 101;
 
-    private ArrayList<String> mResultList = new ArrayList<>();
-    private ArrayList<FolderModel> mResultFolder = new ArrayList<>();
-
     private Button mSubmitButton;
     private ImageGridView mGridView;
     private FolderListView mFolderListView;
@@ -75,15 +72,17 @@ public class ImageSelectActivity extends AbsBaseActivity implements
     private TextView mCategoryText;
     private ProgressWheel mLoadingProgress;
 
+    private Handler mUIHandler = new Handler();
     private ImageGridAdapter mImageAdapter;
-    private File mCameraFile;
     private Animation mAnimTimeLineHide;
 
     private int mDesireImageCount;
     private boolean mIsShowCamera;
     private boolean mIsFolderGenerated = false;
+    private ArrayList<FolderModel> mResultFolder = new ArrayList<>();
 
-    private Handler mUIHandler = new Handler();
+    private File mCameraFile;
+    private ArrayList<String> mResultList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +99,18 @@ public class ImageSelectActivity extends AbsBaseActivity implements
         if (!TextUtils.isEmpty(title)) {
             TextView tvTitle = (TextView) findViewById(R.id.mis_activity_title);
             tvTitle.setText(title);
+        }
+
+        if (savedInstanceState != null) {
+            ArrayList<String> list = savedInstanceState.getStringArrayList("selected_list");
+            String cameraPath = savedInstanceState.getString("camera_path");
+            if (list != null) {
+                mResultList = list;
+            }
+            if (!TextUtils.isEmpty(cameraPath)) {
+                onCameraShot(cameraPath);
+                return;
+            }
         }
 
         findViewById(R.id.mis_activity_btn_back).setOnClickListener(this);
@@ -134,6 +145,15 @@ public class ImageSelectActivity extends AbsBaseActivity implements
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putStringArrayList("selected_list", mResultList);
+        if (mCameraFile != null) {
+            outState.putString("camera_path", mCameraFile.getAbsolutePath());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.mis_activity_btn_back) {
@@ -153,7 +173,7 @@ public class ImageSelectActivity extends AbsBaseActivity implements
 
         if (requestCode == AC_REQUEST_CAMERA) {
             if (mCameraFile != null) {
-                onCameraShot(mCameraFile);
+                onCameraShot(mCameraFile.getAbsolutePath());
             }
         } else if (requestCode == AC_IMAGE_BROWSER) {
             if (data == null) {
@@ -408,9 +428,11 @@ public class ImageSelectActivity extends AbsBaseActivity implements
         refreshSubmitButton();
     }
 
-    private void onCameraShot(File imageFile) {
-        if (imageFile != null) {
-            mResultList.add(imageFile.getAbsolutePath());
+    private void onCameraShot(String imagePath) {
+        if (!TextUtils.isEmpty(imagePath)) {
+            if (!mResultList.contains(imagePath)) {
+                mResultList.add(imagePath);
+            }
             onSelectDone(mResultList);
         }
     }
