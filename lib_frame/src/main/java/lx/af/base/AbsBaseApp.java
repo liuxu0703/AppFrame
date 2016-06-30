@@ -26,6 +26,7 @@ import lx.af.utils.ScreenUtils;
 import lx.af.utils.StringUtils;
 import lx.af.utils.SystemUtils;
 import lx.af.utils.log.LogUtils;
+import lx.af.widget.frenchtoast.SmartToaster;
 import lx.af.widget.iconify.Iconify;
 
 /**
@@ -53,6 +54,7 @@ public class AbsBaseApp extends Application{
         VolleyManager.init(this);
         initImageLoader(this);
         KV.init(this);
+        SmartToaster.init(this);
 
         StringUtils.init(this);
         ResourceUtils.init(this);

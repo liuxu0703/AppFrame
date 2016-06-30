@@ -87,6 +87,11 @@
             android:screenOrientation="portrait"
             android:label="Select Image Widget" >
         </activity>
+        <activity
+            android:name=".activity.DemoWidget.SmartToastDemo"
+            android:screenOrientation="portrait"
+            android:label="crouton" >
+        </activity>
 
 
         <activity

@@ -41,8 +41,8 @@ public class LoadingBkgView extends LinearLayout {
     private boolean mRetryOnEmpty = false;
     private OnClickListener mRetryClickListener;
 
-    private Animation mAnimGone = ResourceUtils.loadAnimation(R.anim.fade_out);
-    private Animation mAnimShow = ResourceUtils.loadAnimation(R.anim.fade_in);
+    private Animation mAnimGone = ResourceUtils.loadAnimation(R.anim.alpha_out);
+    private Animation mAnimShow = ResourceUtils.loadAnimation(R.anim.alpha_in);
 
     public LoadingBkgView(Context context) {
         super(context);

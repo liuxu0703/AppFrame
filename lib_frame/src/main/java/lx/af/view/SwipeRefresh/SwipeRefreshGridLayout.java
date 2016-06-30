@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 
+import java.util.LinkedList;
+
 /**
  * author: lx
  * date: 15-12-15
@@ -22,6 +24,7 @@ public class SwipeRefreshGridLayout extends SwipeRefreshLayout implements
     private ILoadMoreFooter mLoadMoreFooter;
     private OnLoadMoreListener mOnLoadMoreListener;
     private AbsListView.OnScrollListener mOnScrollListener;
+    private LinkedList<AbsListView.OnScrollListener> mScrollListeners;
 
     private LoadState mState = LoadState.IDLE;
     private int mLoadMorePreCount = 0;
@@ -218,6 +221,25 @@ public class SwipeRefreshGridLayout extends SwipeRefreshLayout implements
 
     public void setOnScrollListener(AbsListView.OnScrollListener listener) {
         mOnScrollListener = listener;
+    }
+
+    public void addOnScrollListener(AbsListView.OnScrollListener listener) {
+        if (mScrollListeners == null) {
+            mScrollListeners = new LinkedList<>();
+        }
+        mScrollListeners.add(listener);
+    }
+
+    public void removeOnScrollListener(AbsListView.OnScrollListener listener) {
+        if (mScrollListeners != null) {
+            mScrollListeners.remove(listener);
+        }
+    }
+
+    public void clearOnScrollListeners() {
+        if (mScrollListeners != null) {
+            mScrollListeners.clear();
+        }
     }
 
     // =============================================

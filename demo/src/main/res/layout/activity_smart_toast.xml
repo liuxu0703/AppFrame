@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/demo_smart_toast_btn_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Toast.makeText().show() (system toast)"/>
+
+    <Button
+        android:id="@+id/demo_smart_toast_btn_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="smart toast"/>
+
+    <Button
+        android:id="@+id/demo_smart_toast_btn_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="AlertUtils.toastShort()"/>
+
+    <Button
+        android:id="@+id/demo_smart_toast_btn_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="AbsBaseActivity.toastShort()"/>
+
+    <Button
+        android:id="@+id/demo_smart_toast_btn_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="smart toast custom view"/>
+
+</LinearLayout>

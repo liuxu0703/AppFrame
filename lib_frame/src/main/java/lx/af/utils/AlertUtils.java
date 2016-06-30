@@ -1,9 +1,9 @@
 package lx.af.utils;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import lx.af.manager.GlobalThreadManager;
+import lx.af.widget.frenchtoast.SmartToaster;
 
 /**
  * Created by liuxu on 15-3-19.
@@ -23,23 +23,24 @@ public final class AlertUtils {
         toastLong(sApp.getString(resId));
     }
 
-    public static void toastLong(String msg) {
-        showToast(msg, Toast.LENGTH_LONG);
+    public static void toastLong(final String msg) {
+        GlobalThreadManager.runInUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SmartToaster.with(sApp).longLength().showText(msg);
+            }
+        });
     }
 
     public static void toastShort(int resId) {
         toastShort(sApp.getString(resId));
     }
 
-    public static void toastShort(String msg) {
-        showToast(msg, Toast.LENGTH_SHORT);
-    }
-
-    private static void showToast(final String msg, final int duration) {
+    public static void toastShort(final String msg) {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(sApp, msg, duration).show();
+                SmartToaster.with(sApp).shortLength().showText(msg);
             }
         });
     }
