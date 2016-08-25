@@ -28,6 +28,11 @@ public class SingleSelectDialog extends Dialog implements AdapterView.OnItemClic
     private OnSelectListener mResultListener;
     private ArrayList<Item> mItems;
 
+    public static SingleSelectDialog create(
+            Context context, String[] items, int current, OnSelectListener listener) {
+        return new SingleSelectDialog(context, items, current, listener);
+    }
+
     /**
      * construct dialog.
      * @param context the context.
@@ -42,7 +47,7 @@ public class SingleSelectDialog extends Dialog implements AdapterView.OnItemClic
         setCanceledOnTouchOutside(true);
         mResultListener = listener;
 
-        mItems = new ArrayList<Item>(items.length);
+        mItems = new ArrayList<>(items.length);
         for (int i = 0; i < items.length; i ++) {
             boolean selected = i == current;
             Item item = new Item(items[i], selected);

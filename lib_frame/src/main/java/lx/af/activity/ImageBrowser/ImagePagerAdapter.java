@@ -162,6 +162,12 @@ class ImagePagerAdapter extends PagerAdapter implements
             if (uri.equals(imageUri)) {
                 int pro = current * 360 / total;
                 int percentage = current * 100 / total;
+                //Log.d("liuxu", "111 image browser progress" +
+                //        ", pro=" + pro + ", percentage=" + percentage +
+                //        ", current=" + current + ", total=" + total);
+                if (percentage > 100) {
+                    percentage = 100;
+                }
                 progress.setProgress(pro);
                 progress.setText(percentage + "%");
             }

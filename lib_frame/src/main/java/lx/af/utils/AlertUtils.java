@@ -27,7 +27,7 @@ public final class AlertUtils {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
-                SmartToaster.with(sApp).longLength().showText(msg);
+                SmartToaster.longLength().showText(msg);
             }
         });
     }
@@ -40,7 +40,7 @@ public final class AlertUtils {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
-                SmartToaster.with(sApp).shortLength().showText(msg);
+                SmartToaster.shortLength().showText(msg);
             }
         });
     }

@@ -3,6 +3,7 @@ package lx.af.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
+import android.media.ExifInterface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,14 @@ public class GridFlowLayout extends ViewGroup {
         }
     }
 
+    public void setMaxCount(int maxCount) {
+        mMaxItemCount = maxCount;
+    }
+
+    public void setColumnCount(int columnCount) {
+        mColumnCount = columnCount;
+    }
+
     public void setAdapter(BaseAdapter adapter) {
         // adapter should not be null
         if (mAdapter != null) {
@@ -70,7 +79,10 @@ public class GridFlowLayout extends ViewGroup {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mAdapter != null) {
-            mAdapter.unregisterDataSetObserver(mDataObserver);
+            try {
+                mAdapter.unregisterDataSetObserver(mDataObserver);
+            } catch (Exception ignore) {
+            }
         }
     }
 

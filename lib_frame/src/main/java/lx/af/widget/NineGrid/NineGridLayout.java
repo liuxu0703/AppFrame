@@ -89,7 +89,11 @@ public class NineGridLayout extends ViewGroup {
         for (int i = 0; i < count; i ++) {
             View view = mViews.get(i);
             mViewMap.put(view, i);
-            addViewInLayout(view, -1, generateDefaultLayoutParams());
+            LayoutParams params = adapter.getLayoutParams(view, i, count);
+            if (params == null) {
+                params = generateDefaultLayoutParams();
+            }
+            addViewInLayout(view, -1, params);
             adapter.displayItemView(view, i, count);
         }
     }
@@ -284,6 +288,10 @@ public class NineGridLayout extends ViewGroup {
         public LayoutParams(int w, int h) {
             super(w, h);
         }
+
+        public LayoutParams() {
+            super(WRAP_CONTENT, WRAP_CONTENT);
+        }
     }
 
 
@@ -294,6 +302,8 @@ public class NineGridLayout extends ViewGroup {
         Object getData(int position);
 
         View initItemView(Context context);
+
+        LayoutParams getLayoutParams(View view, int position, int total);
 
         void displayItemView(View view, int position, int total);
 

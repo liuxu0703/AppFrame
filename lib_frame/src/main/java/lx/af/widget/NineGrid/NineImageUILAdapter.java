@@ -80,6 +80,11 @@ public class NineImageUILAdapter implements NineGridLayout.NineGridAdapter {
     }
 
     @Override
+    public NineGridLayout.LayoutParams getLayoutParams(View view, int position, int total) {
+        return null;
+    }
+
+    @Override
     public void displayItemView(View view, int position, int total) {
         ImageView img = (ImageView) view;
         if (total == 1) {

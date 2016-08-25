@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.WindowManager;
 
 import lx.af.R;
 import lx.af.utils.ResourceUtils;
@@ -14,6 +16,8 @@ import lx.af.utils.ResourceUtils;
  */
 public final class DialogFactory {
 
+    private static final String TAG = "DialogFactory";
+
     private DialogFactory() {}
 
     public static Dialog showMessageDialog(Context context, String message) {
@@ -21,7 +25,11 @@ public final class DialogFactory {
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
                 .create();
-        dlg.show();
+        try {
+            dlg.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.w(TAG, "show dialog fail", e);
+        }
         return dlg;
     }
 
@@ -39,7 +47,11 @@ public final class DialogFactory {
                         action.run();
                     }
                 }).create();
-        dlg.show();
+        try {
+            dlg.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.w(TAG, "show dialog fail", e);
+        }
         return dlg;
     }
 
@@ -58,7 +70,11 @@ public final class DialogFactory {
                         okAction.run();
                     }
                 }).create();
-        dlg.show();
+        try {
+            dlg.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.w(TAG, "show dialog fail", e);
+        }
         return dlg;
     }
 
@@ -77,15 +93,23 @@ public final class DialogFactory {
                         deleteAction.run();
                     }
                 }).create();
-        dlg.show();
+        try {
+            dlg.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.w(TAG, "show dialog fail", e);
+        }
         return dlg;
     }
 
     public static LoadingDialog showLoadingDialog(Context context, boolean cancelable) {
-        LoadingDialog dialog = new LoadingDialog(context, null);
-        dialog.setCancelable(cancelable);
-        dialog.show();
-        return dialog;
+        LoadingDialog dlg = new LoadingDialog(context, null);
+        dlg.setCancelable(cancelable);
+        try {
+            dlg.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.w(TAG, "show dialog fail", e);
+        }
+        return dlg;
     }
 
 }

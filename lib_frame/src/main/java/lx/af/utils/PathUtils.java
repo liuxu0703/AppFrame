@@ -67,7 +67,7 @@ public class PathUtils {
      * all files under temp dir will be cleaned on app restart.
      */
     public static File getTmpDir() {
-        return getExtCacheDir("tmp");
+        return getCacheDir("tmp");
     }
 
     /**
@@ -157,7 +157,7 @@ public class PathUtils {
     }
 
     public static long getPathSize(File file) {
-        if (!file.exists()) {
+        if (file == null || !file.exists()) {
             return 0;
         }
         long length = 0;

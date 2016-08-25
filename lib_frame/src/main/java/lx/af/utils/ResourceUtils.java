@@ -51,6 +51,10 @@ public final class ResourceUtils {
         return sRes.getColor(resId);
     }
 
+    public static int getInteger(int id) throws Resources.NotFoundException {
+        return sRes.getInteger(id);
+    }
+
     public static boolean getBoolean(int id) throws Resources.NotFoundException {
         return sRes.getBoolean(id);
     }

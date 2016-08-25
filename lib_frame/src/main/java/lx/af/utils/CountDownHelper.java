@@ -15,6 +15,7 @@ public class CountDownHelper {
 
     private int count;
     private boolean running = false;
+    private boolean paused = false;
     private CountDownCallback callback;
 
     public static Builder build() {
@@ -33,6 +34,7 @@ public class CountDownHelper {
     public void start(boolean immediately) {
         count = start;
         running = true;
+        paused = false;
         GlobalThreadManager.getUiThreadHandler().removeCallbacks(mCountDownRunnable);
         if (immediately) {
             GlobalThreadManager.getUiThreadHandler().post(mCountDownRunnable);
@@ -44,6 +46,23 @@ public class CountDownHelper {
     public void stop() {
         running = false;
         GlobalThreadManager.getUiThreadHandler().removeCallbacks(mCountDownRunnable);
+    }
+
+    public void pause() {
+        running = false;
+        paused = true;
+        GlobalThreadManager.getUiThreadHandler().removeCallbacks(mCountDownRunnable);
+    }
+
+    public void resume(boolean immediately) {
+        running = true;
+        paused = false;
+        GlobalThreadManager.getUiThreadHandler().removeCallbacks(mCountDownRunnable);
+        if (immediately) {
+            GlobalThreadManager.getUiThreadHandler().post(mCountDownRunnable);
+        } else {
+            GlobalThreadManager.getUiThreadHandler().postDelayed(mCountDownRunnable, interval);
+        }
     }
 
     public void reset() {
@@ -62,6 +81,10 @@ public class CountDownHelper {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     private void check() {

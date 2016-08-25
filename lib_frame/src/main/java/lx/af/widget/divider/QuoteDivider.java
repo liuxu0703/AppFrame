@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -262,18 +263,22 @@ public class QuoteDivider extends View {
     private void resetTriangleValues() {
         mTriangleHeight = getHeight() - getPaddingTop() - getPaddingBottom() - mLineWidth;
         if (mTriangleHeight < 0) {
-            throw new IllegalStateException(
-                    "not enough space to draw divider, triangle height=" + mTriangleHeight);
+            Log.w("liuxu",  "not enough space to draw divider, triangle height=" + mTriangleHeight);
+            mTriangleLeft = 0;
+            mTriangleBottomHalf = 0;
+            mTriangleFinalX = 0;
+            mTriangleX = 0;
+        } else {
+            if (mTriangleMiddle) {
+                mTriangleLeft = getWidth() / 2;
+            } else if (mTriangleLeft == 0 && mTriangleRight != 0) {
+                mTriangleLeft = getWidth() - mTriangleRight;
+            }
+            double angle = (mTriangleAngle / 2) * (Math.PI / 180);
+            mTriangleBottomHalf = (int) (mTriangleHeight * Math.tan(angle));
+            mTriangleFinalX = mTriangleLeft - mTriangleBottomHalf;
+            mTriangleX = mTriangleFinalX;
         }
-        if (mTriangleMiddle) {
-            mTriangleLeft = getWidth() / 2;
-        } else if (mTriangleLeft == 0 && mTriangleRight != 0) {
-            mTriangleLeft = getWidth() - mTriangleRight;
-        }
-        double angle = (mTriangleAngle / 2) * (Math.PI / 180);
-        mTriangleBottomHalf = (int) (mTriangleHeight * Math.tan(angle));
-        mTriangleFinalX = mTriangleLeft - mTriangleBottomHalf;
-        mTriangleX = mTriangleFinalX;
     }
 
     private void resetPaint() {

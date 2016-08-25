@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.LENGTH_SHORT;
 import static lx.af.widget.frenchtoast.ToastInternals.assertMainThread;
 
 /**
@@ -19,67 +17,70 @@ import static lx.af.widget.frenchtoast.ToastInternals.assertMainThread;
  */
 public class ApplicationToaster {
 
-    private static final int ANDROID_LONG_DELAY_MS = 3_500;
-    private static final int ANDROID_SHORT_DELAY_MS = 2_000;
-
     private static ToastQueue sQueue;
     private static Application sApp;
+    private static ApplicationToaster sInstance;
 
-    private long durationMs = ANDROID_SHORT_DELAY_MS;
+    private long durationMs = SmartToaster.LENGTH_SHORT;
+
+    private ApplicationToaster() {
+    }
 
     static void init(Application app) {
         sApp = app;
         sQueue = new ToastQueue();
+        sInstance = new ApplicationToaster();
     }
 
-    ApplicationToaster() {
+    static ApplicationToaster getInstance() {
+        return sInstance;
     }
 
     @MainThread
     public ApplicationToaster shortLength() {
         assertMainThread();
-        durationMs = ANDROID_SHORT_DELAY_MS;
+        durationMs = SmartToaster.LENGTH_SHORT;
         return this;
     }
 
     @MainThread
     public ApplicationToaster longLength() {
         assertMainThread();
-        durationMs = ANDROID_LONG_DELAY_MS;
+        durationMs = SmartToaster.LENGTH_LONG;
         return this;
     }
 
-    public Toasted showText(CharSequence text) {
-        int length = durationMs == ANDROID_LONG_DELAY_MS ? LENGTH_LONG : LENGTH_SHORT;
+    public void showText(CharSequence text) {
+        int length = durationMs == SmartToaster.LENGTH_LONG ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         @SuppressLint("ShowToast") Toast toast =
                 Toast.makeText(sApp, text, length);
-        return showDipped(toast);
+        showDipped(toast);
     }
 
-    public Toasted showText(@StringRes int stringResId) {
-        int length = durationMs == ANDROID_LONG_DELAY_MS ? LENGTH_LONG : LENGTH_SHORT;
+    public void showText(@StringRes int stringResId) {
+        int length = durationMs == SmartToaster.LENGTH_LONG ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         @SuppressLint("ShowToast") Toast toast =
                 Toast.makeText(sApp, stringResId, length);
-        return showDipped(toast);
+        showDipped(toast);
     }
 
-    public Toasted showLayout(@LayoutRes int layoutResId) {
+    public void showLayout(@LayoutRes int layoutResId) {
         View view = LayoutInflater.from(sApp).inflate(layoutResId, null);
-        return showView(view);
+        showView(view);
     }
 
-    public Toasted showView(View view) {
+    public void showView(View view) {
         Toast toast = new Toast(sApp);
         toast.setView(view);
-        return showDipped(toast);
+        showDipped(toast);
     }
 
     @MainThread
-    public Toasted showDipped(Toast toast) {
+    public void showDipped(Toast toast) {
         assertMainThread();
         Mixture mixture = Mixture.dip(toast);
         sQueue.enqueue(mixture, durationMs);
-        return new Toasted(sQueue, mixture);
+        new Toasted(sQueue, mixture);
     }
 
 }

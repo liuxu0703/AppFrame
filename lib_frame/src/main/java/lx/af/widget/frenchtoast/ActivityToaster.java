@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static lx.af.widget.frenchtoast.ToastInternals.MAIN_HANDLER;
 import static lx.af.widget.frenchtoast.ToastInternals.assertMainThread;
 
@@ -29,14 +28,12 @@ import static lx.af.widget.frenchtoast.ToastInternals.assertMainThread;
  */
 public class ActivityToaster {
 
-    private static final int ANDROID_LONG_DELAY_MS = 3_500;
-    private static final int ANDROID_SHORT_DELAY_MS = 2_000;
-    private static final int IGNORED = LENGTH_SHORT;
+    private static final int IGNORED = Toast.LENGTH_SHORT;
 
     private static QueueHolder queueHolder;
 
     private final Activity activity;
-    private long durationMs = ANDROID_LONG_DELAY_MS;
+    private long durationMs = SmartToaster.LENGTH_SHORT;
 
     @MainThread
     static void init(@NonNull Application application) {
@@ -54,14 +51,14 @@ public class ActivityToaster {
     @MainThread
     public ActivityToaster shortLength() {
         assertMainThread();
-        durationMs = ANDROID_SHORT_DELAY_MS;
+        durationMs = SmartToaster.LENGTH_SHORT;
         return this;
     }
 
     @MainThread
     public ActivityToaster longLength() {
         assertMainThread();
-        durationMs = ANDROID_LONG_DELAY_MS;
+        durationMs = SmartToaster.LENGTH_LONG;
         return this;
     }
 

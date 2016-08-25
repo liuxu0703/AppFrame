@@ -13,13 +13,6 @@
         android:text="Toast.makeText().show() (system toast)"/>
 
     <Button
-        android:id="@+id/demo_smart_toast_btn_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="smart toast"/>
-
-    <Button
         android:id="@+id/demo_smart_toast_btn_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,5 +32,19 @@
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:text="smart toast custom view"/>
+
+    <Button
+        android:id="@+id/demo_smart_toast_btn_6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="smart toast custom view cancelable"/>
+
+    <Button
+        android:id="@+id/demo_smart_toast_btn_7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="cancel smart toast"/>
 
 </LinearLayout>

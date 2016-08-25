@@ -114,7 +114,7 @@ public class VideoPlayView extends SurfaceView implements MediaPlayerControl {
         initVideoView();
     }
 
-    public void setOnCompleteListener(OnCompletionListener l) {
+    public void setOnCompletionListener(OnCompletionListener l) {
         mOnCompletionListener = l;
     }
 

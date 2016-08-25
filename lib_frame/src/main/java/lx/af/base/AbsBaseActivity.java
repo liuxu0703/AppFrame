@@ -26,6 +26,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public abstract class AbsBaseActivity extends AppCompatActivity {
 
     public static final int FEATURE_DOUBLE_BACK_EXIT = 0x01 << 1;
+    public static final int FEATURE_DISABLE_KEY_BACK = 0x01 << 2;
 
     public String TAG;
 
@@ -153,7 +154,9 @@ public abstract class AbsBaseActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (isFeatureEnabled(FEATURE_DOUBLE_BACK_EXIT)) {
+            if (isFeatureEnabled(FEATURE_DISABLE_KEY_BACK)) {
+                return true;
+            } else if (isFeatureEnabled(FEATURE_DOUBLE_BACK_EXIT)) {
                 long current = System.currentTimeMillis();
                 long interval = current - mDoubleBackTime;
                 if (interval > 2000) {
@@ -285,6 +288,10 @@ public abstract class AbsBaseActivity extends AppCompatActivity {
     }
 
     public void showLoadingDialog(final String msg, boolean cancelable) {
+        if (!mIsForeground) {
+            // avoid BadTokenException
+            return;
+        }
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             // loading dialog already fired, just change the message
             runOnUiThread(new Runnable() {

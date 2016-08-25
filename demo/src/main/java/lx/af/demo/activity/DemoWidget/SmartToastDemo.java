@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lx.af.demo.R;
@@ -31,16 +33,12 @@ public class SmartToastDemo extends BaseActivity implements ActionBar.Default {
         super.onDestroy();
     }
 
-    @OnClick({R.id.demo_smart_toast_btn_1, R.id.demo_smart_toast_btn_2,
-            R.id.demo_smart_toast_btn_3, R.id.demo_smart_toast_btn_4,
-            R.id.demo_smart_toast_btn_5})
+    @OnClick({R.id.demo_smart_toast_btn_1, R.id.demo_smart_toast_btn_3, R.id.demo_smart_toast_btn_4,
+            R.id.demo_smart_toast_btn_5, R.id.demo_smart_toast_btn_6, R.id.demo_smart_toast_btn_7})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.demo_smart_toast_btn_1:
                 Toast.makeText(this, "system toast", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.demo_smart_toast_btn_2:
-                SmartToaster.with(this).showText("smart toast");
                 break;
             case R.id.demo_smart_toast_btn_3:
                 AlertUtils.toastShort("smart toast with AlertUtils");
@@ -48,14 +46,28 @@ public class SmartToastDemo extends BaseActivity implements ActionBar.Default {
             case R.id.demo_smart_toast_btn_4:
                 toastShort("smart toast using activity method");
                 break;
-            case R.id.demo_smart_toast_btn_5:
+            case R.id.demo_smart_toast_btn_5: {
                 View toast = View.inflate(this, R.layout.toast_with_icon, null);
                 TextView icon = (TextView) toast.findViewById(R.id.toast_icon);
                 TextView text = (TextView) toast.findViewById(R.id.toast_text);
                 icon.setText("{md-info}");
                 text.setText("custom smart toast");
-                SmartToaster.with(this).shortLength().showView(toast);
+                SmartToaster.showView(toast);
+                break;
+            }
+            case R.id.demo_smart_toast_btn_6: {
+                View toast = View.inflate(this, R.layout.toast_with_icon, null);
+                TextView icon = (TextView) toast.findViewById(R.id.toast_icon);
+                TextView text = (TextView) toast.findViewById(R.id.toast_text);
+                icon.setText("{md-add}");
+                text.setText("custom smart toast (cancelable)");
+                SmartToaster.with(this).length(1000, TimeUnit.SECONDS).showView(toast);
+                break;
+            }
+            case R.id.demo_smart_toast_btn_7:
+                SmartToaster.with(this).clear();
                 break;
         }
     }
+
 }

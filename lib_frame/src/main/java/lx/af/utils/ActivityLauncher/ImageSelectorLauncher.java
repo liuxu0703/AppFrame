@@ -1,6 +1,7 @@
 package lx.af.utils.ActivityLauncher;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,10 @@ public class ImageSelectorLauncher extends ActivityLauncherBase<ArrayList<String
 
     protected ImageSelectorLauncher(Fragment fragment) {
         super(fragment);
+    }
+
+    public static ImageSelectorLauncher of(Context context) {
+        return new ImageSelectorLauncher((Activity) context);
     }
 
     public static ImageSelectorLauncher of(Activity activity) {
