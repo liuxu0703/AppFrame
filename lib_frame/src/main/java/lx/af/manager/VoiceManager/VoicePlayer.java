@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.IOException;
-
 import lx.af.utils.PathUtils;
 
 import static lx.af.manager.VoiceManager.VoiceManager.TAG;
@@ -63,12 +61,23 @@ class VoicePlayer implements Handler.Callback {
     synchronized boolean isPlaying() {
         if (mMediaPlayer == null) {
             return false;
+        } else {
+            return mIsPlaying;
         }
-        return mIsPlaying;
     }
 
     synchronized void play(Voice voice) {
         Log.d(TAG, "player, prepare to play: " + voice.getContent());
+        if (mMediaPlayer == null) {
+            initMediaPlayer();
+            if (mMediaPlayer == null) {
+                if (voice.getCallback() != null) {
+                    voice.getCallback().onPlayError(voice, VoiceManager.PlayCallback.ERR_PLAY_FAIL);
+                }
+                return;
+            }
+        }
+
         mIsPlaying = true;
         String path = voice.getPath();
 
@@ -162,8 +171,9 @@ class VoicePlayer implements Handler.Callback {
     int getCurrentRecordAmplitude() {
         if (mMediaRecorder == null) {
             return 0;
+        } else {
+            return mMediaRecorder.getMaxAmplitude();
         }
-        return this.mMediaRecorder.getMaxAmplitude();
     }
 
     Voice getCurrentVoice() {
@@ -183,25 +193,33 @@ class VoicePlayer implements Handler.Callback {
 
         if (mMediaRecorder == null) {
             initMediaRecorder();
+            if (mMediaRecorder == null) {
+                if (record.getCallback() != null) {
+                    record.getCallback().onRecordError(
+                            record, VoiceManager.RecordCallback.ERR_RECORD_FAIL);
+                }
+                return;
+            }
         } else {
             mMediaRecorder.reset();
         }
-        mMediaRecorder.setOnErrorListener(mMediaRecorderListener);
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mMediaRecorder.setOutputFile(path);
-
-        mIsRecording = true;
-        stopPlayer();
 
         try {
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mMediaRecorder.setOnErrorListener(mMediaRecorderListener);
+            mMediaRecorder.setOutputFile(path);
+
+            stopPlayer();
+
             mMediaRecorder.prepare();
             mMediaRecorder.start();
+            mIsRecording = true;
             record.start();
             mCurrentRecord = record;
             scheduleUpdateRecordProgress(record);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.w(TAG, "player, fail to record, " + record.getFilePath(), e);
             if (record.getCallback() != null) {
                 record.getCallback().onRecordError(
@@ -222,11 +240,15 @@ class VoicePlayer implements Handler.Callback {
     }
 
     private MediaPlayer initMediaPlayer() {
-        MediaPlayerListener mpListener = new MediaPlayerListener();
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setOnCompletionListener(mpListener);
-        mMediaPlayer.setOnErrorListener(mpListener);
-        mMediaPlayer.setOnPreparedListener(mpListener);
+        try {
+            mMediaPlayer = new MediaPlayer();
+            MediaPlayerListener mpListener = new MediaPlayerListener();
+            mMediaPlayer.setOnCompletionListener(mpListener);
+            mMediaPlayer.setOnErrorListener(mpListener);
+            mMediaPlayer.setOnPreparedListener(mpListener);
+        } catch (Exception e) {
+            Log.e(TAG, "player, fail to init MediaPlayer", e);
+        }
         mIsPlaying = false;
         return mMediaPlayer;
     }
@@ -235,27 +257,29 @@ class VoicePlayer implements Handler.Callback {
         if (mMediaRecorderListener == null) {
             mMediaRecorderListener = new MediaRecorderListener();
         }
-        mMediaRecorder = new MediaRecorder();
+        try {
+            mMediaRecorder = new MediaRecorder();
+        } catch (Exception e) {
+            Log.e(TAG, "player, fail to init MediaRecorder", e);
+        }
         return mMediaRecorder;
     }
 
     private void resetMediaPlayer() {
-        if (mMediaPlayer == null) {
-            initMediaPlayer();
-        }
-        try {
-            mMediaPlayer.reset();
-        } catch (IllegalStateException e) {
-            Log.w(TAG, "player, reset MediaPlayer exception", e);
+        if (mMediaPlayer != null) {
+            try {
+                mMediaPlayer.reset();
+            } catch (IllegalStateException e) {
+                Log.w(TAG, "player, reset MediaPlayer exception", e);
+            }
         }
         mIsPlaying = false;
     }
 
     private void resetMediaRecorder() {
-        if (mMediaRecorder == null) {
-            initMediaRecorder();
+        if (mMediaRecorder != null) {
+            mMediaRecorder.reset();
         }
-        mMediaRecorder.reset();
     }
 
     private class MediaPlayerListener implements

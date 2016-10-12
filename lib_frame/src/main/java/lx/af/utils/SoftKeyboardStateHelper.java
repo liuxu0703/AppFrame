@@ -1,11 +1,14 @@
 package lx.af.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -100,4 +103,22 @@ public class SoftKeyboardStateHelper implements ViewTreeObserver.OnGlobalLayoutL
         void onSoftKeyboardOpened(int keyboardHeightInPx, boolean heightChanged);
         void onSoftKeyboardClosed();
     }
+
+
+    // ===========================================
+
+    public static void hideInputMethod(View editor) {
+        InputMethodManager mInputMethodManager = (InputMethodManager)
+                editor.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mInputMethodManager.hideSoftInputFromWindow(
+                editor.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED);
+    }
+
+    public static void showInputMethod(View editor) {
+        InputMethodManager mInputMethodManager = (InputMethodManager)
+                editor.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        editor.requestFocus();
+        mInputMethodManager.showSoftInput(editor, InputMethodManager.SHOW_IMPLICIT);
+    }
+
 }

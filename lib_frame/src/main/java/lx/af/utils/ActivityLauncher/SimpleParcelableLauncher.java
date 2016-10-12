@@ -15,19 +15,19 @@ import java.util.Random;
  * date: 16-2-23
  *
  */
-public class SimpleParcelableLauncher<T> extends ActivityLauncherBase<T> {
+public class SimpleParcelableLauncher extends ActivityLauncherBase<Parcelable> {
 
     private Intent mIntent;
     private String mIntentResultKey;
     private int mDefaultRequestCode = (new Random()).nextInt(5000);
 
-    protected SimpleParcelableLauncher(Activity activity, Class<? extends Activity> target, String key) {
+    public SimpleParcelableLauncher(Activity activity, Class<? extends Activity> target, String key) {
         super(activity);
         mIntent = new Intent(activity, target);
         mIntentResultKey = key;
     }
 
-    protected SimpleParcelableLauncher(Fragment fragment, Class<? extends Activity> target, String key) {
+    public SimpleParcelableLauncher(Fragment fragment, Class<? extends Activity> target, String key) {
         super(fragment);
         mIntent = new Intent(fragment.getActivity(), target);
         mIntentResultKey = key;
@@ -198,8 +198,8 @@ public class SimpleParcelableLauncher<T> extends ActivityLauncherBase<T> {
     }
 
     @Override
-    protected T extractResult(int resultCode, Intent data) {
-        return (data == null ? null : (T) data.getParcelableExtra(mIntentResultKey));
+    protected Parcelable extractResult(int resultCode, Intent data) {
+        return (data == null ? null : data.getParcelableExtra(mIntentResultKey));
     }
 
     @Override

@@ -26,6 +26,7 @@ import lx.af.utils.UIL.displayer.animator.BaseAnimator;
 import lx.af.utils.UIL.displayer.animator.FadeInAnimator;
 import lx.af.utils.UIL.displayer.animator.FloatInAnimator;
 import lx.af.utils.UIL.displayer.animator.ScaleInAnimator;
+import lx.af.utils.UIL.displayer.animator.VoidAnimator;
 
 /**
  * author: lx
@@ -60,6 +61,10 @@ public class UILLoader {
     protected boolean mAsCircle;
     protected boolean mAsSquare;
 
+    protected String mPreloadUri;
+    protected boolean mForcePreloadUri = false;
+    protected boolean mPreloadSuccess = false;
+
     public static UILLoader of(ImageView imageView, String uri) {
         return new UILLoader(imageView, uri);
     }
@@ -68,15 +73,42 @@ public class UILLoader {
         if (TextUtils.isEmpty(mUri) && mResIdOnEmptyUri != 0) {
             Bitmap bitmap = BitmapFactory.decodeResource(mImageView.getResources(), mResIdOnEmptyUri);
             if (bitmap != null) {
-                getBitmapDisplayer().display(bitmap, mImageViewAware, LoadedFrom.MEMORY_CACHE);
+                if (mDisplayer == null) {
+                    mDisplayer = createBitmapDisplayer(mDisplayerAnimator);
+                }
+                mDisplayer.display(bitmap, mImageViewAware, LoadedFrom.MEMORY_CACHE);
             }
             return;
         }
 
-        sImageLoader.displayImage(
-                mUri, mImageViewAware,
-                getOptions(), getImageSize(),
-                mInnerLoadListener, mProgressListener);
+        boolean doPreload = true;
+        if (sImageLoader.getDiskCache().get(mUri) != null) {
+            // final uri already cached, no need to display preload
+            doPreload = false;
+        } else if (TextUtils.isEmpty(mPreloadUri) || mUri.equals(mPreloadUri)) {
+            // preload uri and final uri is the same, cancel preload
+            doPreload = false;
+        } else if (!mForcePreloadUri && sImageLoader.getDiskCache().get(mPreloadUri) == null) {
+            // preload uri not cached, and force show preload flag is off, cancel preload
+            doPreload = false;
+        }
+
+        if (doPreload) {
+            sImageLoader.displayImage(mPreloadUri, mImageViewAware,
+                    getOptions(), createImageSize(), new LoadFinishListener() {
+                        @Override
+                        void onLoadingFinished(String imageUri, View view,
+                                               Bitmap loadedImage, boolean success) {
+                            mPreloadSuccess = success;
+                            DisplayImageOptions options = createOptionsBuilder()
+                                    .displayer(createBitmapDisplayer(new VoidAnimator()))
+                                    .build();
+                            doDisplay(options);
+                        }
+                    }, null);
+        } else {
+            doDisplay(getOptions());
+        }
     }
 
     public UILLoader(ImageView imageView, String uri) {
@@ -146,6 +178,16 @@ public class UILLoader {
         return this;
     }
 
+    public UILLoader preloadImageUri(String uri, boolean loadWhenNoCache) {
+        mPreloadUri = uri;
+        mForcePreloadUri = loadWhenNoCache;
+        return this;
+    }
+
+    public UILLoader preloadImageUri(String uri) {
+        return preloadImageUri(uri, false);
+    }
+
     public UILLoader delayBeforeLoading(int delayInMillis) {
         getOptionsBuilder().delayBeforeLoading(delayInMillis);
         return this;
@@ -161,8 +203,23 @@ public class UILLoader {
         return this;
     }
 
+    public UILLoader cacheInMemory(boolean cache) {
+        getOptionsBuilder().cacheInMemory(cache);
+        return this;
+    }
+
+    public UILLoader cacheOnDisk(boolean cache) {
+        getOptionsBuilder().cacheOnDisk(cache);
+        return this;
+    }
+
     public UILLoader displayerAnimator(BaseAnimator animator) {
         mDisplayerAnimator = animator;
+        return this;
+    }
+
+    public UILLoader animateNone() {
+        mDisplayerAnimator = new VoidAnimator();
         return this;
     }
 
@@ -199,63 +256,36 @@ public class UILLoader {
     // ====================================================
 
     protected DisplayImageOptions getOptions() {
-        BaseDisplayer displayer = getBitmapDisplayer();
-        if (displayer instanceof BaseDrawableDisplayer) {
+        if (mDisplayer == null) {
+            mDisplayer = createBitmapDisplayer(mDisplayerAnimator);
+        }
+        DisplayImageOptions.Builder builder = getOptionsBuilder();
+        if (mDisplayer instanceof BaseDrawableDisplayer) {
             if (mResIdOnLoading != 0) {
-                Drawable drawable = createDrawableByDisplayer(
-                        (BaseDrawableDisplayer) displayer, mResIdOnLoading);
+                Bitmap bitmap = BitmapFactory.decodeResource(
+                        mImageView.getResources(), mResIdOnLoading);
+                Drawable drawable =  bitmap == null ? null :
+                        ((BaseDrawableDisplayer) mDisplayer).createDisplayDrawable(bitmap);
                 if (drawable != null) {
-                    getOptionsBuilder().showImageOnLoading(drawable);
+                    builder.showImageOnLoading(drawable);
                 }
             }
         } else {
-            if (mResIdOnEmptyUri != 0) {
-                getOptionsBuilder().showImageForEmptyUri(mResIdOnEmptyUri);
-            }
-            if (mResIdOnFail != 0) {
-                getOptionsBuilder().showImageOnFail(mResIdOnFail);
-            }
-            if (mResIdOnLoading != 0) {
-                getOptionsBuilder().showImageOnLoading(mResIdOnLoading);
-            }
+            builder.showImageForEmptyUri(mResIdOnEmptyUri);
+            builder.showImageOnFail(mResIdOnFail);
+            builder.showImageOnLoading(mResIdOnLoading);
         }
-        return getOptionsBuilder().displayer(displayer).build();
+        return builder.displayer(mDisplayer).build();
     }
 
     protected DisplayImageOptions.Builder getOptionsBuilder() {
         if (mOptionsBuilder == null) {
-            mOptionsBuilder = new DisplayImageOptions.Builder()
-                    .cacheOnDisk(true)
-                    .cacheInMemory(true)
-                    .considerExifParams(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565);
+            mOptionsBuilder = createOptionsBuilder();
         }
         return mOptionsBuilder;
     }
 
-    protected BaseDisplayer getBitmapDisplayer() {
-        if (mDisplayer == null) {
-            if (mAsCircle) {
-                mDisplayer = new CircleDisplayer(mBorderWidth, mBorderColor);
-            } else if (mBorderWidth > 0 || mCornerRadius > 0 || mAsSquare) {
-                mDisplayer = new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor)
-                        .setAsSquare(mAsSquare);
-            } else {
-                mDisplayer = new DefaultDisplayer();
-            }
-            if (mBlurRadius > 0) {
-                mDisplayer.setBlur(mBlurRadius);
-            }
-            if (mDisplayerAnimator == null) {
-                mDisplayerAnimator = new FadeInAnimator();
-            }
-            mDisplayer.setDisplayerAnimator(mDisplayerAnimator);
-            mDisplayer.setImageInfoCallback(mImageInfoCallback);
-        }
-        return mDisplayer;
-    }
-
-    protected ImageSize getImageSize() {
+    protected ImageSize createImageSize() {
         if (mMaxWidth > 0 && mMaxHeight > 0) {
             return new ImageSize(mMaxWidth, mMaxHeight);
         } else {
@@ -263,15 +293,40 @@ public class UILLoader {
         }
     }
 
-    protected Drawable createDrawableByDisplayer(BaseDrawableDisplayer displayer, int resId) {
-        if (resId == 0) {
-            return null;
+    protected DisplayImageOptions.Builder createOptionsBuilder() {
+        return new DisplayImageOptions.Builder()
+                .cacheOnDisk(true)
+                .cacheInMemory(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565);
+    }
+
+    protected BaseDisplayer createBitmapDisplayer(BaseAnimator animator) {
+        BaseDisplayer displayer;
+        if (mAsCircle) {
+            displayer = new CircleDisplayer(mBorderWidth, mBorderColor);
+        } else if (mBorderWidth > 0 || mCornerRadius > 0 || mAsSquare) {
+            displayer = new RoundedDisplayer(mCornerRadius, mBorderWidth, mBorderColor)
+                    .setAsSquare(mAsSquare);
+        } else {
+            displayer = new DefaultDisplayer();
         }
-        Bitmap bitmap = BitmapFactory.decodeResource(mImageView.getResources(), resId);
-        if (bitmap == null) {
-            return null;
+        if (mBlurRadius > 0) {
+            displayer.setBlur(mBlurRadius);
         }
-        return displayer.createDisplayDrawable(bitmap);
+        if (animator == null) {
+            animator = new FadeInAnimator();
+        }
+        displayer.setDisplayerAnimator(animator);
+        displayer.setImageInfoCallback(mImageInfoCallback);
+        return displayer;
+    }
+
+    protected void doDisplay(DisplayImageOptions options) {
+        sImageLoader.displayImage(
+                mUri, mImageViewAware,
+                options, createImageSize(),
+                mInnerLoadListener, mProgressListener);
     }
 
 

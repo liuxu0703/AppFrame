@@ -109,6 +109,27 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
     }
 
     /**
+     * replace a single item.
+     * @param oldObj the item to be replaced
+     * @param newObj the new item
+     */
+    public boolean replace(T oldObj, T newObj) {
+        boolean success;
+        synchronized (mLock) {
+            int idx = mObjects.indexOf(oldObj);
+            if (idx == -1) {
+                success = false;
+            } else {
+                mObjects.remove(idx);
+                mObjects.add(idx, newObj);
+                success = true;
+            }
+        }
+        if (success && mNotifyOnChange) notifyDataSetChanged();
+        return success;
+    }
+
+    /**
      * Removes the specified object from the array.
      * @param object The object to remove.
      */
@@ -150,6 +171,15 @@ public abstract class AbsListAdapter<T> extends BaseAdapter {
             Collections.sort(mObjects, comparator);
         }
         if (mNotifyOnChange) notifyDataSetChanged();
+    }
+
+    /**
+     * see if the element is already contained in the list.
+     */
+    public boolean contains(T object) {
+        synchronized (mLock) {
+            return mObjects.contains(object);
+        }
     }
 
     /**

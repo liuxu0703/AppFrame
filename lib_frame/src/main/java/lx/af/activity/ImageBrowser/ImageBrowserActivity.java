@@ -1,9 +1,11 @@
 package lx.af.activity.ImageBrowser;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
@@ -38,6 +40,10 @@ public class ImageBrowserActivity extends AbsBaseActivity {
     public static final String EXTRA_IMAGE_URI_LIST = "ImageBrowserActivity_uri_list";
     /** exit browser by tap image */
     public static final String EXTRA_TAP_EXIT = "ImageBrowserActivity_tap_exit";
+    /** image uri to be displayed before the real image uri */
+    public static final String EXTRA_PRELOAD_URI = "ImageBrowserActivity_uri_preload";
+    /** preload uri prefix */
+    public static final String EXTRA_PRELOAD_URI_PREFIX = "preload_";
     /** auto hide function bar (action bar + bottom bar) */
     public static final String EXTRA_AUTO_HIDE_FUNCTION_BAR = "ImageBrowserActivity_auto_hide_action_bar";
 
@@ -81,11 +87,11 @@ public class ImageBrowserActivity extends AbsBaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getIntent().getExtras();
-        List<String> list = bundle.getStringArrayList(EXTRA_IMAGE_URI_LIST);
-        mCurrentImgUri = bundle.getString(EXTRA_CURRENT_IMAGE_URI);
-        mIsTapExit = bundle.getBoolean(EXTRA_TAP_EXIT, false);
-        mIsAutoHideFunctionBar = bundle.getBoolean(EXTRA_AUTO_HIDE_FUNCTION_BAR, !mIsTapExit);
+        Intent intent = getIntent();
+        List<String> list = intent.getStringArrayListExtra(EXTRA_IMAGE_URI_LIST);
+        mCurrentImgUri = intent.getStringExtra(EXTRA_CURRENT_IMAGE_URI);
+        mIsTapExit = intent.getBooleanExtra(EXTRA_TAP_EXIT, false);
+        mIsAutoHideFunctionBar = intent.getBooleanExtra(EXTRA_AUTO_HIDE_FUNCTION_BAR, !mIsTapExit);
 
         if (!isBrowserEnabled()) {
             // browse is not allowed, add only one image to the list
@@ -115,9 +121,14 @@ public class ImageBrowserActivity extends AbsBaseActivity {
             mCurrentImgUri = mImgUris.get(0);
         }
 
+        String preloadUri = intent.getStringExtra(EXTRA_PRELOAD_URI);
         mImgInfoMap = new HashMap<>(mImgUris.size());
         for (String uri : mImgUris) {
-            mImgInfoMap.put(uri, new ImageInfo(uri));
+            String preload = intent.getStringExtra(EXTRA_PRELOAD_URI_PREFIX + uri);
+            if (TextUtils.isEmpty(preload)) {
+                preload = preloadUri;
+            }
+            mImgInfoMap.put(uri, new ImageInfo(uri, preload));
         }
 
         mAnimActionBarShow = AnimationUtils.loadAnimation(this, R.anim.slide_top_out);
@@ -385,10 +396,16 @@ public class ImageBrowserActivity extends AbsBaseActivity {
 
     static class ImageInfo {
         String uri;
+        String preloadUri;
         ImageValidation valid = ImageValidation.UNKNOWN;
 
         public ImageInfo(String uri) {
+            this(uri, null);
+        }
+
+        public ImageInfo(String uri, String preloadUri) {
             this.uri = uri;
+            this.preloadUri = preloadUri;
         }
     }
 

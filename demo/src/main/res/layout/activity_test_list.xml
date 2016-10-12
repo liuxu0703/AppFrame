@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bkg_1" >
+
+    <ListView
+        android:id="@+id/activity_test_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:dividerHeight="1px"
+        android:divider="@color/divider_color"
+        android:listSelector="@drawable/bkg_clickable"
+        android:fastScrollEnabled="false"
+        android:fastScrollAlwaysVisible="false"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:smoothScrollbar="true" />
+</RelativeLayout>

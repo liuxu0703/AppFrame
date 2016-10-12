@@ -1,4 +1,4 @@
-package lx.af.widget.RoundImage;
+package lx.af.view.RoundedImage;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import lx.af.R;
 
+@SuppressWarnings("UnusedDeclaration")
 public class RoundedImageView extends ImageView {
 
     public static final String TAG = "RoundedImageView";
@@ -64,8 +65,8 @@ public class RoundedImageView extends ImageView {
             setScaleType(ScaleType.FIT_CENTER);
         }
 
-        cornerRadius = a.getDimensionPixelSize(R.styleable.RoundedImageView_corner_radius, -1);
-        borderWidth = a.getDimensionPixelSize(R.styleable.RoundedImageView_border_width, -1);
+        cornerRadius = a.getDimensionPixelSize(R.styleable.RoundedImageView_round_corner_radius, -1);
+        borderWidth = a.getDimensionPixelSize(R.styleable.RoundedImageView_round_border_width, -1);
 
         // don't allow negative values for radius and border
         if (cornerRadius < 0) {
@@ -75,13 +76,13 @@ public class RoundedImageView extends ImageView {
             borderWidth = DEFAULT_BORDER_WIDTH;
         }
 
-        borderColor = a.getColorStateList(R.styleable.RoundedImageView_border_color);
+        borderColor = a.getColorStateList(R.styleable.RoundedImageView_round_border_color);
         if (borderColor == null) {
             borderColor = ColorStateList.valueOf(RoundedDrawable.DEFAULT_BORDER_COLOR);
         }
 
-        mutateBackground = a.getBoolean(R.styleable.RoundedImageView_mutate_background, false);
-        isOval = a.getBoolean(R.styleable.RoundedImageView_oval, false);
+        mutateBackground = a.getBoolean(R.styleable.RoundedImageView_round_mutate_background, false);
+        isOval = a.getBoolean(R.styleable.RoundedImageView_round_oval, false);
 
         updateDrawableAttrs();
         updateBackgroundDrawableAttrs(true);
@@ -99,7 +100,7 @@ public class RoundedImageView extends ImageView {
      * Return the current scale type in use by this ImageView.
      *
      * @attr ref android.R.styleable#ImageView_scaleType
-     * @see android.widget.ImageView.ScaleType
+     * @see ScaleType
      */
     @Override
     public ScaleType getScaleType() {

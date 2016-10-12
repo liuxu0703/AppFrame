@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -31,12 +32,16 @@ public class PathUtils {
     public static void init(Application app) {
         sApp = app;
         sSdRoot = new File(Environment.getExternalStorageDirectory(), "lx");
-        GlobalThreadManager.runInThreadPool(new Runnable() {
-            @Override
-            public void run() {
-                clearDir(getTmpDir());
-            }
-        });
+
+        if (SystemUtils.isMainProcess()) {
+            GlobalThreadManager.runInThreadPool(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("liuxu", "PathUtils clear tmp dir");
+                    clearDir(getTmpDir());
+                }
+            });
+        }
     }
 
     /**

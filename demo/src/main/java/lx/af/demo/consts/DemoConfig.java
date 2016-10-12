@@ -18,6 +18,7 @@ import lx.af.demo.activity.DemoFrame.CodeScannerDemo;
 import lx.af.demo.activity.DemoFrame.ImageOperateDemo;
 import lx.af.demo.activity.DemoFrame.ScrollViewFadeDemo;
 import lx.af.demo.activity.DemoFrame.PostListActivity;
+import lx.af.demo.activity.test.TestListActivity;
 
 /**
  * author: lx
@@ -61,6 +62,7 @@ public class DemoConfig {
 
     public static final ActionModel[] MISC_DEMO = new ActionModel[] {
             demo("What Ever", null),
+            demo("Test List", TestListActivity.class),
     };
 
 

@@ -18,16 +18,19 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import java.util.Locale;
+
 import lx.af.R;
 
 /**
  * import from https://github.com/HotBitmapGG/RingProgressBar
+ * modified by lx
  */
 public class ProgressPieView extends View {
 
     public interface OnProgressListener {
-        public void onProgressChanged(int progress, int max);
-        public void onProgressCompleted();
+        void onProgressChanged(int progress, int max);
+        void onProgressCompleted();
     }
 
     /**
@@ -55,33 +58,37 @@ public class ProgressPieView extends View {
     private static final int DEFAULT_STROKE_COLOR = Color.parseColor("#33b5e5");
     private static final int DEFAULT_TEXT_COLOR = Color.parseColor("#333333");
 
-    private static LruCache<String, Typeface> sTypefaceCache = new LruCache<String, Typeface>(8);
+    private static LruCache<String, Typeface> sTypefaceCache = new LruCache<>(8);
 
-    private OnProgressListener mListener;
-    private DisplayMetrics mDisplayMetrics;
     private int mMax = DEFAULT_MAX;
     private int mProgress = DEFAULT_PROGRESS;
     private int mStartAngle = DEFAULT_START_ANGLE;
+    private float mStrokeWidth = DEFAULT_STROKE_WIDTH;
+    private float mPiePadding = 0;
+    private float mTextSize = DEFAULT_TEXT_SIZE;
     private boolean mInverted = false;
     private boolean mCounterclockwise = false;
     private boolean mShowStroke = true;
-    private float mStrokeWidth = DEFAULT_STROKE_WIDTH;
     private boolean mShowText = true;
-    private float mTextSize = DEFAULT_TEXT_SIZE;
+    private boolean mShowImage = true;
     private String mText;
     private String mTypeface;
-    private boolean mShowImage = true;
+    private int mProgressFillType = FILL_TYPE_RADIAL;
+    private int mAnimationSpeed = MEDIUM_ANIMATION_SPEED;
+
     private Drawable mImage;
-    private Rect mImageRect;
     private Paint mStrokePaint;
     private Paint mTextPaint;
     private Paint mProgressPaint;
     private Paint mBackgroundPaint;
-    private RectF mInnerRectF;
-    private int mProgressFillType = FILL_TYPE_RADIAL;
-	
-	private int mAnimationSpeed = MEDIUM_ANIMATION_SPEED;
+    private Rect mImageRect;
+    private RectF mRectF;
+    private RectF mPieRectF;
+    private RectF mCircleRectF;
+
     private AnimationHandler mAnimationHandler = new AnimationHandler();
+    private OnProgressListener mListener;
+    private DisplayMetrics mDisplayMetrics;
 
     private int mViewSize;
 
@@ -112,6 +119,7 @@ public class ProgressPieView extends View {
         mInverted = a.getBoolean(R.styleable.ProgressPieView_ppvInverted, mInverted);
         mCounterclockwise = a.getBoolean(R.styleable.ProgressPieView_ppvCounterclockwise, mCounterclockwise);
         mStrokeWidth = a.getDimension(R.styleable.ProgressPieView_ppvStrokeWidth, mStrokeWidth);
+        mPiePadding = a.getDimension(R.styleable.ProgressPieView_ppvPiePadding, 0);
         mTypeface = a.getString(R.styleable.ProgressPieView_ppvTypeface);
         mTextSize = a.getDimension(R.styleable.ProgressPieView_android_textSize, mTextSize);
         mText = a.getString(R.styleable.ProgressPieView_android_text);
@@ -147,34 +155,43 @@ public class ProgressPieView extends View {
         mTextPaint.setTextSize(mTextSize);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
-        mInnerRectF = new RectF();
+        mRectF = new RectF();
+        mPieRectF = new RectF();
+        mCircleRectF = new RectF();
         mImageRect = new Rect();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
         int width = resolveSize(DEFAULT_VIEW_SIZE, widthMeasureSpec);
         int height = resolveSize(DEFAULT_VIEW_SIZE, heightMeasureSpec);
         mViewSize = Math.min(width, height);
-
         setMeasuredDimension(width, height);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (w == 0 || h == 0) {
+            return;
+        }
+        if (oldw == w && oldh == h) {
+            return;
+        }
+        resetSize();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mInnerRectF.set(0, 0, mViewSize, mViewSize);
-        mInnerRectF.offset((getWidth() - mViewSize) / 2, (getHeight() - mViewSize) / 2);
-        if (mShowStroke) {
-            final int halfBorder = (int) (mStrokePaint.getStrokeWidth() / 2f + 0.5f);
-            mInnerRectF.inset(halfBorder, halfBorder);
-        }
-        float centerX = mInnerRectF.centerX();
-        float centerY = mInnerRectF.centerY();
+        float centerX = mRectF.centerX();
+        float centerY = mRectF.centerY();
 
-        canvas.drawArc(mInnerRectF, 0, 360, true, mBackgroundPaint);
+        if (mBackgroundPaint.getColor() != Color.TRANSPARENT) {
+            // draw background
+            canvas.drawArc(mRectF, 0, 360, true, mBackgroundPaint);
+        }
 
         switch (mProgressFillType) {
             case FILL_TYPE_RADIAL:
@@ -185,12 +202,12 @@ public class ProgressPieView extends View {
                 if (mCounterclockwise) {
                     sweepAngle = -sweepAngle;
                 }
-                canvas.drawArc(mInnerRectF, mStartAngle, sweepAngle, true, mProgressPaint);
+                canvas.drawArc(mPieRectF, mStartAngle, sweepAngle, true, mProgressPaint);
                 break;
             case FILL_TYPE_CENTER:
                 float radius = (mViewSize / 2) * ((float) mProgress / mMax);
-                if (mShowStroke) {
-                    radius = radius + 0.5f - mStrokePaint.getStrokeWidth();
+                if (mShowStroke && mStrokeWidth > 0) {
+                    radius = radius + 0.5f - mStrokeWidth;
                 }
                 canvas.drawCircle(centerX, centerY, radius, mProgressPaint);
                 break;
@@ -223,10 +240,24 @@ public class ProgressPieView extends View {
             mImage.draw(canvas);
         }
 
-        if (mShowStroke) {
-            canvas.drawOval(mInnerRectF, mStrokePaint);
+        if (mShowStroke && mStrokeWidth > 0) {
+            canvas.drawOval(mCircleRectF, mStrokePaint);
         }
+    }
 
+    private void resetSize() {
+        mRectF.set(0, 0, mViewSize, mViewSize);
+        mRectF.offset((getWidth() - mViewSize) / 2, (getHeight() - mViewSize) / 2);
+        mPieRectF.set(mRectF);
+        float pieInset = mPiePadding + mStrokeWidth;
+        if (pieInset > 0) {
+            mPieRectF.inset(pieInset, pieInset);
+        }
+        if (mStrokeWidth > 0) {
+            mCircleRectF = new RectF(mRectF);
+            float halfBorder = mStrokeWidth / 2f;
+            mCircleRectF.inset(halfBorder, halfBorder);
+        }
     }
 
     /**
@@ -242,7 +273,8 @@ public class ProgressPieView extends View {
     public void setMax(int max) {
         if (max <= 0 || max < mProgress) {
             throw new IllegalArgumentException(
-                    String.format("Max (%d) must be > 0 and >= %d", max, mProgress));
+                    String.format(Locale.getDefault(),
+                            "Max (%d) must be > 0 and >= %d", max, mProgress));
         }
         mMax = max;
         invalidate();
@@ -509,6 +541,7 @@ public class ProgressPieView extends View {
      * @param widthDp in dp for the pie border
      */
     public void setStrokeWidth(int widthDp) {
+        resetSize();
         mStrokeWidth = widthDp * mDisplayMetrics.density;
         mStrokePaint.setStrokeWidth(mStrokeWidth);
         invalidate();
@@ -589,10 +622,8 @@ public class ProgressPieView extends View {
     }
 
     /**
-     * Sets the progress listner.
+     * Sets the progress listener.
      * @param listener progress listener
-     *
-     * @see com.filippudak.ProgressPieView.ProgressPieView.OnProgressListener
      */
     public void setOnProgressListener(OnProgressListener listener) {
         mListener = listener;

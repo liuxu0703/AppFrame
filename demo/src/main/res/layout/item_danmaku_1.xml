@@ -8,13 +8,13 @@
     android:gravity="center_vertical"
     android:orientation="horizontal" >
 
-    <lx.af.widget.RoundImage.RoundedImageView
+    <lx.af.view.RoundedImage.RoundedImageView
         android:id="@+id/item_danmaku_avatar"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:padding="1dp"
         android:background="@drawable/circle_white"
-        app:corner_radius="100dp" />
+        app:round_corner_radius="100dp" />
 
     <TextView
         android:id="@+id/item_danmaku_text"

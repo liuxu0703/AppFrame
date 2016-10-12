@@ -15,9 +15,9 @@ import java.util.Map;
 import lx.af.R;
 import lx.af.activity.ImageBrowser.ImageBrowserActivity.ImageInfo;
 import lx.af.utils.UIL.UILLoader;
-import lx.af.view.ProgressWheel;
 import lx.af.view.photoview.PhotoView;
 import lx.af.view.photoview.PhotoViewAttacher.OnViewTapListener;
+import lx.af.widget.ProgressPieView;
 
 /**
  * author: lx
@@ -41,7 +41,7 @@ class ImagePagerAdapter extends PagerAdapter implements
     public View instantiateItem(ViewGroup container, int position) {
         String uri = mUriList.get(position);
         View itemView = View.inflate(container.getContext(), R.layout.image_browser_item, null);
-        ProgressWheel progress = (ProgressWheel)
+        ProgressPieView progress = (ProgressPieView)
                 itemView.findViewById(R.id.image_browser_item_loading);
         PhotoView photoView = (PhotoView)
                 itemView.findViewById(R.id.image_browser_item_image);
@@ -50,6 +50,7 @@ class ImagePagerAdapter extends PagerAdapter implements
         photoView.setTag(uri);
         LoadListener listener = new LoadListener(progress, uri, mLoadImageCallback);
         UILLoader.of(photoView, uri)
+                .preloadImageUri(mImgInfoMap.get(uri).preloadUri)
                 .imageOnFail(R.drawable.img_gallery_default)
                 .imageForEmptyUri(R.drawable.img_gallery_default)
                 .setProgressListener(listener)
@@ -95,11 +96,11 @@ class ImagePagerAdapter extends PagerAdapter implements
 
     private class LoadListener implements ImageLoadingListener, ImageLoadingProgressListener {
 
-        ProgressWheel progress;
+        ProgressPieView progress;
         String uri;
         LoadImageCallback callback;
 
-        public LoadListener(ProgressWheel progress, String uri, LoadImageCallback c) {
+        public LoadListener(ProgressPieView progress, String uri, LoadImageCallback c) {
             this.progress = progress;
             this.uri = uri;
             this.callback = c;
@@ -114,10 +115,8 @@ class ImagePagerAdapter extends PagerAdapter implements
                         ImageInfo info = mImgInfoMap.get(imageUri);
                         if (info.valid == ImageBrowserActivity.ImageValidation.UNKNOWN) {
                             progress.setVisibility(View.VISIBLE);
-                            progress.spin();
                         } else {
                             progress.setVisibility(View.GONE);
-                            progress.stopSpinning();
                         }
                     }
                 }
@@ -127,7 +126,6 @@ class ImagePagerAdapter extends PagerAdapter implements
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
             if (uri.equals(imageUri)) {
-                progress.stopSpinning();
                 progress.setVisibility(View.GONE);
             }
             if (callback != null) {
@@ -138,7 +136,6 @@ class ImagePagerAdapter extends PagerAdapter implements
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
             if (uri.equals(imageUri)) {
-                progress.stopSpinning();
                 progress.setVisibility(View.GONE);
             }
             if (callback != null) {
@@ -149,7 +146,6 @@ class ImagePagerAdapter extends PagerAdapter implements
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
             if (uri.equals(imageUri)) {
-                progress.stopSpinning();
                 progress.setVisibility(View.GONE);
             }
             if (callback != null) {
@@ -160,16 +156,15 @@ class ImagePagerAdapter extends PagerAdapter implements
         @Override
         public void onProgressUpdate(String imageUri, View view, int current, int total) {
             if (uri.equals(imageUri)) {
-                int pro = current * 360 / total;
                 int percentage = current * 100 / total;
                 //Log.d("liuxu", "111 image browser progress" +
-                //        ", pro=" + pro + ", percentage=" + percentage +
+                //        ", percentage=" + percentage +
                 //        ", current=" + current + ", total=" + total);
                 if (percentage > 100) {
                     percentage = 100;
                 }
-                progress.setProgress(pro);
-                progress.setText(percentage + "%");
+                progress.setProgress(percentage);
+                //progress.setText(percentage + "%");
             }
         }
     }

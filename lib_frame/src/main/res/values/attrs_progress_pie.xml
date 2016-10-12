@@ -10,6 +10,7 @@
         <attr name="ppvInverted" format="boolean"/>
         <attr name="ppvCounterclockwise" format="boolean"/>
         <attr name="ppvStrokeWidth" format="dimension"/>
+        <attr name="ppvPiePadding" format="dimension"/>
         <attr name="ppvBackgroundColor" format="reference|color"/>
         <attr name="ppvProgressColor" format="reference|color"/>
         <attr name="ppvStrokeColor" format="reference|color"/>

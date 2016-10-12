@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.text.TextUtils;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import lx.af.R;
 import lx.af.activity.ImageBrowser.ImageBrowserActivity;
@@ -67,14 +70,14 @@ public class ImageBrowserLauncher {
     }
 
     public ImageBrowserLauncher currentPath(String path) {
-        if (path != null) {
+        if (!TextUtils.isEmpty(path)) {
             mIntent.putExtra(ImageBrowserActivity.EXTRA_CURRENT_IMAGE_URI, "file://" + path);
         }
         return this;
     }
 
     public ImageBrowserLauncher currentUri(String uri) {
-        if (uri != null) {
+        if (!TextUtils.isEmpty(uri)) {
             mIntent.putExtra(ImageBrowserActivity.EXTRA_CURRENT_IMAGE_URI, uri);
         }
         return this;
@@ -82,7 +85,34 @@ public class ImageBrowserLauncher {
 
     public ImageBrowserLauncher currentUri(Uri uri) {
         if (uri != null) {
-            mIntent.putExtra(ImageBrowserActivity.EXTRA_CURRENT_IMAGE_URI, uri.toString());
+            currentUri(uri.toString());
+        }
+        return this;
+    }
+
+    public ImageBrowserLauncher preloadUri(String preloadUri) {
+        if (!TextUtils.isEmpty(preloadUri)) {
+            mIntent.putExtra(ImageBrowserActivity.EXTRA_PRELOAD_URI, preloadUri);
+        }
+        return this;
+    }
+
+    public ImageBrowserLauncher preloadForUri(String uri, String preloadUri) {
+        if (!TextUtils.isEmpty(uri) && !TextUtils.isEmpty(preloadUri)) {
+            mIntent.putExtra(ImageBrowserActivity.EXTRA_PRELOAD_URI_PREFIX + uri, preloadUri);
+        }
+        return this;
+    }
+
+    public ImageBrowserLauncher preloadForUri(Map<String, String> uriMap) {
+        if (uriMap != null && uriMap.size() > 0) {
+            Iterator<Map.Entry<String, String>> it = uriMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, String> entry = it.next();
+                mIntent.putExtra(
+                        ImageBrowserActivity.EXTRA_PRELOAD_URI_PREFIX + entry.getKey(),
+                        entry.getValue());
+            }
         }
         return this;
     }

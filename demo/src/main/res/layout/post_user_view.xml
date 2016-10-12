@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <lx.af.widget.RoundImage.RoundedImageView
+    <lx.af.view.RoundedImage.RoundedImageView
         android:id="@+id/post_user_avatar"
         android:layout_width="26dp"
         android:layout_height="26dp"
@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:src="@drawable/img_default"
-        app:corner_radius="100dp" />
+        app:round_corner_radius="100dp" />
 
     <TextView
         android:id="@+id/post_user_name"

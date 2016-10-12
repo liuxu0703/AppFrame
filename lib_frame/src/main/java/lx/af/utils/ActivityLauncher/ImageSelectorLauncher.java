@@ -79,11 +79,13 @@ public class ImageSelectorLauncher extends ActivityLauncherBase<ArrayList<String
     }
 
     public ImageSelectorLauncher preSelect(List<String> paths) {
-        if (paths instanceof ArrayList) {
-            mPreSelect = (ArrayList<String>) paths;
-        } else {
-            mPreSelect = new ArrayList<>(paths.size());
-            mPreSelect.addAll(paths);
+        if (paths != null && paths.size() != 0) {
+            if (paths instanceof ArrayList) {
+                mPreSelect = (ArrayList<String>) paths;
+            } else {
+                mPreSelect = new ArrayList<>(paths.size());
+                mPreSelect.addAll(paths);
+            }
         }
         return this;
     }

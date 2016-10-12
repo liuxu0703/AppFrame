@@ -70,6 +70,10 @@ public class GridFlowLayout extends ViewGroup {
         requestLayout();
     }
 
+    public BaseAdapter getAdapter() {
+        return mAdapter;
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();

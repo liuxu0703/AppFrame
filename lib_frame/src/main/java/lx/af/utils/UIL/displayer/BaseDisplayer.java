@@ -42,6 +42,10 @@ public abstract class BaseDisplayer implements BitmapDisplayer {
         return this;
     }
 
+    public BaseAnimator getAnimator() {
+        return mDisplayerAnimator;
+    }
+
     @Override
     public void display(final Bitmap bitmap, final ImageAware imageAware, final LoadedFrom loadedFrom) {
         if (mImageInfoCallback != null) {

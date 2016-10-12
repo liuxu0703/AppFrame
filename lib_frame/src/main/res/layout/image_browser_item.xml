@@ -10,21 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <lx.af.view.ProgressWheel
-        xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+    <lx.af.widget.ProgressPieView
+        xmlns:ppv="http://schemas.android.com/apk/res-auto"
         android:id="@+id/image_browser_item_loading"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        ProgressWheel:text=""
-        ProgressWheel:textColor="#fff"
-        ProgressWheel:textSize="14sp"
-        ProgressWheel:rimColor="#00000000"
-        ProgressWheel:rimWidth="5dp"
-        ProgressWheel:barLength="30dp"
-        ProgressWheel:barColor="#339BB9"
-        ProgressWheel:barWidth="5dp"
-        ProgressWheel:contourColor="#00000000"
-        ProgressWheel:spinSpeed="3dp" />
+        ppv:ppvMax="100"
+        ppv:ppvPiePadding="3dp"
+        ppv:ppvStrokeWidth="2dp"
+        ppv:ppvShowStroke="true"
+        ppv:ppvStrokeColor="#d0ffffff"
+        ppv:ppvProgressColor="#d0ffffff" />
+
 </RelativeLayout>

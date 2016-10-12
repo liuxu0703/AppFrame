@@ -22,9 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,7 +86,7 @@ public final class StringUtils {
     /**
      * get file md5
      */
-    public static String toMD5(File file) {
+    public static String toMd5(File file) {
         if (!file.isFile()) {
             return null;
         }
@@ -335,16 +332,29 @@ public final class StringUtils {
     }
 
     /**
-     * check if password is valid.
+     * check if password is valid. password length is 4 - 20.
      * only digit, alphabet and '_' is allowed.
      * @param password the password
      * @return true if valid
      */
     public static boolean isValidPassword(String password) {
+        return isValidPassword(password, 4, 20);
+    }
+
+    /**
+     * check if password is valid.
+     * only digit, alphabet and '_' is allowed.
+     * @param password the password
+     * @param min password min length
+     * @param max password max length
+     * @return true if valid
+     */
+    public static boolean isValidPassword(String password, int min, int max) {
         if (TextUtils.isEmpty(password)) {
             return false;
         }
-        Pattern pattern = Pattern.compile("^[0-9a-zA-Z_]{4,20}$");
+        String regex = "^[0-9a-zA-Z_]{" + min + "," + max + "}$";
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
@@ -420,6 +430,19 @@ public final class StringUtils {
     }
 
     // ==========================================================
+
+    /**
+     * replace continuous \n \r char with one \n char
+     * @param str original string
+     * @return the result
+     */
+    public static String duplicateNewLine(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        } else {
+            return str.replaceAll("(?:[\\n|\\r]\\s*)+", "\n");
+        }
+    }
 
     /**
      * add query string for url
@@ -531,35 +554,5 @@ public final class StringUtils {
 
 
     // ==========================================================
-    // data format
-
-
-    private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
-    static {
-        suffixes.put(1_000L, "k");
-        suffixes.put(1_000_000L, "M");
-        suffixes.put(1_000_000_000L, "G");
-        suffixes.put(1_000_000_000_000L, "T");
-        suffixes.put(1_000_000_000_000_000L, "P");
-        suffixes.put(1_000_000_000_000_000_000L, "E");
-    }
-
-    /**
-     * format number to string: 1453 -> 1.4k, 2400000 -> 2.4M
-     */
-    public static String formatNumber(long value) {
-        //Long.MIN_VALUE == -Long.MIN_VALUE so we need an adjustment here
-        if (value == Long.MIN_VALUE) return formatNumber(Long.MIN_VALUE + 1);
-        if (value < 0) return "-" + formatNumber(-value);
-        if (value < 1000) return Long.toString(value); //deal with easy case
-
-        Map.Entry<Long, String> e = suffixes.floorEntry(value);
-        Long divideBy = e.getKey();
-        String suffix = e.getValue();
-
-        long truncated = value / (divideBy / 10); //the number part of the output times 10
-        boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
-        return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
-    }
 
 }

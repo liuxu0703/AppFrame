@@ -47,6 +47,7 @@ public class AbsBaseApp extends Application{
         sInstance = this;
 
         GlobalThreadManager.init(this);
+        SystemUtils.init(this);
         PathUtils.init(this);
         LogUtils.init(this);
         CrashHandler.init();
@@ -60,7 +61,6 @@ public class AbsBaseApp extends Application{
         ResourceUtils.init(this);
         BitmapUtils.init(this);
         AlertUtils.init(this);
-        SystemUtils.init(this);
         ScreenUtils.init(this);
         NetStateUtils.init(this);
 

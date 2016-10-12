@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ToggleButton">
-    	<attr name="borderWidth" format="dimension" />
-    	<attr name="offBorderColor" format="reference|color" />
-    	<attr name="offColor" format="reference|color" />
-    	<attr name="onColor" format="reference|color" />
-    	<attr name="spotColor" format="reference|color" />
-    	<attr name="animate" format="reference|boolean" />
-	<attr name="isDefaultOn" format="reference|boolean" />
+    	<attr name="toggleBorderWidth" format="dimension" />
+    	<attr name="toggleOffBorderColor" format="reference|color" />
+    	<attr name="toggleOffColor" format="reference|color" />
+    	<attr name="toggleOnColor" format="reference|color" />
+    	<attr name="toggleSpotColor" format="reference|color" />
+    	<attr name="toggleAnimate" format="reference|boolean" />
+	<attr name="toggleIsDefaultOn" format="reference|boolean" />
     </declare-styleable>
 </resources>

@@ -113,6 +113,11 @@
 
 
         <activity
+            android:name=".activity.test.TestListActivity"
+            android:screenOrientation="portrait"
+            android:label="Test List" >
+        </activity>
+        <activity
             android:name=".activity.ActivityTest"
             android:screenOrientation="portrait"
             android:label="File Picker" >

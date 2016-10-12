@@ -302,6 +302,36 @@ public final class SystemUtils {
     }
 
     /**
+     * get process name by pid
+     */
+    public static String getProcessName(int pid) {
+        ActivityManager am = (ActivityManager) sApp.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
+        if (runningApps != null) {
+            for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
+                if (procInfo.pid == pid) {
+                    return procInfo.processName;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * get process name of this application
+     */
+    public static String getCurrentProcessName() {
+        return getProcessName(android.os.Process.myPid());
+    }
+
+    /**
+     * check if current process is the application's main process
+     */
+    public static boolean isMainProcess() {
+        return sApp.getApplicationInfo().packageName.equals(getCurrentProcessName());
+    }
+
+    /**
      * install package
      * @param apkFile the apk file
      */
@@ -382,19 +412,6 @@ public final class SystemUtils {
         ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
         am.getMemoryInfo(mi);
         return (int) (mi.availMem / (1024 * 1024));
-    }
-
-    public static String getCurrentProcessName() {
-        int pid = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager)
-                sApp.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess :
-                activityManager.getRunningAppProcesses()) {
-            if (appProcess.pid == pid) {
-                return appProcess.processName;
-            }
-        }
-        return null;
     }
 
     // =======================================================

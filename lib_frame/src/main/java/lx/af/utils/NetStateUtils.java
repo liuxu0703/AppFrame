@@ -2,8 +2,10 @@ package lx.af.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
 /**
@@ -39,6 +41,17 @@ public final class NetStateUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isWifiEnable() {
+        WifiManager wifiManager = (WifiManager) sApp.getSystemService(Context.WIFI_SERVICE);
+        return wifiManager.isWifiEnabled();
+    }
+
+    public static boolean isGpsEnable() {
+        LocationManager locationManager =
+                ((LocationManager) sApp.getSystemService(Context.LOCATION_SERVICE));
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     public static boolean isThirdGeneration() {
