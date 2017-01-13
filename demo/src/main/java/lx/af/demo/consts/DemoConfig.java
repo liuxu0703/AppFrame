@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import lx.af.demo.activity.DemoUtils.UILLoaderDemo;
 import lx.af.demo.activity.DemoUtils.WatermarkDemo;
-import lx.af.demo.activity.DemoWidget.SmartToastDemo;
 import lx.af.demo.activity.DemoWidget.QuoteDividerDemo;
 import lx.af.demo.activity.DemoWidget.SelectImageViewDemo;
 import lx.af.demo.activity.DemoWidget.AutoSlidePagerDemo;
@@ -46,7 +45,6 @@ public class DemoConfig {
             demo("Flow Layout", FlowLayoutDemo.class),
             demo("Video Play View", VideoPlayViewDemo.class),
             demo("Danmaku Layout", DanmakuLayoutDemo.class),
-            demo("Smart Toast", SmartToastDemo.class),
     };
 
 

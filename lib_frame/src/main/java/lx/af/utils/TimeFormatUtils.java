@@ -23,6 +23,32 @@ public final class TimeFormatUtils {
     }
 
     public static String getDisplayTime(long time) {
+        if(time<=0){
+            return "";
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+
+        if (cal.before(getYesterday())) {
+            return formatTime(time, "MM-dd HH:mm");
+        } else if (cal.before(getToday())) {
+            return ResourceUtils.getString(
+                    R.string.time_utils_yesterday, formatTime(time, "HH:mm"));
+        } else {
+            return formatTime(time, "HH:mm");
+        }
+    }
+    public static String getDisplayTime(String timeStr) {
+        long time0;
+        try {
+            time0 = Long.parseLong(timeStr);
+        }catch(NumberFormatException nfe){
+            return timeStr;
+        }
+        long time = 1000 * time0;
+        if(time<=0){
+            return "";
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
 

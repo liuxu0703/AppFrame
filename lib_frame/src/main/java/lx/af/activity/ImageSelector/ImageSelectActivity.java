@@ -3,6 +3,7 @@ package lx.af.activity.ImageSelector;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.StaleDataException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +15,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -507,7 +509,14 @@ public class ImageSelectActivity extends AbsBaseActivity implements
                 @Override
                 public void run() {
                     final List<ImageModel> images = new ArrayList<>();
-                    data.moveToFirst();
+                    try {
+                        data.moveToFirst();
+                    } catch (StaleDataException e) {
+                        toastShort(R.string.mis_toast_data_stale_exception);
+                        finish();
+                        return;
+                    }
+
                     do {
                         String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
                         if (TextUtils.isEmpty(path)) {
@@ -519,9 +528,18 @@ public class ImageSelectActivity extends AbsBaseActivity implements
                             continue;
                         }
 
-                        String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
-                        long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
-                        long id = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
+                        String name;
+                        long dateTime;
+                        long id;
+                        try {
+                            name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+                            dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                            id = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
+                        } catch (StaleDataException e) {
+                            Log.e(TAG, "load data fail for item", e);
+                            continue;
+                        }
+
                         ImageModel image = new ImageModel(path, name, dateTime, getImageThumbnail(id));
                         images.add(image);
 

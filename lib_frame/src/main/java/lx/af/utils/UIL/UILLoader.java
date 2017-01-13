@@ -82,14 +82,19 @@ public class UILLoader {
         }
 
         boolean doPreload = true;
-        if (sImageLoader.getDiskCache().get(mUri) != null) {
-            // final uri already cached, no need to display preload
-            doPreload = false;
-        } else if (TextUtils.isEmpty(mPreloadUri) || mUri.equals(mPreloadUri)) {
-            // preload uri and final uri is the same, cancel preload
-            doPreload = false;
-        } else if (!mForcePreloadUri && sImageLoader.getDiskCache().get(mPreloadUri) == null) {
-            // preload uri not cached, and force show preload flag is off, cancel preload
+        try {
+            // TODO: LruDiskCache.get() sometimes throw NPE, which seems unlikely to happen
+            if (mUri != null && sImageLoader.getDiskCache().get(mUri) != null) {
+                // final uri already cached, no need to display preload
+                doPreload = false;
+            } else if (TextUtils.isEmpty(mPreloadUri) || mPreloadUri.equals(mUri)) {
+                // preload uri and final uri is the same, cancel preload
+                doPreload = false;
+            } else if (!mForcePreloadUri && sImageLoader.getDiskCache().get(mPreloadUri) == null) {
+                // preload uri not cached, and force show preload flag is off, cancel preload
+                doPreload = false;
+            }
+        } catch (Exception e) {
             doPreload = false;
         }
 

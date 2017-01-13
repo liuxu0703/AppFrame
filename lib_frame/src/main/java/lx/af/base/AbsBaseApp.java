@@ -14,8 +14,8 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import lx.af.R;
 import lx.af.manager.ActivityTaskManager;
 import lx.af.manager.GlobalThreadManager;
-import lx.af.net.HttpRequest.VolleyManager;
 import lx.af.manager.KV;
+import lx.af.net.HttpRequest.VolleyManager;
 import lx.af.utils.AlertUtils;
 import lx.af.utils.BitmapUtils;
 import lx.af.utils.CrashHandler;
@@ -26,7 +26,6 @@ import lx.af.utils.ScreenUtils;
 import lx.af.utils.StringUtils;
 import lx.af.utils.SystemUtils;
 import lx.af.utils.log.LogUtils;
-import lx.af.widget.frenchtoast.SmartToaster;
 import lx.af.widget.iconify.Iconify;
 
 /**
@@ -55,7 +54,6 @@ public class AbsBaseApp extends Application{
         VolleyManager.init(this);
         initImageLoader(this);
         KV.init(this);
-        SmartToaster.init(this);
 
         StringUtils.init(this);
         ResourceUtils.init(this);

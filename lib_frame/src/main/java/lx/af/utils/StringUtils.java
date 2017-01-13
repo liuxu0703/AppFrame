@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.security.InvalidParameterException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,8 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -360,6 +364,24 @@ public final class StringUtils {
     }
 
     /**
+     * check if user name is valid:
+     * only digit, English alphabet, Chinese character, and '_' is allowed.
+     * @param name the password
+     * @param min password min length
+     * @param max password max length
+     * @return true if valid
+     */
+    public static boolean isValidEnChName(String name, int min, int max) {
+        if (TextUtils.isEmpty(name)) {
+            return false;
+        }
+        String regex = "^([0-9A-Za-z_]|[\\u4e00-\\u9fa5]){" + min + "," + max + "}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
+    }
+
+    /**
      * check if the string reaches the limited length
      * @param content the string
      */
@@ -430,6 +452,148 @@ public final class StringUtils {
     }
 
     // ==========================================================
+    // about url
+
+    /**
+     * Parses an URL query string and returns a map with the parameter values.
+     * The URL query string is the part in the URL after the first '?' character up
+     * to an optional '#' character. It has the format "name=value&name=value&...".
+     * params with same name will be duplicated: only the last appeared value will be stored.
+     * @param s an URL query string.
+     * @return a map containing parameter names as keys and parameter values as map values.
+     */
+    public static Map<String, String> parseUrlQueryStringDuplicate(String s) {
+        if (s == null) return new HashMap<>(0);
+        // In map1 we use strings and ArrayLists to collect the parameter values.
+        HashMap<String, String> map = new HashMap<>();
+        int p = 0;
+        while (p < s.length()) {
+            int p0 = p;
+            while (p < s.length() && s.charAt(p) != '=' && s.charAt(p) != '&') p++;
+            String name = urlDecode(s.substring(p0, p));
+            if (p < s.length() && s.charAt(p) == '=') p++;
+            p0 = p;
+            while (p < s.length() && s.charAt(p) != '&') p++;
+            String value = urlDecode(s.substring(p0, p));
+            if (p < s.length() && s.charAt(p) == '&') p++;
+            map.put (name, value);
+        }
+        return map;
+    }
+
+    /**
+     * Parses an URL query string and returns a map with the parameter values.
+     * The URL query string is the part in the URL after the first '?' character up
+     * to an optional '#' character. It has the format "name=value&name=value&...".
+     * The map has the same structure as the one returned by
+     * javax.servlet.ServletRequest.getParameterMap().
+     * A parameter name may occur multiple times within the query string.
+     * For each parameter name, the map contains a string array with the parameter values.
+     * @param s an URL query string.
+     * @return a map containing parameter names as keys and parameter values as map values.
+     * @author Christian d'Heureuse, Inventec Informatik AG, Switzerland, www.source-code.biz.
+     */
+    public static Map<String, String[]> parseUrlQueryString (String s) {
+        if (s == null) return new HashMap<>(0);
+        // In map1 we use strings and ArrayLists to collect the parameter values.
+        HashMap<String, Object> map1 = new HashMap<>();
+        int p = 0;
+        while (p < s.length()) {
+            int p0 = p;
+            while (p < s.length() && s.charAt(p) != '=' && s.charAt(p) != '&') p++;
+            String name = urlDecode(s.substring(p0, p));
+            if (p < s.length() && s.charAt(p) == '=') p++;
+            p0 = p;
+            while (p < s.length() && s.charAt(p) != '&') p++;
+            String value = urlDecode(s.substring(p0, p));
+            if (p < s.length() && s.charAt(p) == '&') p++;
+            Object x = map1.get(name);
+            if (x == null) {
+                // The first value of each name is added directly as a string to the map.
+                map1.put (name, value);
+            } else if (x instanceof String) {
+                // For multiple values, we use an ArrayList.
+                ArrayList<String> a = new ArrayList<>();
+                a.add ((String)x);
+                a.add (value);
+                map1.put (name, a);
+            } else {
+                @SuppressWarnings("unchecked")
+                ArrayList<String> a = (ArrayList<String>) x;
+                a.add (value);
+            }
+        }
+
+        // Copy map1 to map2. Map2 uses string arrays to store the parameter values.
+        HashMap<String, String[]> map2 = new HashMap<>(map1.size());
+        for (Map.Entry<String, Object> e : map1.entrySet()) {
+            String name = e.getKey();
+            Object x = e.getValue();
+            String[] v;
+            if (x instanceof String) {
+                v = new String[]{(String)x};
+            } else {
+                @SuppressWarnings("unchecked")
+                ArrayList<String> a = (ArrayList<String>)x;
+                v = new String[a.size()];
+                v = a.toArray(v);
+            }
+            map2.put (name, v);
+        }
+        return map2;
+    }
+
+    private static String urlDecode (String s) {
+        try {
+            return URLDecoder.decode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Error in urlDecode.", e);
+        }
+    }
+
+    /**
+     * add query string for url
+     * @param url url
+     * @param queryString query string
+     * @return url with query string
+     */
+    public static String addUrlQueryString(String url, String queryString) {
+        try {
+            URI uri = URI.create(url);
+            if (uri.getQuery() == null) {
+                return url + "?" + queryString;
+            } else {
+                return url + "&" + queryString;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    /**
+     * create url query string with given params
+     * @param params param key-value
+     * @return query string, begin with "?", or empty string "" if there is no param.
+     */
+    public static String createQueryString(Map<String, String> params) {
+        if (params == null || params.size() == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("?");
+        Iterator<Map.Entry<String, String>> it = params.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> entry = it.next();
+            sb.append(entry.getKey()).append("=").append(entry.getValue());
+            if (it.hasNext()) {
+                sb.append("&");
+            }
+        }
+        return sb.toString();
+    }
+
+    // ==========================================================
 
     /**
      * replace continuous \n \r char with one \n char
@@ -445,31 +609,11 @@ public final class StringUtils {
     }
 
     /**
-     * add query string for url
-     * @param url url
-     * @param queryString query string
-     * @return url with query string
-     */
-    public static String addQueryString(String url, String queryString) {
-        try {
-            URI uri = URI.create(url);
-            if (uri.getQuery() == null) {
-                return url + "?" + queryString;
-            } else {
-                return url + "&" + queryString;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
-
-    /**
      * 逆序每隔3位添加一个逗号
      * @param str "31232"
      * @return "31,232"
      */
-    public static String addComma3(String str) {
+    public static String addCommaStep3(String str) {
         if (TextUtils.isEmpty(str)) {
             return "";
         }

@@ -40,7 +40,11 @@ public class ActionBarScrollFadeHelper {
      * set action bar view
      */
     public static ActionBarScrollFadeHelper with(View actionBar) {
-        return new ActionBarScrollFadeHelper(actionBar);
+        return new ActionBarScrollFadeHelper(actionBar, true);
+    }
+
+    public static ActionBarScrollFadeHelper with(View actionBar, boolean actionBarFade) {
+        return new ActionBarScrollFadeHelper(actionBar, actionBarFade);
     }
 
     /**
@@ -187,9 +191,11 @@ public class ActionBarScrollFadeHelper {
         scrollView.setOnScrollListener(mScrollViewScrollListener);
     }
 
-    private ActionBarScrollFadeHelper(View actionBar) {
+    private ActionBarScrollFadeHelper(View actionBar, boolean actionBarFade) {
         mActionBar = actionBar;
-        mFadeDrawableList.add(new FadeDrawableInfo(mActionBar.getBackground(), false));
+        if (actionBarFade) {
+            mFadeDrawableList.add(new FadeDrawableInfo(mActionBar.getBackground(), false));
+        }
     }
 
     private void init(View scrollableView, boolean acceptOffsetViewOnly) {

@@ -430,8 +430,8 @@ public class LocalDiskCache {
             if (result != 0) {
                 return result;
             } else {
-                long lastUsed1 = m1 != null ? m1.lastUsed : 0l;
-                long lastUsed2 = m2 != null ? m2.lastUsed : 0l;
+                long lastUsed1 = m1 != null ? m1.lastUsed : 0L;
+                long lastUsed2 = m2 != null ? m2.lastUsed : 0L;
                 return (int) (lastUsed2 - lastUsed1);
             }
         }

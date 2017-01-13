@@ -20,17 +20,29 @@ public final class DialogFactory {
 
     private DialogFactory() {}
 
-    public static Dialog showMessageDialog(Context context, String message) {
+    public static Dialog showMessageDialog(Context context, String message, final Runnable dismissRunnable) {
         Dialog dlg = new AlertDialog.Builder(context)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
                 .create();
+        if (dismissRunnable != null) {
+            dlg.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    dismissRunnable.run();
+                }
+            });
+        }
         try {
             dlg.show();
         } catch (WindowManager.BadTokenException e) {
             Log.w(TAG, "show dialog fail", e);
         }
         return dlg;
+    }
+
+    public static Dialog showMessageDialog(Context context, String message) {
+        return showMessageDialog(context, message, null);
     }
 
     public static Dialog showMessageDialog(Context context, int stringId) {

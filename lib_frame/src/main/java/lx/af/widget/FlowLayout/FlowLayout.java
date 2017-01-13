@@ -62,6 +62,17 @@ public class FlowLayout extends ViewGroup
         return mAllViews.size();
     }
 
+    public boolean isExpandable() {
+        int visibleCount = 0;
+        if (mAllViews != null) {
+            for (List<View> line : mAllViews) {
+                visibleCount += line.size();
+            }
+        }
+        int childCount = getChildCount();
+        return childCount > visibleCount;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {

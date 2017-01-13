@@ -3,6 +3,7 @@ package lx.af.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,11 @@ public class SingleSelectDialog extends Dialog implements AdapterView.OnItemClic
     private ListView mListView;
     private OnSelectListener mResultListener;
     private ArrayList<Item> mItems;
+
+    public static SingleSelectDialog create(
+            Context context, String[] items, OnSelectListener listener) {
+        return new SingleSelectDialog(context, items, -1, listener);
+    }
 
     public static SingleSelectDialog create(
             Context context, String[] items, int current, OnSelectListener listener) {
@@ -59,6 +65,16 @@ public class SingleSelectDialog extends Dialog implements AdapterView.OnItemClic
         mListView.setAdapter(new ChoiceAdapter(context, mItems));
     }
 
+    /**
+     * construct dialog.
+     * @param context the context.
+     * @param items the selection options
+     * @param listener the callback.
+     */
+    public SingleSelectDialog(Context context, String[] items, OnSelectListener listener) {
+        this(context, items, -1, listener);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Item item = mItems.get(position);
@@ -69,6 +85,16 @@ public class SingleSelectDialog extends Dialog implements AdapterView.OnItemClic
             mResultListener.onSelect(position);
         }
         dismiss();
+    }
+
+    public void setDialogTitle(CharSequence title) {
+        if(!TextUtils.isEmpty(title)){
+            TextView titleTv = (TextView)findViewById(R.id.bottom_dialog_title);
+            titleTv.setVisibility(View.VISIBLE);
+            titleTv.setText(title);
+        }else{
+            findViewById(R.id.bottom_dialog_title).setVisibility(View.GONE);
+        }
     }
 
 

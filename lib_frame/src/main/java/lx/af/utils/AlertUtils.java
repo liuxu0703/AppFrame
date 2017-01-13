@@ -1,9 +1,9 @@
 package lx.af.utils;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import lx.af.manager.GlobalThreadManager;
-import lx.af.widget.frenchtoast.SmartToaster;
 
 /**
  * Created by liuxu on 15-3-19.
@@ -27,7 +27,7 @@ public final class AlertUtils {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
-                SmartToaster.longLength().showText(msg);
+                Toast.makeText(sApp, msg, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -40,7 +40,7 @@ public final class AlertUtils {
         GlobalThreadManager.runInUiThread(new Runnable() {
             @Override
             public void run() {
-                SmartToaster.shortLength().showText(msg);
+                Toast.makeText(sApp, msg, Toast.LENGTH_SHORT).show();
             }
         });
     }

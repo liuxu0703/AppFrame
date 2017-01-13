@@ -33,6 +33,7 @@
     <string name="mis_toast_no_camera">未找到系统相机</string>
     <string name="mis_toast_amount_limit">已经达到最高选择数量</string>
     <string name="mis_toast_invalid_image">无法打开这张图片&#8230;</string>
+    <string name="mis_toast_data_stale_exception">图片数据异常,请重试</string>
     <string name="mis_folder_img_amount"><xliff:g>%d</xliff:g>张</string>
     <string name="mis_finish_btn">完成</string>
     <string name="mis_finish_btn_with_amount">完成(<xliff:g>%d</xliff:g>/<xliff:g>%d</xliff:g>)</string>
