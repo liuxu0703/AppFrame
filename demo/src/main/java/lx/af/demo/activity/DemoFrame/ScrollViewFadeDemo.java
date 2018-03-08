@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
 import lx.af.demo.base.BaseActivity;
@@ -22,11 +22,11 @@ public class ScrollViewFadeDemo extends BaseActivity implements
         ActionBar.Default.Callback.Overlay {
 
 
-    @InjectView(R.id.activity_scroll_view_fade_hint)
+    @BindView(R.id.activity_scroll_view_fade_hint)
     TextView mTvHint;
-    @InjectView(R.id.activity_scroll_view_fade_text)
+    @BindView(R.id.activity_scroll_view_fade_text)
     TextView mTvText;
-    @InjectView(R.id.activity_scroll_view_fade_scrollview)
+    @BindView(R.id.activity_scroll_view_fade_scrollview)
     ObservableScrollView mScrollView;
 
     private View mTvTitle;
@@ -35,7 +35,7 @@ public class ScrollViewFadeDemo extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll_view_fade);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 45; i++) {

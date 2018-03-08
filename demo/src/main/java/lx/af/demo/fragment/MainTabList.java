@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import lx.af.demo.R;
 import lx.af.demo.adapter.DemoActionAdapter;
 import lx.af.demo.base.BaseActivity;
@@ -23,7 +23,7 @@ import lx.af.demo.consts.ActionModel;
  */
 public abstract class MainTabList extends BaseFragment {
 
-    @InjectView(R.id.fragment_tab_list_view)
+    @BindView(R.id.fragment_tab_list_view)
     ListView mListView;
 
     DemoActionAdapter mAdapter;
@@ -32,7 +32,7 @@ public abstract class MainTabList extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_list, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -63,6 +63,5 @@ public abstract class MainTabList extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.reset(this);
     }
 }

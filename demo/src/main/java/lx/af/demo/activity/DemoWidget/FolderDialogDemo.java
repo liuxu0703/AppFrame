@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import lx.af.adapter.AbsListAdapter;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
@@ -27,7 +27,7 @@ public class FolderDialogDemo extends BaseActivity implements
         AdapterView.OnItemClickListener,
         ActionBar.Default {
 
-    @InjectView(R.id.icon_grid)
+    @BindView(R.id.icon_grid)
     GridView mIconGridView;
 
     private IconAdapter mAdapter;
@@ -36,7 +36,7 @@ public class FolderDialogDemo extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder_dialog);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mAdapter = new IconAdapter(this);
         mIconGridView.setAdapter(mAdapter);
         mIconGridView.setOnItemClickListener(this);

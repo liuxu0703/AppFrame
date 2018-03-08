@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import lx.af.adapter.AbsViewHolderAdapter;
 import lx.af.adapter.IViewHolder;
 import lx.af.demo.R;
@@ -34,22 +34,22 @@ public class PostListAdapter extends AbsViewHolderAdapter<PostModel> {
 
     static class PostViewHolder implements IViewHolder<PostModel> {
         View mRootView;
-        @InjectView(R.id.item_post_user_view)
+        @BindView(R.id.item_post_user_view)
         PostUserView mUserView;
-        @InjectView(R.id.item_post_content)
+        @BindView(R.id.item_post_content)
         TextView mContentView;
-        @InjectView(R.id.item_post_image_grid)
+        @BindView(R.id.item_post_image_grid)
         NineGridLayout mImageGrid;
-        @InjectView(R.id.item_post_time)
+        @BindView(R.id.item_post_time)
         TextView mTimeView;
-        @InjectView(R.id.item_post_address)
+        @BindView(R.id.item_post_address)
         TextView mAddressView;
 
         NineImageUILAdapter mImageAdapter;
 
         PostViewHolder(Context context) {
             mRootView = View.inflate(context, R.layout.item_post_list, null);
-            ButterKnife.inject(this, mRootView);
+            ButterKnife.bind(this, mRootView);
             mImageAdapter = new NineImageUILAdapter(mImageGrid);
             mImageAdapter.setOnItemClickListener(new NineImageUILAdapter.OnItemClickListener() {
                 @Override

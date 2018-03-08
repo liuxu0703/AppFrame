@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnItemClick;
 import lx.af.adapter.AbsListAdapter;
 import lx.af.demo.R;
@@ -26,7 +26,7 @@ public class TestListActivity extends BaseActivity implements
         ActionBar.Default,
         AdapterView.OnItemClickListener {
 
-    @InjectView(R.id.activity_test_list_view)
+    @BindView(R.id.activity_test_list_view)
     ListView mListView;
 
     ActionAdapter mAdapter;
@@ -35,7 +35,7 @@ public class TestListActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_list);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mAdapter = new ActionAdapter(this);
         mListView.setAdapter(mAdapter);
     }

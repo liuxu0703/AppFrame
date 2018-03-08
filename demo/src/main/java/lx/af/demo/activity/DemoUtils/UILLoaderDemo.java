@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
@@ -22,26 +22,26 @@ import lx.af.utils.UIL.UILLoader;
 public class UILLoaderDemo extends BaseActivity implements
         ActionBar.Default {
 
-    @InjectView(R.id.uil_loader_demo_container1)
+    @BindView(R.id.uil_loader_demo_container1)
     LinearLayout container1;
-    @InjectView(R.id.uil_loader_demo_container2)
+    @BindView(R.id.uil_loader_demo_container2)
     LinearLayout container2;
-    @InjectView(R.id.uil_loader_image1)
+    @BindView(R.id.uil_loader_image1)
     ImageView image1;
-    @InjectView(R.id.uil_loader_image2)
+    @BindView(R.id.uil_loader_image2)
     ImageView image2;
-    @InjectView(R.id.uil_loader_image3)
+    @BindView(R.id.uil_loader_image3)
     ImageView image3;
-    @InjectView(R.id.uil_loader_image4)
+    @BindView(R.id.uil_loader_image4)
     ImageView image4;
-    @InjectView(R.id.uil_loader_image5)
+    @BindView(R.id.uil_loader_image5)
     ImageView image5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uilloader_demo);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         displayCircleImages();
         displaySquareImages();

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
@@ -24,26 +24,26 @@ public class SelectImageViewDemo extends BaseActivity implements
         View.OnClickListener,
         ActionBar.Default {
 
-    @InjectView(R.id.activity_select_rating_1)
+    @BindView(R.id.activity_select_rating_1)
     Rating5StarLayout mRating1;
-    @InjectView(R.id.activity_select_rating_2)
+    @BindView(R.id.activity_select_rating_2)
     Rating5StarLayout mRating2;
-    @InjectView(R.id.activity_select_rating_3)
+    @BindView(R.id.activity_select_rating_3)
     Rating5StarLayout mRating3;
-    @InjectView(R.id.activity_select_rating_4)
+    @BindView(R.id.activity_select_rating_4)
     Rating5StarLayout mRating4;
-    @InjectView(R.id.activity_select_editor)
+    @BindView(R.id.activity_select_editor)
     EditText mEditor;
-    @InjectView(R.id.activity_select_image_view)
+    @BindView(R.id.activity_select_image_view)
     SelectImageWidget mSelectImageWidget;
-    @InjectView(R.id.activity_select_image_text)
+    @BindView(R.id.activity_select_image_text)
     TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_image_widget);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         mRating1.setTitle("Rating 1").setRating(2);
         mRating2.setTitle("Rating 2").setRating(3);

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 import lx.af.demo.R;
 import lx.af.demo.base.ActionBar;
@@ -34,11 +34,11 @@ public class CodeScannerDemo extends BaseActivity implements
         ActivityResultCallback<String>,
         ActionBar.Default {
 
-    @InjectView(R.id.scanner_editor_text)
+    @BindView(R.id.scanner_editor_text)
     EditText editor;
-    @InjectView(R.id.scanner_text)
+    @BindView(R.id.scanner_text)
     TextView text;
-    @InjectView(R.id.scanner_qr_code_image)
+    @BindView(R.id.scanner_qr_code_image)
     ImageView image;
 
     private Bitmap qrcodeBitmap;
@@ -47,7 +47,7 @@ public class CodeScannerDemo extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     @Override

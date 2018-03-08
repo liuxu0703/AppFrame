@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import lx.af.demo.R;
 import lx.af.demo.adapter.ImagePagerAdapter;
 import lx.af.demo.adapter.PostListAdapter;
@@ -38,11 +38,11 @@ public class PostListActivity extends BaseActivity implements
         SwipeRefreshListLayout.OnLoadMoreListener,
         ActionBar.Default.Callback.Overlay {
 
-    @InjectView(R.id.activity_swipe_refresh_listview)
+    @BindView(R.id.activity_swipe_refresh_listview)
     ListView mListView;
-    @InjectView(R.id.activity_swipe_refresh_layout)
+    @BindView(R.id.activity_swipe_refresh_layout)
     SwipeRefreshListLayout mSwipeRefreshLayout;
-    @InjectView(R.id.activity_swipe_refresh_loading_view)
+    @BindView(R.id.activity_swipe_refresh_loading_view)
     LoadingBkgView mLoadingView;
 
     private ViewPager mHeaderViewPager;
@@ -58,7 +58,7 @@ public class PostListActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_list);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setLoadMorePreCount(1);
